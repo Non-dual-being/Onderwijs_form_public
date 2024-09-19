@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeoFort Onderwijsaanvraag</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="aanvraagscript.js"></script>
 </head>
 <body>
@@ -12,33 +13,48 @@
     <form id="onderwijsFormulier" method="post">
         <fieldset>
             <legend>Basis-Gegevens</legend>
-            <label for="contactpersoonvoornaam">Voornaam contactpersoon</label >
-            <input type="text" id="contactpersoonvoornaam" name="contactpersoonvoornaam" required >
+            <label for="contactpersoonvoornaam">Voornaam contactpersoon</label>
+            <input type="text" id="contactpersoonvoornaam" name="contactpersoonvoornaam" required>
+            <div id="voornaamFout" class="foute-invoermelding"></div>
 
             <label for="contactpersoonachternaam">Achternaam contactpersoon</label>
             <input type="text" id="contactpersoonachternaam" name="contactpersoonachternaam" required >
+            <div id="achternaamFout" class="foute-invoermelding"></div>
             
             <label for="emailadres">E-mailadres</label>
             <input type="email" id="emailadres" name="emailadres" required>
-            <div id="emailError" class="foutmeldingmail">Vul een geldig e-mailadres in.</div>
+            <div id="emailFout" class="foute-invoermelding"></div>
             
             <label for="telefoonnummer">Telefoonnummer</label>
-            <input type="tel" id="telefoonnummer" name="telefoonnummer" >
+            <input type="tel" id="telefoonnummer" name="telefoonnummer" required>
+            <div id="telefoonFout" class="foute-invoermelding"></div>
+            
             
             <label for="totaalbegeleiders">Aantal begeleiders</label>
-            <input type="number" id="totaalbegeleiders" name="totaalbegeleiders" min="1" max="50" step="1" > 
-            
+            <input type="number" id="totaalbegeleiders" name="totaalbegeleiders" min="1" max="50" step="1" inputmode="numeric" pattern="[0-9]*" required>
+            <div id="aantalBegeleidersFout" class="foute-invoermelding"></div>
+
+
             <label for="niveauleerjaar">Niveau en Leerjaar</label>
-            <input type="text" id="niveauLeerjaar" name="niveauleerjaar" >
+            <input type="text" id="niveauleerjaar" name="niveauleerjaar" required>
+            <div id="niveauLeerjaarFout" class="foute-invoermelding"></div>
+
             
             <label for="schoolnaam">Naam school</label>
-            <input type="text" id="schoolnaam" name="schoolnaam" >
+            <input type="text" id="schoolnaam" name="schoolnaam" required>
+            <div id="naamSchoolFout" class="foute-invoermelding"></div>
             
             <label for="adres">Adres</label>
-            <input type="text" id="adres" name="adres" >
+            <input type="text" id="adres" name="adres" required>
+            <div id="adresFout" class="foute-invoermelding"></div>
             
-            <label for="postcodeplaats">Postcode en plaats</label>
-            <input type="text" id="postcodeplaats" name="postcodeplaats" >
+            <label for="postcode">Postcode</label>
+            <input type="text" id="postcode" name="postcode" >
+            <div id="postcodeFout" class="foute-invoermelding"></div>
+
+            <label for="plaats">Plaats</label>
+            <input type="text" id="plaats" name="plaats" >
+            <div id="plaatsFout" class="foute-invoermelding"></div>
             
             <label for="bezoekdatum">Datum bezoek</label>
             <input type="date" id="bezoekdatum" name="bezoekdatum" >
@@ -81,7 +97,7 @@
             <legend>Lesprogramma</legend>
             <label for="onderwijsNiveau">Selecteer het Schooltype</label>
             <select id="onderwijsNiveau" name="onderwijsNiveau">
-                <option value="primairOnderwijs">Primair Onderwijs</option>
+                <option value="primairOnderwijs" selected>Primair Onderwijs</option>
                 <option value="voortgezetOnderbouw">Voortgezet Onderwijs - Onderbouw</option>
                 <option value="voortgezetBovenbouw">Voortgezet Onderwijs - Bovenbouw</option>
             </select>
@@ -95,7 +111,7 @@
         
             <label for="aantalLeerlingen">Vul het aantal leerlingen in</label>
             <input type="number" id="aantalLeerlingen" name="aantalLeerlingen" min="40" max="160" step="1" required placeholder="min=40, max=160">
-            <div id="aantalLeerlingenFout" class="foutmelding">Vul alstublieft een geldig aantal van 40 tot en met 160 in.</div>
+            <div id="aantalLeerlingenFout" class="foutmelding"></div>
         </fieldset>
         
 
@@ -251,6 +267,6 @@
         </fieldset>
         <button type="submit" id="verzendknop">Verzenden</button>
     </form>
-
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>

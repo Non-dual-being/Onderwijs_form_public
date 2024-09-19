@@ -607,15 +607,21 @@ html::-webkit-scrollbar-button {
     border-radius: 5px;
 }
 
-.hover-message {
-    position: absolute;
-    background-color: #081540;/* Red background color */
-    color: white; /* White text color */
+.foute-invoermelding {
+    position: absolute;  /* Maakt het mogelijk de foutmelding los van de flow te plaatsen */
+    background-color: #081540;
+    color: white;
     padding: 5px 10px;
     border-radius: 5px;
-    border: 1px solid white; /* Dark blue border color */
-    display: none;
-    z-index: 2000; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 1px solid white;
+    display: none; /* Verborgen als standaard */
+    z-index: 2000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     font-size: max(7px, 0.7vw);
+    transition: opacity 0.6s ease;
+    left: 0;  /* Plaatsing aan de linkerzijde van het inputveld */
+    top: -30px; /* Plaatsing net boven het inputveld, pas dit aan naar behoefte */
+    width: 100%;  /* Zelfde breedte als het inputveld */
+    text-align: left; /* Zorg dat de tekst netjes uitlijnt */
 }
+
