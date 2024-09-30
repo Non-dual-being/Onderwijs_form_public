@@ -686,3 +686,133 @@ ${snacks.filter(snack => snack.amount > 0).map(snack => `${leftPadding}
 ```jsx
 ${padString(` - ${snack.amount} ${snack.name}:`, `€${(snack.amount * snack.price).toFixed(2)}`)}`).join('\n')}
 ```
+
+```jsx
+function initFlatpickr(unavailableDates, limitedAvailabilityDates, fullyBookedDates, availableDates) {
+    flatpickr("#bezoekdatum", {
+        locale: "nl",  // Locale Nederlands instellen
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        disable: unavailableDates.map(date => new Date(date)),  // Onbeschikbare datums disablen
+        ...
+    })
+    })
+```
+
+function initFlatpickr(...): Dit is de functie die de flatpickr-initialisatie uitvoert. Hierin worden verschillende datums (zoals onbeschikbare en volgeboekte) als argumenten doorgegeven.
+
+flatpickr("#bezoekdatum", {...}): Dit start flatpickr op het element met het id bezoekdatum. Dit is waarschijnlijk het invoerveld waar de gebruiker een bezoekdatum kan selecteren.
+
+locale: "nl": Dit stelt de locale van flatpickr in op Nederlands, zodat de kalender in het Nederlands wordt weergegeven (dagen, maanden, enz.).
+
+enableTime: false: Hiermee wordt aangegeven dat er geen tijdkeuze nodig is. De gebruiker selecteert alleen een datum.
+dateFormat: "Y-m-d": Dit bepaalt het formaat van de datum in het invoerveld. Het is ingesteld op het ISO-formaat (jaar-maand-dag).
+
+disable: unavailableDates.map(date => new Date(date)): De onbeschikbare datums worden gemapt naar Date-objecten, zodat flatpickr weet welke datums niet selecteerbaar zijn.
+
+```jsx
+        onDayCreate: function (dObj, dStr, fp, dayElem) {
+            const dayTimestamp = dayElem.dateObj.setHours(0, 0, 0, 0); // Normale timestamp zonder tijd
+            const formattedDate = dayElem.dateObj.toLocaleDateString('nl-NL'); // Locale formatted
+            ...
+        }
+ 
+```
+onDayCreate: function(...): Dit is een callback-functie die wordt aangeroepen wanneer elke dag in de kalender wordt gegenereerd. Dit stelt ons in staat om per dag stijlen toe te passen.
+
+const dayTimestamp = dayElem.dateObj.setHours(0, 0, 0, 0);: Dit zet het Date-object om naar een timestamp zonder uren/minuten/seconden, zodat alleen de datum wordt vergeleken (en niet de tijd).
+
+const formattedDate = dayElem.dateObj.toLocaleDateString('nl-NL');: Dit formatteert de datum op de Nederlandse manier (dd-mm-jjjj), wat handig is voor logging en debuggen.
+
+```jsx
+            const unavailableTimestamps = unavailableDates.map(date => new Date(date).setHours(0, 0, 0, 0));
+            const fullyBookedTimestamps = fullyBookedDates.map(date => new Date(date).setHours(0, 0, 0, 0));
+            const limitedAvailabilityTimestamps = limitedAvailabilityDates.map(date => new Date(date).setHours(0, 0, 0, 0));
+            const availableTimestamps = availableDates.map(date => new Date(date).setHours(0, 0, 0, 0));
+```
+new Date is een ingebouwde javascrip functie die een date omzet in data-time formaat, hier wordt het op een lege tijd gezet omdat alleen de datum van belang is. Map gaat gwn alle data in de array langs
+
+
+```sql
+DROP TABLE IF EXISTS `aanvragen`;
+CREATE TABLE IF NOT EXISTS `aanvragen` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `schoolnaam` varchar(255) NOT NULL,
+  `voornaam_contactpersoon` varchar(255) NOT NULL,
+  `achternaam_contactpersoon` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `telefoon` varchar(20) DEFAULT NULL,
+  `aantal_leerlingen` int DEFAULT NULL,
+  `schooltype` enum('Primair Onderwijs','Voortgezet Onderwijs - Onderbouw','Voortgezet Onderwijs - Bovenbouw') NOT NULL,
+  `keuze_module` enum('Minecraft-Klimaatspeurtocht','Earth-Watch','Minecraft-Windenergiespeurtocht','Stop-de-Klimaat-Klok','Crisismanagement') NOT NULL,
+  `status` enum('In optie','Definitief','Afgewezen') NOT NULL DEFAULT 'In optie',
+  `bezoekdatum` date NOT NULL,
+  `opmerkingen` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
+
+```
+
+```php
+    // E-mail validatie
+    if (empty($_POST['emailadres']) || !filter_var($_POST['emailadres'], FILTER_VALIDATE_EMAIL)) {
+        $errors['emailadres'] = "Ongeldig e-mailadres.";
+    } else {
+        $email = sanitize_input($_POST['emailadres'], 100);
+    }
+```
+
+
+```md
+filter_var()
+De functie filter_var() wordt in PHP vaak gebruikt om data te valideren of te filteren. Het neemt twee verplichte argumenten:
+
+De te valideren of te filteren waarde (hier: $_POST['emailadres']).
+Het type validatie of filter dat je wilt toepassen (hier: FILTER_VALIDATE_EMAIL).
+In jouw geval valideert de functie of de ingevoerde waarde een geldig e-mailadres is.
+
+Voordelen van filter_var() boven preg_match() voor e-mailvalidatie:
+
+Standaard ingebouwde validatie: FILTER_VALIDATE_EMAIL volgt de specificaties voor een geldig e-mailadres volgens de RFC 5321/5322 standaarden. Het bevat daarom ingebouwde ondersteuning voor de meeste edge-cases.
+Eenvoudiger te gebruiken: In plaats van een complexe reguliere expressie met preg_match(), maakt filter_var() de validatie veel simpeler en leesbaarder.
+Betrouwbaarheid: Reguliere expressies zijn moeilijk om volledig correct te krijgen als het gaat om e-mailvalidatie, vooral als je rekening houdt met alle mogelijke gevallen van e-mailformaten (bijv. plus-adressering, subdomeinen, etc.).
+filter_var($_POST['emailadres'], FILTER_VALIDATE_EMAIL)
+$_POST['emailadres']: Dit is de input die een gebruiker via een formulier heeft ingevuld.
+FILTER_VALIDATE_EMAIL: Dit vertelt de functie om te controleren of de input een geldig e-mailadres is.
+Als het ingevoerde e-mailadres geldig is, retourneert filter_var() de waarde zelf (het e-mailadres). Als het ongeldig is, retourneert het false.
+```
+
+
+```php
+$datumObject = DateTime::createFromFormat('d F Y', $ontvangenDatumEngels);
+```
+
+1. DateTime class in PHP
+De DateTime class in PHP is een zeer krachtige en flexibele manier om met datum- en tijdgegevens te werken. Deze class biedt vele methoden om datums en tijden te maken, te manipuleren en weer te geven.
+
+2. DateTime::createFromFormat()
+De methode createFromFormat() wordt gebruikt om een DateTime object te creëren vanuit een string die een datum of tijd voorstelt, met een specifiek formaat.
+
+De gebruikelijke manier om een datum te creëren in PHP is via new DateTime(), maar als de datumstring in een niet-standaardformaat is (dus niet een formaat dat PHP automatisch begrijpt), kun je met createFromFormat() expliciet aangeven hoe de datumstring is opgebouwd.
+
+3. De structuur van createFromFormat()
+De methode heeft twee argumenten:
+
+Het formaat van de datum: Dit geeft aan hoe de datum is opgebouwd in de string. In dit geval: 'd F Y'.
+d: Dag van de maand, twee cijfers met voorloopnullen (01 tot 31).
+F: Volledige maandnaam, bijvoorbeeld "January", "February", etc.
+Y: Volledig jaartal, vier cijfers (bijvoorbeeld "2024").
+De datumstring zelf: Dit is de string die je wilt omzetten naar een DateTime object. In dit geval wordt dit weergegeven door de variabele $ontvangenDatumEngels. Deze string zou bijvoorbeeld kunnen zijn: "25 September 2024".
+
+4. Context en gebruik
+Als we dit in de context plaatsen, stel je voor dat je een datum ontvangt in een tekstueel formaat zoals "25 September 2024" (dit is typisch Engels omdat de maand volledig in het Engels geschreven wordt). Deze string is niet direct bruikbaar in veel situaties waarin je een datum als een PHP DateTime object nodig hebt. Met de createFromFormat() methode kun je deze string eenvoudig omzetten naar een DateTime object zodat je er verder mee kunt werken (bijvoorbeeld om datumberekeningen uit te voeren, het formaat te veranderen, enz.).
+
+```php
+$ontvangenDatumEngels = '25 September 2024';
+$datumObject = DateTime::createFromFormat('d F Y', $ontvangenDatumEngels);
+
+// $datumObject is nu een DateTime object en je kunt er verder mee werken:
+echo $datumObject->format('Y-m-d');  // Geeft: 2024-09-25
+```
+

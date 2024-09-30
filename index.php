@@ -10,7 +10,7 @@
 </head>
 <body>
     <h1>ONDERWIJS AANVRAAG-FORMULIER</h1>
-    <form id="onderwijsFormulier" method="post">
+    <form id="onderwijsFormulier" method="post" novalidate>
         <fieldset>
             <legend>Basis-Gegevens</legend>
             <label for="contactpersoonvoornaam">Voornaam contactpersoon</label>
@@ -49,15 +49,17 @@
             <div id="adresFout" class="foute-invoermelding"></div>
             
             <label for="postcode">Postcode</label>
-            <input type="text" id="postcode" name="postcode" >
+            <input type="text" id="postcode" name="postcode" required>
             <div id="postcodeFout" class="foute-invoermelding"></div>
 
             <label for="plaats">Plaats</label>
-            <input type="text" id="plaats" name="plaats" >
+            <input type="text" id="plaats" name="plaats" required>
             <div id="plaatsFout" class="foute-invoermelding"></div>
             
             <label for="bezoekdatum">Datum bezoek</label>
-            <input type="date" id="bezoekdatum" name="bezoekdatum" >
+            <input type="date" id="bezoekdatum" name="bezoekdatum" required>
+            <div id="datumFout" class="foute-invoermelding"></div>
+            
             
             <label for="aankomsttijd">Wij verwachten u om</label>
             <input type="time" id="aankomsttijd" name="aankomsttijd" value="10:00" readonly required data-hover-message="Standaard aankomsttijd">
@@ -67,6 +69,7 @@
             
             <label for="hoekentGeoFort">Hoe kent u GeoFort?</label>
             <input type="text" id="hoekentGeoFort" name="hoekentGeoFort">
+            <div id="hoekentGeoFortFout" class="foute-invoermelding"></div>
         </fieldset>
 
         <fieldset>
@@ -96,17 +99,19 @@
         <fieldset class="lesprogramma">
             <legend>Lesprogramma</legend>
             <label for="onderwijsNiveau">Selecteer het Schooltype</label>
-            <select id="onderwijsNiveau" name="onderwijsNiveau">
+            <select id="onderwijsNiveau" name="onderwijsNiveau" required>
                 <option value="primairOnderwijs" selected>Primair Onderwijs</option>
                 <option value="voortgezetOnderbouw">Voortgezet Onderwijs - Onderbouw</option>
                 <option value="voortgezetBovenbouw">Voortgezet Onderwijs - Bovenbouw</option>
             </select>
+            <div id="onderwijsNiveauFout" class="foute-invoermelding"></div>
         
             <div id="keuzeModuleSelectie">
                 <label for="keuzeModule">Kies een lesmodule</label>
-                <select id="keuzeModule" name="keuzeModule">
+                <select id="keuzeModule" name="keuzeModule" required>
                     <!-- Keuzemodules worden hier dynamisch toegevoegd -->
                 </select>
+                <div id="keuzeModuleFout" class="foute-invoermelding"></div>
             </div>
         
             <label for="aantalLeerlingen">Vul het aantal leerlingen in</label>
@@ -150,7 +155,7 @@
                     <li>Koffie en thee voor begeleiders bij aankomst.</li>
                     <li>Vegetarische snack en plantaardige chocolademelk voor leerlingen tijdens de lesmodule voedselinnovatie</li>
                 </ul>
-                <h4>OPTITIONEEL BIJ TE BOEKEN</h4>
+                <h4>OPTIONEEL BIJ TE BOEKEN</h4>
                 <h5>Snacks</h5>
                 <ul>
                     <li>remiseBreak, kazerneBreak en fortgrachtBreak</li>
@@ -163,78 +168,87 @@
                 </ul>
             </div>
             <h4 class="snacks-heading">Snack keuze menu</h4>
-            <span class="subtitle">Vink aan en vul een aantal in</span>
-            <div class="snacks-section">
-                <div class="snack-option">
-                    <label for="remiseBreakCheckbox">Remise break: koek met limonade</label>
-                    <span class="subtitle">€2.60</span>
-                    <div class="input-group">
-                        <input type="checkbox" id="remiseBreakCheckbox" name="snack" value="2.60">
-                        <label for="remiseBreakAantal">Aantal:</label>
-                        <input type="number" id="remiseBreakAantal" name="remiseBreakAantal" min="0" value="0" disabled>
-                    </div>
-                </div>
-                <div class="snack-option">
-                    <label for="kazerneBreakCheckbox">Kazerne break: zakje chips met limonade</label>
-                    <span class="subtitle">€2.60</span>
-                    <div class="input-group">
-                        <input type="checkbox" id="kazerneBreakCheckbox" name="snack" value="2.60">
-                        <label for="kazerneBreakAantal">Aantal:</label>
-                        <input type="number" id="kazerneBreakAantal" name="kazerneBreakAantal" min="0" value="0" disabled>
-                    </div>
-                </div>
-                <div class="snack-option">
-                    <label for="fortgrachtBreakCheckbox">Fortgracht break: fruit met limonade</label>
-                    <span class="subtitle">€2.60</span>
-                    <div class="input-group">
-                        <input type="checkbox" id="fortgrachtBreakCheckbox" name="snack" value="2.60">
-                        <label for="fortgrachtBreakAantal">Aantal:</label>
-                        <input type="number" id="fortgrachtBreakAantal" name="fortgrachtBreakAantal" min="0" value="0" disabled>
-                    </div>
-                </div>
-                <div class="snack-option">
-                    <label for="waterijsjeCheckbox">Waterijsje</label>
-                    <span class="subtitle">€1.00</span>
-                    <div class="input-group">
-                        <input type="checkbox" id="waterijsjeCheckbox" name="snack" value="1.00">
-                        <label for="waterijsjeAantal">Aantal:</label>
-                        <input type="number" id="waterijsjeAantal" name="waterijsjeAantal" min="0" value="0" disabled>
-                    </div>
-                </div>
-                <div class="snack-option">
-                    <label for="pakjeDrinkenCheckbox">Pakje drinken</label>
-                    <span class="subtitle">€1.00</span>
-                    <div class="input-group">
-                        <input type="checkbox" id="pakjeDrinkenCheckbox" name="snack" value="1.00">
-                        <label for="pakjeDrinkenAantal">Aantal:</label>
-                        <input type="number" id="pakjeDrinkenAantal" name="pakjeDrinkenAantal" min="0" value="0" disabled>
-                    </div>
-                </div>
+    <span class="subtitle">Vink aan en vul een aantal in</span>
+    <div class="snacks-section">
+        <div class="snack-option">
+            <label for="remiseBreakCheckbox">Remise break: koek met limonade</label>
+            <span class="subtitle">€2.60</span>
+            <div class="input-group">
+                <input type="checkbox" id="remiseBreakCheckbox" name="snack" value="2.60">
+                <label for="remiseBreakAantal">Aantal:</label>
+                <input type="number" id="remiseBreakAantal" name="remiseBreakAantal" min="0" value="0" disabled>
+                <div id="remiseBreakAantalFout" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
             </div>
-            <h4 class="lunch-heading">Lunch aanbod </h4>
-            <span class="subtitle">Vink aan en vul een aantal in</span>
-            <div class="snack-option">
-                <label for="remiseLunchCheckbox">Remiselunch: friet, saus, snack en pakje drinken</label>
-                <span class="subtitle">€5.20</span>
-                <div class="input-group">
-                    <input type="checkbox" id="remiseLunchCheckbox" name="lunch" value="5.20">
-                    <label for="remiseLunchAantal">Aantal:</label>
-                    <input type="number" id="remiseLunchAantal" name="remiseLunchAantal" min="0" value="0" disabled>
-                </div>
+        </div>
+        <div class="snack-option">
+            <label for="kazerneBreakCheckbox">Kazerne break: zakje chips met limonade</label>
+            <span class="subtitle">€2.60</span>
+            <div class="input-group">
+                <input type="checkbox" id="kazerneBreakCheckbox" name="snack" value="2.60">
+                <label for="kazerneBreakAantal">Aantal:</label>
+                <input type="number" id="kazerneBreakAantal" name="kazerneBreakAantal" min="0" value="0" disabled>
+                <div id="kazerneBreakAantalFout" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
             </div>
-            <div class="snack-option">
-                <label for="tweeBroodjesCheckbox">Twee belegde broodjes en fruitsap</label>
-                <span class="subtitle">€10.30</span>
-                <div class="input-group">
-                    <input type="checkbox" id="tweeBroodjesCheckbox" name="lunch" value="10.30">
-                    <label for="tweeBroodjesAantal">Aantal:</label>
-                    <input type="number" id="tweeBroodjesAantal" name="tweeBroodjesAantal" min="0" value="0" disabled>
-                </div>
+        </div>
+        <div class="snack-option">
+            <label for="fortgrachtBreakCheckbox">Fortgracht break: fruit met limonade</label>
+            <span class="subtitle">€2.60</span>
+            <div class="input-group">
+                <input type="checkbox" id="fortgrachtBreakCheckbox" name="snack" value="2.60">
+                <label for="fortgrachtBreakAantal">Aantal:</label>
+                <input type="number" id="fortgrachtBreakAantal" name="fortgrachtBreakAantal" min="0" value="0" disabled>
+                <div id="fortgrachtBreakAantalFout" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
             </div>
-            <div class="snack-option">
-                <label for="eigenPicknickCheckbox">Nemen eigen picknick mee</label>
-                <input type="checkbox" id="eigenPicknickCheckbox" name="lunch" value="0">
+        </div>
+        <div class="snack-option">
+            <label for="waterijsjeCheckbox">Waterijsje</label>
+            <span class="subtitle">€1.00</span>
+            <div class="input-group">
+                <input type="checkbox" id="waterijsjeCheckbox" name="snack" value="1.00">
+                <label for="waterijsjeAantal">Aantal:</label>
+                <input type="number" id="waterijsjeAantal" name="waterijsjeAantal" min="0" value="0" disabled>
+                <div id="waterijsjeAantalFout" class="foute-invoermeldingg"></div> <!-- Foutdiv toegevoegd -->
             </div>
+        </div>
+        <div class="snack-option">
+            <label for="pakjeDrinkenCheckbox">Pakje drinken</label>
+            <span class="subtitle">€1.00</span>
+            <div class="input-group">
+                <input type="checkbox" id="pakjeDrinkenCheckbox" name="snack" value="1.00">
+                <label for="pakjeDrinkenAantal">Aantal:</label>
+                <input type="number" id="pakjeDrinkenAantal" name="pakjeDrinkenAantal" min="0" value="0" disabled>
+                <div id="pakjeDrinkenAantalFout" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
+            </div>
+        </div>
+    </div>
+
+    <h4 class="lunch-heading">Lunch aanbod</h4>
+    <span class="subtitle">Vink aan en vul een aantal in</span>
+    <div class="snack-option">
+        <label for="remiseLunchCheckbox">Remiselunch: friet, saus, snack en pakje drinken</label>
+        <span class="subtitle">€5.20</span>
+        <div class="input-group">
+            <input type="checkbox" id="remiseLunchCheckbox" name="lunch" value="5.20">
+            <label for="remiseLunchAantal">Aantal:</label>
+            <input type="number" id="remiseLunchAantal" name="remiseLunchAantal" min="0" value="0" disabled>
+            <div id="remiseLunchAantalFout" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
+        </div>
+    </div>
+    <div class="snack-option">
+        <label for="tweeBroodjesCheckbox">Twee belegde broodjes en fruitsap</label>
+        <span class="subtitle">€10.30</span>
+        <div class="input-group">
+            <input type="checkbox" id="tweeBroodjesCheckbox" name="lunch" value="10.30">
+            <label for="tweeBroodjesAantal">Aantal:</label>
+            <input type="number" id="tweeBroodjesAantal" name="tweeBroodjesAantal" min="0" value="0" disabled>
+            <div id="tweeBroodjesAantalFout" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
+        </div>
+    </div>
+    <div class="snack-option">
+        <label for="eigenPicknickCheckbox">Nemen eigen picknick mee</label>
+        <input type="checkbox" id="eigenPicknickCheckbox" name="lunch" value="0">
+    </div>
+
         </fieldset>
         <fieldset>
             <legend>Overzicht totaalprijs</legend>
@@ -263,10 +277,17 @@
             <legend>Vragen en Opmerkingen</legend>
             <label for="vragenOpmerkingen">Vragen en Opmerkingen</label>
             <textarea id="vragenOpmerkingen" name="vragenOpmerkingen" maxlength="600" rows="5"></textarea>
+            <div id="vragenOpmerkingenFout" class="foute-invoermelding"></div>
             <div id="tekenTeller">600 tekens over</div>
+            <div id="contact">
+            <p>Neem contact op via: <a href="mailto:onderwijs@geofort.nl">onderwijs@geofort.nl</a></p>
+            </div>
+
         </fieldset>
         <button type="submit" id="verzendknop">Verzenden</button>
+        <div id="verzendknopMeldingdiv" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
     </form>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/nl.js"></script>
 </body>
 </html>

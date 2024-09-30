@@ -6,7 +6,7 @@ $user = 'root'; // of je databasegebruikersnaam
 $pass = ''; // je databasewachtwoord
 $port = '3307';
 
-// Definieer de geldige waarden voor schooltype en lesmodule
+// Definieer de geldige waarden voor schooltype en keuzemodule
 $onderwijsModules = [
     'primairOnderwijs' => [
         'standaard' => ["Klimaat-Experience", "Klimparcours", "Voedsel-Innovatie", "Dynamische-Globe"],
@@ -29,12 +29,10 @@ try {
 
     // Verkrijg parameters van het AJAX-verzoek
     $schooltype = $_POST['schooltype'] ?? '';
-    $lesmodule = $_POST['lesmodule'] ?? '';
+    $keuzemodule = $_POST['lesmodule'] ?? '';
     $aantalLeerlingen = (int)($_POST['aantalleerlingen'] ?? 0); // Cast naar integer
 
-    error_log("Schooltype: " . $schooltype);
-    error_log("Lesmodule: " . $lesmodule);
-    error_log("Aantal Leerlingen: " . $aantalLeerlingen);
+   
 
     // Validatie van aantal leerlingen
     if ($aantalLeerlingen < 40 || $aantalLeerlingen > 160) {
@@ -54,12 +52,12 @@ try {
         exit;
     }
 
-    // Validatie van lesmodule
-    $isValidModule = in_array($lesmodule, $onderwijsModules[$schooltype]['keuze']);
+    // Validatie van keuzemodule
+    $isValidModule = in_array($keuzemodule, $onderwijsModules[$schooltype]['keuze']);
     if (!$isValidModule) {
         echo json_encode([
             'success' => false,
-            'message' => 'Ongeldige lesmodule.'
+            'message' => 'Ongeldige keuzemodule.'
         ]);
         exit;
     }
@@ -76,19 +74,16 @@ try {
         $schooltype = $schooltypeMapping[$schooltype];
     }
 
-    // Vervang streepjes in lesmodule door spaties
-    $lesmodule = str_replace('-', ' ', $lesmodule);
-
     // Voorbereid SQL-commando om de afbeelding op te halen
     $sql = "SELECT afbeelding FROM roosters 
             WHERE schooltype = :schooltype 
-            AND lesmodule = :lesmodule 
+            AND keuzemodule = :keuzemodule 
             AND leerlingen_min <= :aantalLeerlingen 
             AND leerlingen_max >= :aantalLeerlingen";
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':schooltype', $schooltype);
-    $stmt->bindParam(':lesmodule', $lesmodule);
+    $stmt->bindParam(':keuzemodule', $keuzemodule);
     $stmt->bindParam(':aantalLeerlingen', $aantalLeerlingen, PDO::PARAM_INT); // Bind als integer
     $stmt->execute();
 

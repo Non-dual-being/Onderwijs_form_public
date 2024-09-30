@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         voortgezetOnderbouw: {
             standaard: ["Klimaat-Experience", "Voedsel-Innovatie", "Dynamische-Globe", "Earth-Watch"],
-            keuze: ["Minecraft-Windenergiespeurtocht", "Stop-de-Klimaat-Klok"]
+            keuze: ["Minecraft-Windenergiespeurtocht", "Stop-de-Klimaat-Klok","Minecraft-Programmeren"]
         },
         voortgezetBovenbouw: {
             standaard: ["Klimaat-Experience", "Voedsel-Innovatie", "Dynamische-Globe", "Earth-Watch", "Stop-de-Klimaat-Klok"],
@@ -65,15 +65,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function valideerInvoer(veld, foutElement, validatieFunctie) {
         const waarde = veld.value.trim();
+        console.log("waarde van valideerf verzend: ", waarde);
         let foutmelding = validatieFunctie(waarde); // Roep de specifieke validatiefunctie aan
     
         if (foutmelding) {
             toonFoutmelding(foutElement, foutmelding, veld);
     
             // Controleer of de foutmelding specifiek is dat het veld leeg is
-            if (foutmelding === "Dit veld mag niet leeg blijven.") {
+            if (foutmelding === "Dit veld mag niet leeg blijven.")  {
                 veld.style.border = ''; // Geen rand bij lege velden
                 veld.style.backgroundColor = ''; // Geen achtergrondkleur bij lege velden
+            } else if (foutmelding === "Voer een geldig getal in tussen 0 en 200."){
+                veld.style.border = ''; 
+                veld.style.backgroundColor = '';         
+            } else if (foutmelding === "Aanvraag succesvol ontvangen!"){
+                veld.style.border = ''; 
+                veld.style.backgroundColor = '';
+                foutElement.style.left = '35%';
+                foutElement.style.width = '30%'; // Zorg voor iets extra ruimte
+                foutElement.style.fontSize = '18px';  // Maak de tekst groter
+                foutElement.style.backgroundColor = '#1c2541'; // Donkerblauw voor een professionele uitstraling
+                foutElement.style.color = '#ffffff'; // Witte tekst voor contrast
+                foutElement.style.padding = '15px'; // Extra padding voor ruimtelijkheid
+                foutElement.style.borderRadius = '8px'; // Subtiel afgeronde hoeken
+                foutElement.style.border = '4px solid white'; // Lichtere blauwachtige rand voor zachtheid
+                foutElement.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)'; // Lichte schaduw voor een zachte diepte
+                foutElement.style.position = 'absolute';
+                foutElement.style.zIndex = '2000';
+                foutElement.style.opacity = '1';
+                foutElement.style.display = 'flex'; // Flexbox om centrering te vereenvoudigen
+                foutElement.style.alignItems = 'center'; // Verticaal centreren
+                foutElement.style.justifyContent = 'center'; // Horizontaal centreren
+                foutElement.style.transition = 'opacity 0.6s ease, transform 0.3s ease';
+                foutElement.style.transform = 'scale(1)'; // Animatie bij het tonen        
             } else {
                 // Voor andere foutmeldingen, toon wel visuele feedback
                 veld.style.border = '1px solid #ff9900'; // Lichte oranje tint
@@ -81,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             
             return false; // Keer terug als er een foutmelding is
+
         } else {
             hideFoutmelding(foutElement);
             veld.style.border = ''; // Reset de rand naar de standaardwaarde
@@ -283,6 +308,35 @@ function valideerHoeKentGeoFort(waarde) {
     return ""; // Geen foutmelding
 }
 
+function valideerOnderwijsNiveau(waarde) {
+    const geldigeNiveaus = Object.keys(onderwijsModules); // Verkrijg de geldige onderwijsniveaus uit de modules
+    if (!waarde) {
+        return "Selecteer een onderwijsniveau."; // Geen waarde ingevuld
+    }
+    if (!geldigeNiveaus.includes(waarde)) {
+        return "Ongeldig onderwijsniveau geselecteerd."; // Niet in de lijst met geldige niveaus
+    }
+    return ""; // Geen foutmelding
+}
+
+// Stap 3: Functie voor validatie van de keuze module
+function valideerKeuzeModule(waarde) {
+
+
+    // Verzamel alle keuze modules uit het onderwijsModules object
+    const alleKeuzeModules = [
+        ...onderwijsModules.primairOnderwijs.keuze,
+        ...onderwijsModules.voortgezetOnderbouw.keuze,
+        ...onderwijsModules.voortgezetBovenbouw.keuze
+    ];
+
+    // Stap 5: Gebruik `some()` om te controleren of de gekozen module geldig is
+    const isGeldig = alleKeuzeModules.some(module => module === waarde);
+
+    return isGeldig ? "" : "De gekozen lesmodule is niet geldig."; // Retourneer lege string als alles geldig is, anders de foutmelding
+}
+
+
 function valideerAantalLeerlingen(waarde) {
     // Controleer of de invoer leeg is
     if (waarde.trim() === "") {
@@ -304,7 +358,64 @@ function valideerAantalLeerlingen(waarde) {
     return ""; // Geen foutmelding
 }
 
+let isTyping = false; // Vlag om te detecteren of de gebruiker aan het typen is
 
+
+function valideerInput(amountInput) {
+    const cijferRegex = /^[0-9]+$/; // Regex om alleen cijfers toe te staan
+    console.log("amountINput zelf in de valideercheck: ", amountInput)
+    console.log("amountINput.value zelf in de valideercheck: ", amountInput.value)
+    let waarde = amountInput.value.trim();
+   
+    // Als de invoer leeg is, zet de waarde automatisch op 0 en geen foutmelding
+    if (waarde === '') {
+        amountInput.value = 0;
+        return ""; // Geen foutmelding
+    }
+
+    // Trim leidende nullen (behalve als de waarde gewoon '0' is)
+    if (waarde.startsWith('0') && waarde.length > 1) {
+        waarde = waarde.replace(/^0+/, ''); // Verwijder leidende nullen
+        amountInput.value = waarde; // Update het invoerveld
+    }
+
+    // Controleer of de invoer alleen cijfers bevat
+    if (!cijferRegex.test(waarde)) {
+        amountInput.value = 0; // Zet de waarde naar 0 als de invoer ongeldig is
+        return "Voer een geldig getal in tussen 0 en 200."; // Ongeldige invoer
+    }
+
+    const aantal = parseInt(waarde, 10);
+
+    // Controleer of het aantal tussen 0 en 200 ligt
+    if (aantal < 0 || aantal > 200) {
+        amountInput.value = 0; // Zet de waarde naar 0 als het buiten het bereik valt
+        return "Voer een geldig getal in tussen 0 en 200."; // Ongeldig bereik
+    }
+
+
+    return ""; // Geen foutmelding
+}
+
+function valideerVragenenOpmerkingen(waarde) {
+    const maxLength = 600;  
+    const vragenenOpmerkingenRegex = /^[A-Za-z0-9\s.,:]+$/;
+
+    if (waarde.length === 0){
+        return "";
+    }
+    
+    if (waarde.length > maxLength) {
+        return `Dit veld mag max ${maxLength} tekens bevatten.`;
+    } else if (!vragenenOpmerkingenRegex.test(waarde)) {
+        return "Speciale tekens zoals } of / kunnen niet gebruikt worden";
+    }
+    return ""; // Geen foutmelding
+}
+
+function verzendknopSuccesMelding(waarde) {
+   return waarde;
+}
 
 
     // Algemene functie om foutmeldingen te tonen met display
@@ -425,9 +536,14 @@ function valideerAantalLeerlingen(waarde) {
         
         valideerInvoer(hoekentGeoFortVeld, hoekentGeoFortFoutElement, valideerHoeKentGeoFort);
     });
-    
-    
 
+    document.getElementById('vragenOpmerkingen').addEventListener('blur', function() {
+        const adresVeld = document.getElementById('vragenOpmerkingen');
+        const adresFoutElement = document.getElementById('vragenOpmerkingenFout');
+    
+        valideerInvoer(adresVeld, adresFoutElement, valideerVragenenOpmerkingen);
+    });
+    
 
     function werkKeuzeModulesBij1() {
         const onderwijsNiveau1 = document.getElementById('onderwijsNiveau').value || 'primairOnderwijs';
@@ -524,6 +640,7 @@ function valideerAantalLeerlingen(waarde) {
                     if (response.success) {
                         roosterAfbeeldingContainer.style.display = 'block';
                         roosterAfbeelding.src = response.afbeelding;
+                        console.log("afbeelding src van sql: ", response.afbeelding);
                         downloadButton.style.display = 'block';
 
                         downloadButton.onclick = function (event) {
@@ -618,7 +735,6 @@ function valideerAantalLeerlingen(waarde) {
 
     function scheduleHoverMessage4(message, element, className = 'hover-message') {
         clearTimeout(hoverTimeout);
-        console.log("Hover gepland voor:", element, "met bericht:", message, "en klasse:", className);
         hoverTimeout = setTimeout(() => showHoverMessage6(message, element, className), 200);
     }
     
@@ -673,9 +789,8 @@ function valideerAantalLeerlingen(waarde) {
     
         } else {
             // Voor andere hover-messages (niet agenda)
-            hoverMessageElement = document.querySelector(`.${className}`);
-    
             // Maak een nieuw hover-message element aan als het nog niet bestaat
+            hoverMessageElement = element.querySelector(`.${className}`);
             if (!hoverMessageElement) {
                 hoverMessageElement = document.createElement('div');
                 hoverMessageElement.className = className;
@@ -686,6 +801,7 @@ function valideerAantalLeerlingen(waarde) {
             hoverMessageElement.textContent = message;
             hoverMessageElement.style.display = 'block';
             hoverMessageElement.style.opacity = '1';
+
     
             // Positionering voor niet-agenda hover-messages
             const rect = element.getBoundingClientRect();
@@ -701,22 +817,27 @@ function valideerAantalLeerlingen(waarde) {
     function hideHoverMessage7() {
         const hoverMessageElement = document.querySelector('.hover-message');
         const hoverMessageElement_agenda = document.querySelector('.hover-message-agenda');
+    
         if (hoverMessageElement) {
             hoverMessageElement.style.opacity = '0';
+    
             setTimeout(() => {
                 hoverMessageElement.style.display = 'none';
+                hoverMessageElement.remove(); // Verwijder het element uit de DOM
             }, 300);
         }
-        else  {
-            if (hoverMessageElement_agenda) {
-                hoverMessageElement_agenda.style.opacity = '0';
-                setTimeout(() => {
-                    hoverMessageElement_agenda.style.display = 'none';
-                }, 400);
-            }
-
+    
+        if (hoverMessageElement_agenda) {
+            hoverMessageElement_agenda.style.opacity = '0';
+    
+            setTimeout(() => {
+                hoverMessageElement_agenda.style.display = 'none';
+                hoverMessageElement_agenda.remove(); // Verwijder agenda hover bericht uit de DOM
+            }, 400);
         }
     }
+    
+    
     
     const foodInputs = document.querySelectorAll('input[type="checkbox"][name="snack"], input[type="checkbox"][name="lunch"]');
     const foodSummaryDiv = document.getElementById('foodSummary');
@@ -724,12 +845,37 @@ function valideerAantalLeerlingen(waarde) {
     const bezoekDiv = document.getElementById('bezoek');
 
     foodInputs.forEach(input => {
+        const snackOption = input.closest('.snack-option');
+        const amountInput = snackOption ? snackOption.querySelector('input[type="number"]') : null;
+    
+        if (amountInput) {
+            // Start detectie van input-activiteit
+            amountInput.addEventListener('input', function () {
+                const foutElement = document.getElementById(`${amountInput.id}Fout`);
+    
+                // Valideer de invoer tijdens het typen
+                valideerInvoer(amountInput, foutElement, () => {
+                    return valideerInput(amountInput); // Input validatie, deze syntax is een callback functie, die valideerinput pas inzet nadat de divs zijn ontvangen
+                });
+            });
+        }
+    });
+    
+    foodInputs.forEach(input => {
         input.addEventListener('change', function () {
             const amountInput = input.closest('.snack-option').querySelector('input[type="number"]');
             if (amountInput) {
                 amountInput.disabled = !this.checked;
                 if (!this.checked) {
                     amountInput.value = 0;
+                    amountInput.disabled = true;  // Maak het invoerveld disabled
+
+                    // Reset inline styling (verwijder fout-styling)
+                    amountInput.style.border = '';  // Reset de border
+                    amountInput.style.backgroundColor = '';  // Reset de achtergrondkleur
+                    
+                    // Optioneel: Voeg een class of inline-styling toe voor disabled status
+                    amountInput.classList.add('disabled');  // Voeg disabled-stijl toe
                 }
             }
             updateFoodSummary9();
@@ -810,11 +956,12 @@ function valideerAantalLeerlingen(waarde) {
         }
     
         const disabledDates = [];
+        flatpickr.localize(flatpickr.l10ns.nl);
     
         flatpickr("#bezoekdatum", {
             locale: "nl",  // Locale Nederlands instellen
             enableTime: false,
-            dateFormat: "Y-m-d",
+            dateFormat: "d F Y",  // Dag, maand, jaar
             disable: [
                 function (date) {
                     const isWeekend = (date.getDay() === 0 || date.getDay() === 6);
@@ -846,6 +993,7 @@ function valideerAantalLeerlingen(waarde) {
                         applyStyling(dayElem, 'gray', 'white', 'Onbeschikbaar');
                     } else if (dateMatch.status === 'volgeboekt') {
                         applyStyling(dayElem, 'red', 'white', 'Volgeboekt', '#081540');
+                        dayElem.classList.add('flatpickr-disabled');
                     } else if (dateMatch.status === 'beperkt beschikbaar') {
                         const beschikbarePlaatsen = 160 - parseInt(dateMatch.totale_leerlingen, 10);
                         applyStyling(dayElem, '#081540', 'white', `Beperkt te boeken voor ${beschikbarePlaatsen} leerlingen`, 'green');
@@ -863,7 +1011,6 @@ function valideerAantalLeerlingen(waarde) {
                         dayElem.style.transition = 'box-shadow 0.3s ease, transform 0.3s ease';
                         dayElem.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.4)';
                         dayElem.style.borderRadius = '30px'; // Maak de hoeken ronder bij hover
-                        console.log(dayElem);
                     });
         
                     dayElem.addEventListener('mouseleave', () => {
@@ -932,10 +1079,8 @@ function loadCalendarData() {
         .then(data => {
             // Controleer of de ontvangen data niet leeg is
             if (data && data.length > 0) {
-                console.log("Ontvangen agenda data:", data);
                 initFlatpickr(data);  // Data wordt gebruikt als er beschikbaar is
             } else {
-                console.log("Geen data beschikbaar voor de agenda. Lege agenda wordt geladen.");
                 initFlatpickr([]);  // Laad Flatpickr met een lege dataset
             }
         })
@@ -948,15 +1093,201 @@ function loadCalendarData() {
 loadCalendarData();  // Kalenderdata wordt geladen bij het laden van de pagina
 
 document.getElementById('onderwijsFormulier').addEventListener('submit', function (event) {
-    event.preventDefault();
+    event.preventDefault();  // Voorkom standaard formulierverzending
 
-    // Valideer alle velden opnieuw voordat het formulier wordt verzonden
-    const isVoornaamGeldig = valideerVoornaam();
+    // Definieer alle verplichte velden die niet leeg mogen zijn
+    const verplichteVelden = [
+        { veld: document.getElementById('contactpersoonvoornaam'), foutElement: document.getElementById('voornaamFout'), validatieFunctie: valideerVoornaam },
+        { veld: document.getElementById('contactpersoonachternaam'), foutElement: document.getElementById('achternaamFout'), validatieFunctie: valideerAchternaam },
+        { veld: document.getElementById('emailadres'), foutElement: document.getElementById('emailFout'), validatieFunctie: valideerEmail },
+        { veld: document.getElementById('telefoonnummer'), foutElement: document.getElementById('telefoonFout'), validatieFunctie: valideerTelefoonnummer },
+        { veld: document.getElementById('totaalbegeleiders'), foutElement: document.getElementById('aantalBegeleidersFout'), validatieFunctie: valideerAantalBegeleiders },
+        { veld: document.getElementById('niveauleerjaar'), foutElement: document.getElementById('niveauLeerjaarFout'), validatieFunctie: valideerNiveauEnLeerjaar },
+        { veld: document.getElementById('schoolnaam'), foutElement: document.getElementById('naamSchoolFout'), validatieFunctie: valideerNaamSchool },
+        { veld: document.getElementById('adres'), foutElement: document.getElementById('adresFout'), validatieFunctie: valideerAdres },
+        { veld: document.getElementById('postcode'), foutElement: document.getElementById('postcodeFout'), validatieFunctie: valideerPostcode },
+        { veld: document.getElementById('plaats'), foutElement: document.getElementById('plaatsFout'), validatieFunctie: valideerPlaats },
+        { veld: document.getElementById('aantalLeerlingen'), foutElement: document.getElementById('aantalLeerlingenFout'), validatieFunctie: valideerAantalLeerlingen }
+    ];
 
-    // Als alles geldig is, verstuur het formulier
-    if (isVoornaamGeldig) {
-        this.submit();
+    let isFormulierGeldig = true;
+
+    // Valideer verplichte velden
+    for (const veldInfo of verplichteVelden) {
+        const isGeldig = valideerInvoer(veldInfo.veld, veldInfo.foutElement, veldInfo.validatieFunctie);
+
+        // Als er een fout is, focus op het eerste veld dat niet geldig is en stop met de controle
+        if (!isGeldig) {
+            veldInfo.veld.focus();  // Verplaats de focus naar het foutieve veld
+            isFormulierGeldig = false;
+            break;  // Stop met het valideren van andere velden
+        }
     }
+
+    // Voeg extra validatie toe voor het onderwijsniveau en de keuzemodule
+    const onderwijsNiveauVeld = document.getElementById('onderwijsNiveau');
+    const onderwijsNiveauFoutElement = document.getElementById('onderwijsNiveauFout');
+    const isGeldigNiveau = valideerInvoer(onderwijsNiveauVeld, onderwijsNiveauFoutElement, valideerOnderwijsNiveau);
+
+    if (!isGeldigNiveau) {
+        onderwijsNiveauVeld.focus();
+        return false;
+    }
+
+    const keuzeModuleVeld = document.getElementById('keuzeModule');
+    const keuzeModuleFoutElement = document.getElementById('keuzeModuleFout');
+    const isGeldigeModule = valideerInvoer(keuzeModuleVeld, keuzeModuleFoutElement, valideerKeuzeModule);
+
+    if (!isGeldigeModule) {
+        keuzeModuleVeld.focus();
+        return false;
+    }
+
+    // Voeg de validatie toe voor de datum met de flatpickr
+    const datumVeld = document.getElementById('bezoekdatum');
+    const datumFoutElement = document.getElementById('datumFout');
+    const datumPicker = datumVeld._flatpickr;
+    const geselecteerdeDatum = datumPicker.selectedDates[0];
+
+    if (!geselecteerdeDatum || isNaN(geselecteerdeDatum)) {
+        toonFoutmelding(datumFoutElement, "Selecteer een geldige datum.", datumVeld);
+        datumVeld.focus();
+        isFormulierGeldig = false;
+    } else {
+        const isDisabledDatum = datumPicker.config.disable.some(disableRule => {
+            if (typeof disableRule === 'function') {
+                return disableRule(geselecteerdeDatum);
+            }
+            if (disableRule instanceof Date) {
+                return disableRule.getTime() === geselecteerdeDatum.getTime();
+            }
+            return false;
+        });
+        if (isDisabledDatum) {
+            datumVeld.focus();
+            isFormulierGeldig = false;
+        } else {
+            hideFoutmelding(datumFoutElement);
+        }
+    }
+
+    // Valideer optionele velden
+    const optioneleVelden = [
+        { veld: document.getElementById('hoekentGeoFort'), foutElement: document.getElementById('hoekentGeoFortFout'), validatieFunctie: valideerHoeKentGeoFort },
+        { veld: document.getElementById('vragenOpmerkingen'), foutElement: document.getElementById('vragenOpmerkingenFout'), validatieFunctie: valideerVragenenOpmerkingen }
+    ];
+
+    for (const veldInfo of optioneleVelden) {
+        const waarde = veldInfo.veld.value.trim();
+        if (waarde !== "") {
+            const isGeldig = valideerInvoer(veldInfo.veld, veldInfo.foutElement, veldInfo.validatieFunctie);
+            if (!isGeldig) {
+                veldInfo.veld.focus();
+                isFormulierGeldig = false;
+                break;
+            }
+        }
+    }
+
+    const foodInputs = document.querySelectorAll('input[type="checkbox"][name="snack"], input[type="checkbox"][name="lunch"]');
+    foodInputs.forEach(input => {
+        const snackOption = input.closest('.snack-option');
+        const amountInput = snackOption ? snackOption.querySelector('input[type="number"]') : null;
+
+        if (input.checked && amountInput) {
+            const foutElement = document.getElementById(`${amountInput.id}Fout`);
+            const isValid = valideerInvoer(amountInput, foutElement, () => valideerInput(amountInput));
+            if (!isValid) {
+                amountInput.focus();
+                isFormulierGeldig = false;
+                return false;
+            }
+        } else if (!input.checked && amountInput) {
+            amountInput.value = 0;
+            amountInput.disabled = true;
+        }
+    });
+
+
+    const formData = new FormData(this);  // Verzamel alle formulierdata
+    console.log(formData);
+
+    // Verstuur AJAX-aanroep naar PHP voor server-side validatie
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'validatie.php', true);  // Verwijs naar je PHP-bestand
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            // Verwerk de JSON-response van PHP
+            const response = JSON.parse(xhr.responseText);
+    
+            if (response.success) {
+                // Als het formulier succesvol is verwerkt, toon succesbericht
+                const verzendknopDiv = document.getElementById("verzendknop");
+                const verzendMeldingdiv = document.getElementById("verzendknopMeldingdiv");    
+                verzendknopDiv.value = response.message;
+                valideerInvoer(verzendknopDiv, verzendMeldingdiv, verzendknopSuccesMelding);
+    
+            } else {
+                // Als er fouten zijn, koppel deze terug aan de juiste velden en functies
+                for (let veld in response.errors) {
+                    const foutElement = document.getElementById(`${veld}Fout`);
+                    const veldElement = document.getElementById(veld);
+                    
+                    if (foutElement && veldElement) {
+                        // Roep de juiste validatiefunctie aan op basis van het veld
+                        switch (veld) {
+                            case 'contactpersoonvoornaam':
+                                valideerInvoer(veldElement, foutElement, valideerVoornaam);
+                                break;
+                            case 'contactpersoonachternaam':
+                                valideerInvoer(veldElement, foutElement, valideerAchternaam);
+                                break;
+                            case 'emailadres':
+                                valideerInvoer(veldElement, foutElement, valideerEmail);
+                                break;
+                            case 'telefoonnummer':
+                                valideerInvoer(veldElement, foutElement, valideerTelefoonnummer);
+                                break;
+                            case 'totaalbegeleiders':
+                                valideerInvoer(veldElement, foutElement, valideerAantalBegeleiders);
+                                break;
+                            case 'niveauleerjaar':
+                                valideerInvoer(veldElement, foutElement, valideerNiveauEnLeerjaar);
+                                break;
+                            case 'schoolnaam':
+                                valideerInvoer(veldElement, foutElement, valideerNaamSchool);
+                                break;
+                            case 'adres':
+                                valideerInvoer(veldElement, foutElement, valideerAdres);
+                                break;
+                            case 'postcode':
+                                valideerInvoer(veldElement, foutElement, valideerPostcode);
+                                break;
+                            case 'plaats':
+                                valideerInvoer(veldElement, foutElement, valideerPlaats);
+                                break;
+                            case 'aantalLeerlingen':
+                                valideerInvoer(veldElement, foutElement, valideerAantalLeerlingen);
+                                break;
+                            case 'bezoekdatum':
+                                valideerInvoer(datumVeld, datumFoutElement, valideerDatum); // Voeg validatie voor datum toe
+                                break;
+                            // Voeg andere velden en validaties hier toe indien nodig
+                            default:
+                                toonFoutmelding(foutElement, response.errors[veld], veldElement);
+                                break;
+                        }
+                    }
+                }
+            }
+        } else {
+            // Foutafhandeling als er iets misging met de server-aanroep
+            console.error('Er is een fout opgetreden tijdens het versturen van het formulier.');
+        }
+    };
+    
+    xhr.send(formData);  // Verstuur de formulierdata naar PHP
+    
 });
 
 });

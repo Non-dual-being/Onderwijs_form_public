@@ -625,3 +625,55 @@ html::-webkit-scrollbar-button {
     text-align: left; /* Zorg dat de tekst netjes uitlijnt */
 }
 
+.hover-message{
+    position: absolute;  /* Maakt het mogelijk de foutmelding los van de flow te plaatsen */
+    background-color: #081540;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid white;
+    display: none; /* Verborgen als standaard */
+    z-index: 2000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: max(12px, 0.7vw);
+    transition: opacity 0.6s ease;
+    left: 0;  /* Plaatsing aan de linkerzijde van het inputveld */
+    top: -30px; /* Plaatsing net boven het inputveld, pas dit aan naar behoefte */
+    width: auto;  /* Zelfde breedte als het inputveld */
+    text-align: left; /* Zorg dat de tekst netjes uitlijnt */
+}
+#contact {
+    font-size: 14px;
+    color: #333;
+    margin-top: 15px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+  }
+  
+  #contact p {
+    margin: 0;
+    padding-top: 5px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  #contact a {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 1px solid #0056b3;
+    transition: all 0.3s ease;
+  }
+  
+  .flatpickr-disabled {
+    cursor: crosshair;
+    opacity: 0.4;  /* Maak het element wat transparanter */
+    pointer-events: none; /* Zorg ervoor dat het element niet aanklikbaar is */
+}
+
+.flatpickr-disabled:hover {
+    cursor: crosshair;
+    opacity: 0.4;  /* Maak het element wat transparanter */
+    pointer-events: none; /* Zorg ervoor dat het element niet aanklikbaar is */
+}
+
