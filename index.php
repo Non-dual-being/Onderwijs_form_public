@@ -25,15 +25,21 @@
             <input type="email" id="emailadres" name="emailadres" required>
             <div id="emailFout" class="foute-invoermelding"></div>
             
-            <label for="telefoonnummer">Telefoonnummer</label>
-            <input type="tel" id="telefoonnummer" name="telefoonnummer" required>
-            <div id="telefoonFout" class="foute-invoermelding"></div>
-            
-            
-            <label for="totaalbegeleiders">Aantal begeleiders</label>
-            <input type="number" id="totaalbegeleiders" name="totaalbegeleiders" min="1" max="50" step="1" inputmode="numeric" pattern="[0-9]*" required>
-            <div id="aantalBegeleidersFout" class="foute-invoermelding"></div>
+            <label for="schoolTelefoonnummer">Telefoonnummer school</label>
+            <input type="tel" id="schoolTelefoonnummer" name="schoolTelefoonnummer" required>
+            <div id="schoolTelefoonnummerFout" class="foute-invoermelding"></div>
 
+            <label for="contactTelefoonnummer">Telefoonnummer contactpersoon</label>
+            <input type="tel" id="contactTelefoonnummer" name="contactTelefoonnummer" required>
+            <div id="contactTelefoonnummerFout" class="foute-invoermelding"></div>
+
+            <div class="meer-informatie-container">
+            <a href="#" class="meerInformatieToggle" data-target="telefoonInfo"><span>Meer informatie over telefoonnummers</span></a>
+                <div id="telefoonInfo" class="meerInformatieContent">
+                    <p><strong>Telefoonnummer van de school:</strong> Dit nummer wordt gebruikt voor alle communicatie met de school zelf.</p>
+                    <p><strong>Telefoonnummer contactpersoon:</strong> Dit nummer is voor de contactpersoon die tijdens het schoolbezoek bereikbaar is.</p>
+                </div>
+            </div>
 
             <label for="niveauleerjaar">Niveau en Leerjaar</label>
             <input type="text" id="niveauleerjaar" name="niveauleerjaar" required>
@@ -62,7 +68,7 @@
             
             
             <label for="aankomsttijd">Wij verwachten u om</label>
-            <input type="time" id="aankomsttijd" name="aankomsttijd" value="10:00" readonly required data-hover-message="Standaard aankomsttijd">
+            <input type="time" id="aankomsttijd" name="aankomsttijd" value="09:45" readonly required data-hover-message="Standaard aankomsttijd">
 
             <label for="vertrektijd">Het vertrek is om</label>
             <input type="time" id="vertrektijd" name="vertrektijd" value="15:00" readonly required data-hover-message="Standaard vertrektijd">
@@ -78,7 +84,9 @@
                 <h4>Kosten en Voorwaarden</h4>
                 <p>
                     • Minimaal 40 leerlingen, maximaal 160 leerlingen.<br>
-                    • €20 per leerling (incl. BTW), per 8 leerlingen is 1 begeleider gratis. Deze kosten zijn inclusief:
+                    • €20,- per leerling (incl. BTW), per 8 leerlingen is 1 begeleider gratis. <br>
+                    • Deze kosten zijn inclusief:
+                  
                 </p>
                 <ul class="secondary-list">
                     <li>BTW</li>
@@ -91,7 +99,8 @@
                 <h4>Tijdschema</h4>
                 <p>
                     • Een bezoek kan plaatsvinden tussen 09:45 en 15:00 uur, met een maximum van 5 ronden. Na een welkomswoord start de eerste lesmodule om 10:15 en eindigt de laatste om 14:45.<br>
-                    • Museumjaarkaart is niet geldig op onderwijsarrangementen. Cultuurkaart / CJP zijn wel geldig. Vul bij de opmerkingen naam, pashouder en CJP-nummer in.
+                    • Museumjaarkaart is niet geldig op onderwijsarrangementen. Cultuurkaart / CJP zijn wel geldig. Vul bij de opmerkingen naam, pashouder en CJP-nummer in.<br>
+                    • In geval van allergieën, graag zelf lunch meenemen.
                 </p>
             </div>
         </fieldset>
@@ -117,6 +126,19 @@
             <label for="aantalLeerlingen">Vul het aantal leerlingen in</label>
             <input type="number" id="aantalLeerlingen" name="aantalLeerlingen" min="40" max="160" step="1" required placeholder="min=40, max=160">
             <div id="aantalLeerlingenFout" class="foutmelding"></div>
+
+            <label for="totaalbegeleiders">Aantal begeleiders</label>
+            <input type="number" id="totaalbegeleiders" name="totaalbegeleiders" min="1" max="50" step="1" inputmode="numeric" pattern="[0-9]*" required>
+            <div id="aantalBegeleidersFout" class="foute-invoermelding"></div>
+
+            <div class="meer-informatie-container">
+                <a href="#" class="meerInformatieToggle" data-target="begeleidersInfo">Meer informatie over aantal begeleiders</a>
+                <div id="begeleidersInfo" class="meerInformatieContent">
+                    <p>
+                        GeoFort verwacht minimaal <strong>één begeleider per groep leerlingen</strong>. Voor elke <strong>8 leerlingen</strong> is <strong>één begeleider</strong> gratis inbegrepen. Voor aanvullende begeleiders wordt er <strong>€20</strong> per begeleider in rekening gebracht.
+                    </p>
+                </div>
+            </div>
         </fieldset>
         
 
@@ -158,20 +180,21 @@
                 <h4>OPTIONEEL BIJ TE BOEKEN</h4>
                 <h5>Snacks</h5>
                 <ul>
-                    <li>remiseBreak, kazerneBreak en fortgrachtBreak</li>
-                    <li>waterijsje en pakje drinken</li>
+                    <li>Remise break, Kazerne break en Fortgracht break</li>
+                    <li>Waterijsje en glaasje limonade</li>
                 </ul>
                 <h5>Lunch</h5>
                 <ul>
-                    <li>Remiselunch </li>
-                    <li>tweeBroodjesAantal</li>
+                <li><strong>Remiselunch</strong> - tarwebolletjes met vegetarisch beleg <strong><small>(leerlingen en begeleiders)</small></strong></li>
+                <li><strong>Nemen eigen picknick mee</strong></li>
+                
                 </ul>
             </div>
             <h4 class="snacks-heading">Snack keuze menu</h4>
     <span class="subtitle">Vink aan en vul een aantal in</span>
     <div class="snacks-section">
         <div class="snack-option">
-            <label for="remiseBreakCheckbox">Remise break: koek met limonade</label>
+            <label for="remiseBreakCheckbox">Remise break: ontbijtkoek met limonade</label>
             <span class="subtitle">€2.60</span>
             <div class="input-group">
                 <input type="checkbox" id="remiseBreakCheckbox" name="snack" value="2.60">
@@ -211,7 +234,7 @@
             </div>
         </div>
         <div class="snack-option">
-            <label for="pakjeDrinkenCheckbox">Pakje drinken</label>
+            <label for="pakjeDrinkenCheckbox">Glaasje limonade</label>
             <span class="subtitle">€1.00</span>
             <div class="input-group">
                 <input type="checkbox" id="pakjeDrinkenCheckbox" name="snack" value="1.00">
@@ -225,23 +248,13 @@
     <h4 class="lunch-heading">Lunch aanbod</h4>
     <span class="subtitle">Vink aan en vul een aantal in</span>
     <div class="snack-option">
-        <label for="remiseLunchCheckbox">Remiselunch: friet, saus, snack en pakje drinken</label>
+        <label for="remiseLunchCheckbox">Remiselunch: tarwebolletjes met vegetarisch beleg</label>
         <span class="subtitle">€5.20</span>
         <div class="input-group">
             <input type="checkbox" id="remiseLunchCheckbox" name="lunch" value="5.20">
             <label for="remiseLunchAantal">Aantal:</label>
             <input type="number" id="remiseLunchAantal" name="remiseLunchAantal" min="0" value="0" disabled>
             <div id="remiseLunchAantalFout" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
-        </div>
-    </div>
-    <div class="snack-option">
-        <label for="tweeBroodjesCheckbox">Twee belegde broodjes en fruitsap</label>
-        <span class="subtitle">€10.30</span>
-        <div class="input-group">
-            <input type="checkbox" id="tweeBroodjesCheckbox" name="lunch" value="10.30">
-            <label for="tweeBroodjesAantal">Aantal:</label>
-            <input type="number" id="tweeBroodjesAantal" name="tweeBroodjesAantal" min="0" value="0" disabled>
-            <div id="tweeBroodjesAantalFout" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
         </div>
     </div>
     <div class="snack-option">

@@ -4,8 +4,8 @@ session_start();
 // Database inloggegevens
 $host = '127.0.0.1';
 $dbname = 'school_db';
-$user = 'root'; // Of je databasegebruikersnaam
-$pass = ''; // Je databasewachtwoord
+$user = 'root'; 
+$pass = ''; 
 $port = '3307';
 
 header('Content-Type: application/json');  // Zorg ervoor dat de PHP-respons in JSON-formaat is
@@ -31,13 +31,13 @@ $onderwijsModules = [
 function generateDisabledDates() {
     $disabledDates = [];
 
-    // Genereer weekends
+    // Voeg weekenden en vakantiedata toe aan de lijst van niet-beschikbare data
     $currentDate = new DateTime('now');
     $endOfYearDate = new DateTime($currentDate->format('Y') . '-12-31');
     
     // Voeg weekenden toe
     while ($currentDate <= $endOfYearDate) {
-        if (in_array($currentDate->format('N'), [6, 7])) {  // 6 = zaterdag, 7 = zondag
+        if (in_array($currentDate->format('N'), [6, 7])) {
             $disabledDates[] = $currentDate->format('Y-m-d');
         }
         $currentDate->modify('+1 day');
@@ -64,14 +64,11 @@ function generateDisabledDates() {
     return $disabledDates;
 }
 
-
-// Functie om een string te trimmen, te ontsmetten en te beperken tot een maximumlengte
 function sanitize_input($data, $maxLength) {
     $data = htmlspecialchars(stripslashes(trim($data)));
-    return substr($data, 0, $maxLength);  // Houd rekening met de maximale lengte
+    return substr($data, 0, $maxLength);
 }
 
-// Functie om de Nederlandse maandnamen naar Engelse maandnamen om te zetten
 function convertDutchToEnglishDate($date) {
     $dutchMonths = [
         'januari', 'februari', 'maart', 'april', 'mei', 'juni', 
@@ -84,10 +81,38 @@ function convertDutchToEnglishDate($date) {
     ];
 
     return str_replace($dutchMonths, $englishMonths, $date);
+
+}
+
+
+
+$remiseBreakAantal = isset($_POST['remiseBreakAantal']) ? (int) $_POST['remiseBreakAantal'] : 0;
+$kazerneBreakAantal = isset($_POST['kazerneBreakAantal']) ? (int) $_POST['kazerneBreakAantal'] : 0;
+$fortgrachtBreakAantal = isset($_POST['fortgrachtBreakAantal']) ? (int) $_POST['fortgrachtBreakAantal'] : 0;
+$waterijsjeAantal = isset($_POST['waterijsjeAantal']) ? (int) $_POST['waterijsjeAantal'] : 0;
+$pakjeDrinkenAantal = isset($_POST['pakjeDrinkenAantal']) ? (int) $_POST['pakjeDrinkenAantal'] : 0;
+$remiseLunchAantal = isset($_POST['remiseLunchAantal']) ? (int) $_POST['remiseLunchAantal'] : 0;
+$eigenPicknick = isset($_POST['eigenPicknickCheckbox']) ? 1 : 0;
+
+// Log de waarden die zijn binnengekomen via het formulier
+error_log("remiseBreakAantal: " . $remiseBreakAantal);
+error_log("kazerneBreakAantal: " . $kazerneBreakAantal);
+error_log("fortgrachtBreakAantal: " . $fortgrachtBreakAantal);
+error_log("waterijsjeAantal: " . $waterijsjeAantal);
+error_log("pakjeDrinkenAantal: " . $pakjeDrinkenAantal);
+error_log("remiseLunchAantal: " . $remiseLunchAantal);
+error_log("eigenPicknick: " . $eigenPicknick);
+
+if (!is_int($remiseBreakAantal)) {
+    error_log("remiseBreakAantal is geen integer: " . gettype($remiseBreakAantal));
+}
+
+if (!is_int($kazerneBreakAantal)) {
+    error_log("remiseBreakAantal is geen integer: " . gettype($remiseBreakAantal));
 }
 
 try {
-    // Maak een verbinding met de database
+    // Maak verbinding met de database
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -115,12 +140,20 @@ try {
         $email = sanitize_input($_POST['emailadres'], 100);
     }
 
-    // Telefoonnummer validatie
-    if (empty($_POST['telefoonnummer']) || !preg_match("/^(\+31|0)[1-9][0-9]{8}$/", $_POST['telefoonnummer'])) {
-        $errors['telefoonnummer'] = "Ongeldig telefoonnummer.";
+    // Telefoonnummer validatie 1
+    if (empty($_POST['schoolTelefoonnummer']) || !preg_match("/^(\+31|0)[1-9][0-9]{8}$/", $_POST['schoolTelefoonnummer'])) {
+        $errors['schoolTelefoonnummer'] = "Ongeldig school-telefoonnummer.";
     } else {
-        $telefoonnummer = sanitize_input($_POST['telefoonnummer'], 15);
+        $schooltelefoonnummer = sanitize_input($_POST['schoolTelefoonnummer'], 15);
     }
+
+     // Telefoonnummer validatie 1
+     if (empty($_POST['contactTelefoonnummer']) || !preg_match("/^(\+31|0)[1-9][0-9]{8}$/", $_POST['contactTelefoonnummer'])) {
+        $errors['contactTelefoonnummer'] = "Ongeldig contact-telefoonnummer.";
+    } else {
+        $contacttelefoonnummer = sanitize_input($_POST['contactTelefoonnummer'], 15);
+    }
+
 
     // Aantal leerlingen validatie
     $aantalLeerlingen = (int) ($_POST['aantalLeerlingen'] ?? 0);
@@ -190,7 +223,38 @@ try {
         $keuze_module = sanitize_input($keuzemodule, 50);
     }
 
-    // Check of er validatiefouten zijn
+   // Voor elke snack/lunch validatie met het juiste veldnaam in geval van fout
+
+   $remiseBreakAantal=201;
+
+if (!is_int($remiseBreakAantal) || $remiseBreakAantal < 0 || $remiseBreakAantal > 200) {
+    $errors['remiseBreakAantal'] = "Ongeldig aantal voor Remise Break. Moet tussen 0 en 200 liggen.";
+}
+if (!is_int($kazerneBreakAantal) || $kazerneBreakAantal < 0 || $kazerneBreakAantal > 200) {
+    $errors['kazerneBreakAantal'] = "Ongeldig aantal voor Kazerne Break. Moet tussen 0 en 200liggen.";
+}
+if (!is_int($fortgrachtBreakAantal) || $fortgrachtBreakAantal < 0 || $fortgrachtBreakAantal > 200) {
+    $errors['fortgrachtBreakAantal'] = "Ongeldig aantal voor Fortgracht Break. Moet tussen 0 en 200 liggen.";
+}
+if (!is_int($waterijsjeAantal) || $waterijsjeAantal < 0 || $waterijsjeAantal > 200) {
+    $errors['waterijsjeAantal'] = "Ongeldig aantal voor Waterijsje. Moet tussen 0 en 200 liggen.";
+}
+if (!is_int($pakjeDrinkenAantal) || $pakjeDrinkenAantal < 0 || $pakjeDrinkenAantal > 200) {
+    $errors['pakjeDrinkenAantal'] = "Ongeldig aantal voor Pakje Drinken. Moet tussen 0 en 200 liggen.";
+}
+
+
+if (!is_int($remiseLunchAantal) || $remiseLunchAantal < 0 || $remiseLunchAantal > 200) {
+    $errors['remiseLunchAantal'] = "Ongeldig aantal voor Remise Lunch. Moet tussen 0 en 200 liggen.";
+}
+
+
+if (!in_array($eigenPicknick, [0, 1], true)) {
+    $errors['eigenPicknick'] = "Ongeldige waarde voor Eigen Picknick. Moet 0 of 1 zijn.";
+}
+
+
+   
     if (!empty($errors)) {
         error_log("Validatiefouten: " . print_r($errors, true));
         echo json_encode([
@@ -223,32 +287,84 @@ try {
     }
 
     if ($result['aantal_definitieve_boekingen'] == 1 && ($result['totale_leerlingen'] + $aantalLeerlingen) > 160) {
-        error_log("aantal leerlingen is teveel, namelijk: ". ($result['totale_leerlingen'] + $aantalLeerlingen) );
+        $maxMogelijk = 160 - $result['totale_leerlingen']; // Bereken het maximaal mogelijke aantal leerlingen
+        error_log("Aantal leerlingen is teveel, namelijk: " . ($result['totale_leerlingen'] + $aantalLeerlingen));
         echo json_encode([
             'success' => false,
-            'errors' => ['aantal_leerlingen' => 'Het totale aantal leerlingen zou groter zijn dan 160 met deze boeking.']
+            'errors' => ['aantalLeerlingen' => "Er is voor {$aantalLeerlingen} leerlingen geboekt: maximaal {$maxMogelijk} mogelijk."]
         ]);
         exit;
     }
 
     // Voeg de aanvraag toe aan de database
-    $sql = "INSERT INTO aanvragen (voornaam_contactpersoon, achternaam_contactpersoon, email, telefoon, aantal_leerlingen, bezoekdatum, schoolnaam, adres, postcode, plaats, keuze_module, status)
-            VALUES (:voornaam, :achternaam, :email, :telefoonnummer, :aantal_leerlingen, :bezoekdatum, :schoolnaam, :adres, :postcode, :plaats, :keuze_module, 'Definitief')";
+// Voeg de aanvraag toe aan de database met snacks en lunches
+$sql = "INSERT INTO aanvragen (
+    voornaam_contactpersoon, 
+    achternaam_contactpersoon, 
+    email, 
+    school_telefoon, 
+    contact_telefoon, 
+    aantal_leerlingen, 
+    bezoekdatum, 
+    schoolnaam, 
+    adres, 
+    postcode, 
+    plaats, 
+    keuze_module, 
+    remise_break, 
+    kazerne_break, 
+    fortgracht_break, 
+    waterijsje, 
+    glas_limonade, 
+    remise_lunch, 
+    eigen_picknick, 
+    status
+) VALUES (
+    :voornaam, 
+    :achternaam, 
+    :email, 
+    :schooltelefoonnummer, 
+    :contacttelefoonnummer, 
+    :aantal_leerlingen, 
+    :bezoekdatum, 
+    :schoolnaam, 
+    :adres, 
+    :postcode, 
+    :plaats, 
+    :keuze_module, 
+    :remiseBreakAantal, 
+    :kazerneBreakAantal, 
+    :fortgrachtBreakAantal, 
+    :waterijsjeAantal, 
+    :pakjeDrinkenAantal, 
+    :remiseLunchAantal, 
+    :eigenPicknick, 
+    'Definitief'
+)";
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':voornaam' => $voornaam,
-        ':achternaam' => $achternaam,
-        ':email' => $email,
-        ':telefoonnummer' => $telefoonnummer,
-        ':aantal_leerlingen' => $aantalLeerlingen,
-        ':bezoekdatum' => $bezoekdatum,
-        ':schoolnaam' => $schoolnaam,
-        ':adres' => $adres,
-        ':postcode' => $postcode,
-        ':plaats' => $plaats,
-        ':keuze_module' => $keuze_module
-    ]);
+$stmt = $pdo->prepare($sql);
+$stmt->execute([
+':voornaam' => $voornaam,
+':achternaam' => $achternaam,
+':email' => $email,
+':schooltelefoonnummer' => $schooltelefoonnummer,
+':contacttelefoonnummer' => $contacttelefoonnummer,
+':aantal_leerlingen' => $aantalLeerlingen,
+':bezoekdatum' => $bezoekdatum,
+':schoolnaam' => $schoolnaam,
+':adres' => $adres,
+':postcode' => $postcode,
+':plaats' => $plaats,
+':keuze_module' => $keuze_module,
+':remiseBreakAantal' => $remiseBreakAantal,
+':kazerneBreakAantal' => $kazerneBreakAantal,
+':fortgrachtBreakAantal' => $fortgrachtBreakAantal,
+':waterijsjeAantal' => $waterijsjeAantal,
+':pakjeDrinkenAantal' => $pakjeDrinkenAantal,
+':remiseLunchAantal' => $remiseLunchAantal,
+':eigenPicknick' => $eigenPicknick
+]);
+
 
     // Succesvolle invoer
     echo json_encode([

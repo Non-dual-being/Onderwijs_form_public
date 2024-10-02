@@ -241,6 +241,127 @@ p {
     margin: 5px 0;
 }
 
+/* Stijl voor de "meer informatie" link */
+
+.meerInformatieToggle span {
+    text-decoration: none; /* Zorg dat de tekst in de span geen onderstreping krijgt */
+}
+#meerInformatieToggle {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 1px solid #0056b3;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+}
+
+#meerInformatieToggle:hover {
+    color: #ff0000;
+    border-bottom: 1px solid #ff0000;
+    text-decoration: underline;
+}
+
+/* Stijl voor het informatieblok */
+/* Stijl voor het informatieblok */
+#meerInformatieContent {
+    display: none; /* Verborgen bij het laden */
+    background-color: #081540; /* Donkerblauw voor consistentie met de footer */
+    padding: 15px;
+    margin-top: 5px;
+    border: 1px solid #e0e0e0; /* Lichtgrijze rand */
+    border-radius: 5px; /* Subtiel afgerond zoals andere secties */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Zachte schaduw voor diepte */
+    font-family: 'Courier New', Courier, monospace; /* Notitieblokstijl */
+    font-size: 14px;
+    color: white; /* Witte tekst voor contrast */
+    max-width: 100%;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+}
+
+/* Algemene stijl voor de 'meer informatie' link */
+.meerInformatieToggle {
+    color: #0056b3;
+    text-decoration: none!important;
+    font-weight: bold;
+    border-bottom: 1px solid #0056b3;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.meerInformatieToggle::before,
+.meerInformatieToggle::after {
+    content: "";
+    text-decoration: none !important; /* Zorg ervoor dat er geen onderstreping op pseudo-elementen is */
+}
+
+.meerInformatieToggle:hover {
+    color: #ff0000;
+    border-bottom: 1px solid #ff0000;
+    text-decoration: underline;
+}
+
+/* Stijl voor het informatieblok */
+.meerInformatieContent {
+    display: none; /* Verborgen bij het laden */
+    background-color: #081540; /* Donkerblauw voor consistentie */
+    padding: 15px;
+    margin-top: 5px;
+    border: 1px solid #e0e0e0; /* Lichtgrijze rand */
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Zachte schaduw */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    color: white;
+    max-width: 100%;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+}
+
+/* Stijl wanneer het informatieblok actief is */
+.meerInformatieContent.open {
+    display: block;
+    max-height: 200px; /* Beperkte hoogte als het wordt geopend */
+    opacity: 1;
+    transition: max-height 0.5s ease-in-out, opacity 0.3s ease;
+}
+
+/* Eventuele headers in het informatieblok */
+.meerInformatieContent h4 {
+    color: #DC493A; /* Fel rood zoals in de informative-text */
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+/* Specifieke paragraafstijl voor het informatieblok */
+.meerInformatieContent p {
+    margin-left: 10px; /* Indent de tekst voor een nette uitlijning */
+    color: white; /* Zorg ervoor dat de tekst wit blijft */
+    font-size: 1em;
+}
+
+/* Opsommingstekenlijst in het informatieblok */
+.meerInformatieContent ul {
+    list-style: disc;
+    margin-left: 20px;
+    font-size: 1em;
+    padding-left: 20px;
+    margin-top: 10px;
+    color: white; /* Witte tekst voor goede leesbaarheid */
+}
+
+
 
 
 #roosterAfbeeldingContainer {
@@ -409,6 +530,7 @@ h5{
 .lunch-option {
     margin-bottom: 10px;
 }
+
 
 input[type="checkbox"] {
     -webkit-appearance: none;  /* Chrome, Safari, Opera */
@@ -664,16 +786,17 @@ html::-webkit-scrollbar-button {
     border-bottom: 1px solid #0056b3;
     transition: all 0.3s ease;
   }
+
+  
+  #contact a:hover {
+    color: #ff0000;
+    border-bottom: 1px solid #ff0000;
+    text-decoration: underline;
+  }
   
   .flatpickr-disabled {
-    cursor: crosshair;
     opacity: 0.4;  /* Maak het element wat transparanter */
     pointer-events: none; /* Zorg ervoor dat het element niet aanklikbaar is */
 }
 
-.flatpickr-disabled:hover {
-    cursor: crosshair;
-    opacity: 0.4;  /* Maak het element wat transparanter */
-    pointer-events: none; /* Zorg ervoor dat het element niet aanklikbaar is */
-}
 
