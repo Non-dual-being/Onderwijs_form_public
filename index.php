@@ -72,6 +72,14 @@
 
             <label for="vertrektijd">Het vertrek is om</label>
             <input type="time" id="vertrektijd" name="vertrektijd" value="15:00" readonly required data-hover-message="Standaard vertrektijd">
+
+            <div class="meer-informatie-container">
+            <a href="#" class="meerInformatieToggle" data-target="bezoektijdenInfo"><span>Meer informatie over bezoektijden</span></a>
+            <div id="bezoektijdenInfo" class="meerInformatieContent">
+                <p>GeoFort hanteert standaard bezoektijden, in overleg kan het bezoek afwijken van de standaardtijden.</p>
+                <p>Vul onderaan het formulier bij de sectie <strong class="highlighted-text">Vragen en Opmerkingen</strong> je wensen in ten aanzien van de bezoektijden.</p>
+            </div>
+
             
             <label for="hoekentGeoFort">Hoe kent u GeoFort?</label>
             <input type="text" id="hoekentGeoFort" name="hoekentGeoFort">
@@ -132,7 +140,7 @@
             <div id="aantalBegeleidersFout" class="foute-invoermelding"></div>
 
             <div class="meer-informatie-container">
-                <a href="#" class="meerInformatieToggle" data-target="begeleidersInfo">Meer informatie over aantal begeleiders</a>
+                <a href="#" class="meerInformatieToggle" data-target="begeleidersInfo"><span>Meer informatie over aantal begeleiders</span></a>
                 <div id="begeleidersInfo" class="meerInformatieContent">
                     <p>
                         GeoFort verwacht minimaal <strong>één begeleider per groep leerlingen</strong>. Voor elke <strong>8 leerlingen</strong> is <strong>één begeleider</strong> gratis inbegrepen. Voor aanvullende begeleiders wordt er <strong>€20</strong> per begeleider in rekening gebracht.
@@ -234,7 +242,7 @@
             </div>
         </div>
         <div class="snack-option">
-            <label for="pakjeDrinkenCheckbox">Glaasje limonade</label>
+            <label for="pakjeDrinkenCheckbox">limonade drink</label>
             <span class="subtitle">€1.00</span>
             <div class="input-group">
                 <input type="checkbox" id="pakjeDrinkenCheckbox" name="snack" value="1.00">
@@ -267,20 +275,20 @@
             <legend>Overzicht totaalprijs</legend>
             <div class="informative-text overview-section">
                 <div class="price-summary-section">
-                    <div class="summary-category">
+                    <div>
                         <h3>Bezoek</h3>
-                        <div id="bezoek" class="summary-item">
+                        <div id="bezoek" class="summary-category">
                             <!-- Selected visit price displayed here -->
                         </div>
                     </div>
-                    <div class="summary-category">
+                    <div>
                         <h3>Eten en drinken</h3>
                         <div id="foodSummary" class="summary-category">
                             <!-- Selected food options will be displayed here -->
                         </div>
                     </div>
                     <div class="total-price">
-                        <span>Totaalprijs: €<span id="totalPrice">0.00</span></span>
+                        <span>Totale prijs: €<span id="totalPrice">0.00</span></span>
                     </div>
                 </div>
             </div>

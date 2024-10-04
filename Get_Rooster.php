@@ -10,11 +10,11 @@ $port = '3307';
 $onderwijsModules = [
     'primairOnderwijs' => [
         'standaard' => ["Klimaat-Experience", "Klimparcours", "Voedsel-Innovatie", "Dynamische-Globe"],
-        'keuze' => ["Minecraft-klimaatspeurtocht", "Earth-Watch"]
+        'keuze' => ["Minecraft-Klimaatspeurtocht", "Earth-Watch","Stop-de-Klimaat-Klok"]
     ],
     'voortgezetOnderbouw' => [
         'standaard' => ["Klimaat-Experience", "Voedsel-Innovatie", "Dynamische-Globe", "Earth-Watch"],
-        'keuze' => ["Minecraft-windenergiespeurtocht", "Stop-de-Klimaat-Klok"]
+        'keuze' => ["Minecraft-Windenergiespeurtocht", "Stop-de-Klimaat-Klok","Minecraft-Programmeren"]
     ],
     'voortgezetBovenbouw' => [
         'standaard' => ["Klimaat-Experience", "Voedsel-Innovatie", "Dynamische-Globe", "Earth-Watch", "Stop-de-Klimaat-Klok"],
@@ -31,6 +31,8 @@ try {
     $schooltype = $_POST['schooltype'] ?? '';
     $keuzemodule = $_POST['lesmodule'] ?? '';
     $aantalLeerlingen = (int)($_POST['aantalleerlingen'] ?? 0); // Cast naar integer
+
+   
 
    
 

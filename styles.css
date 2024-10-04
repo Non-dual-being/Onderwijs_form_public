@@ -231,7 +231,7 @@ input, select, button {
 }
 
 h3 {
-    font: 18px BwNista, -apple-system, BlinkMacSystemFont, sans-serif;
+    font: 20px BwNista, -apple-system, BlinkMacSystemFont, sans-serif;
     color: #DC493A;
     margin: 0px 0px 10px;
     font-weight: bold;
@@ -361,6 +361,10 @@ p {
     color: white; /* Witte tekst voor goede leesbaarheid */
 }
 
+.highlighted-text {
+    font-size: 0.9em; /* Vergroot de tekst */
+    color: #ff5722;   /* Fel oranje kleur */
+}
 
 
 
@@ -560,7 +564,10 @@ input[type="checkbox"]:checked::after {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
+input[type="number"]:enabled {
+    min-width: 80px;
+    height: 45px;
+}
 
 input[type="number"]:disabled {
     background-color: #f9f9f9; /* Lichte achtergrondkleur */
@@ -575,20 +582,26 @@ input[type="number"]:disabled:hover {
 }
 
 .price-summary-section {
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
-.price-summary-section h3 {
-    font-size: 1.2em;
-    color: #DC493A;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    font-weight: bold;
+.price-summary-section h3{
+    font-size: 1.5em; /* Grotere lettergrootte */
+    color: #DC493A;   /* Gebruik dezelfde rode kleur als andere titels */
+    margin-bottom: 7px; /* Wat extra ruimte onder de titel */
+    text-transform: uppercase; /* Zorg ervoor dat de tekst in hoofdletters verschijnt */
+    font-weight: bold; /* Zorg voor een dikke tekst */
 }
+
+
+
 
 .price-summary-section .summary-category {
     margin-bottom: 20px;
 }
+
+
+
 
 .price-summary-section .summary-category h4 {
     font-size: 1em;
@@ -609,7 +622,8 @@ input[type="number"]:disabled:hover {
 }
 
 .price-summary-section .total-price {
-    font-size: 1.5em;
+    font-size: 1.7em;
+    text-transform: uppercase;
     font-weight: bold;
     margin-top: 20px;
 }
