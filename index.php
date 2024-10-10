@@ -64,7 +64,7 @@
             
             <label for="bezoekdatum">Datum bezoek</label>
             <input type="date" id="bezoekdatum" name="bezoekdatum" required>
-            <div id="datumFout" class="foute-invoermelding"></div>
+            <div id="bezoekdatumFout" class="foute-invoermelding"></div>
             
             
             <label for="aankomsttijd">Wij verwachten u om</label>

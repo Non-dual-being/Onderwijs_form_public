@@ -1,9 +1,24 @@
 <?php
 session_start();
 
+ini_set('display_errors', 0);  // Schakel weergave van fouten in de browser uit
+ini_set('log_errors', 1);      // Log fouten naar een logbestand
+error_reporting(E_ALL);        // Log alle fouten
+
+
+
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require 'vendor/autoload.php';  // Composer autoload voor PHPMailer
+
+require 'vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+$smtp_password = getenv('SMTP_PASSWORD');
+
+
+
 
 // Database inloggegevens
 $host = '127.0.0.1';
@@ -20,7 +35,7 @@ error_log("Ontvangen gegevens: " . print_r($_POST, true));
 $onderwijsModules = [
     'primairOnderwijs' => [
         'standaard' => ["Klimaat-Experience", "Klimparcours", "Voedsel-Innovatie", "Dynamische-Globe"],
-        'keuze' => ["Minecraft-Klimaatspeurtocht", "Earth-Watch"]
+        'keuze' => ["Minecraft-Klimaatspeurtocht", "Earth-Watch","Stop-de-Klimaat-Klok"]
     ],
     'voortgezetOnderbouw' => [
         'standaard' => ["Klimaat-Experience", "Voedsel-Innovatie", "Dynamische-Globe", "Earth-Watch"],
@@ -31,6 +46,14 @@ $onderwijsModules = [
         'keuze' => ["Crisismanagement"]
     ]
 ];
+
+$schooltypeMapping = [
+    'primairOnderwijs' => 'Primair Onderwijs',
+    'voortgezetOnderbouw' => 'Voorgezet Onderwijs onderbouw',
+    'voortgezetBovenbouw' => 'Voorgezet Onderwijs onderbouw'
+];
+
+
 
 function generateDisabledDates() {
     $disabledDates = [];
@@ -100,15 +123,51 @@ $fortgrachtBreakAantal = isset($_POST['fortgrachtBreakAantal']) ? (int) $_POST['
 $waterijsjeAantal = isset($_POST['waterijsjeAantal']) ? (int) $_POST['waterijsjeAantal'] : 0;
 $pakjeDrinkenAantal = isset($_POST['pakjeDrinkenAantal']) ? (int) $_POST['pakjeDrinkenAantal'] : 0;
 $remiseLunchAantal = isset($_POST['remiseLunchAantal']) ? (int) $_POST['remiseLunchAantal'] : 0;
-$eigenPicknick = isset($_POST['eigenPicknickCheckbox']) ? 1 : 0;
+$eigenPicknick = isset($_POST['eigenPicknick']) && ($_POST['eigenPicknick'] == 1 || $_POST['eigenPicknick'] == 0) ? (int)$_POST['eigenPicknick'] : 0;
+
+$foodPrice = null; // Initialiseer de variabele
+if (isset($_POST['foodPrice'])) {
+    $tempPrice = (float)$_POST['foodPrice'];
+
+    // Check of de waarde binnen het bereik ligt
+    if ($tempPrice > 0 && $tempPrice < 4000) {
+        $foodPrice = $tempPrice; // Alleen toewijzen als de waarde voldoet aan de voorwaarden
+    }
+}
+
+
+$bezoekPrice = null; // Initialiseer de variabele
+if (isset($_POST['bezoekPrice'])) {
+    $tempPrice = (float)$_POST['bezoekPrice'];
+    
+    // Check of de waarde binnen het bereik ligt
+    if ($tempPrice > 0 && $tempPrice < 4000) {
+        $bezoekPrice = $tempPrice; // Alleen toewijzen als de waarde voldoet aan de voorwaarden
+    }
+}
+
+$totalPrice = null; // Initialiseer de variabele
+if (isset($_POST['totalPrice'])) {
+    $tempPrice = (float)$_POST['totalPrice'];
+    
+    // Check of de waarde binnen het bereik ligt
+    if ($tempPrice > 0 && $tempPrice < 8000) {
+        $totalPrice = $tempPrice; // Alleen toewijzen als de waarde voldoet aan de voorwaarden
+    }
+}
+
 
 try {
     // Maak verbinding met de database
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Begin een transactie (voorkomen dat er gemaild wordt als db een fout geeft)
+    $pdo->beginTransaction();
+
     // Valideer en ontsmet elk veld
     $errors = [];
+    error_log("Validatie van invoervelden gestart...");
 
     // Voornaam validatie
     if (empty($_POST['contactpersoonvoornaam']) || !preg_match("/^[A-Za-z\s.]*$/", $_POST['contactpersoonvoornaam'])) {
@@ -209,36 +268,37 @@ try {
     if (!array_key_exists($schooltype, $onderwijsModules) || !in_array($keuzemodule, $onderwijsModules[$schooltype]['keuze'])) {
         $errors['keuzeModule'] = "Ongeldige keuzemodule.";
     } else {
-        $keuze_module = sanitize_input($_POST['keuzeModule'], 50, $errors, 'keuze_module');
+        $keuze_module = sanitize_input($_POST['keuzeModule'], 50, $errors, 'keuzeModule');
+        $schooltype = sanitize_input($_POST['onderwijsNiveau'], 50, $errors, 'onderwijsNiveau');
     }
 
    // Voor elke snack/lunch validatie met het juiste veldnaam in geval van fout
 
-if (!is_int($remiseBreakAantal) || $remiseBreakAantal < 0 || $remiseBreakAantal > 200) {
-    $errors['remiseBreakAantal'] = "Ongeldig aantal voor Remise Break. Moet tussen 0 en 200 liggen.";
-}
-if (!is_int($kazerneBreakAantal) || $kazerneBreakAantal < 0 || $kazerneBreakAantal > 200) {
-    $errors['kazerneBreakAantal'] = "Ongeldig aantal voor Kazerne Break. Moet tussen 0 en 200 liggen.";
-}
-if (!is_int($fortgrachtBreakAantal) || $fortgrachtBreakAantal < 0 || $fortgrachtBreakAantal > 200) {
-    $errors['fortgrachtBreakAantal'] = "Ongeldig aantal voor Fortgracht Break. Moet tussen 0 en 200 liggen.";
-}
-if (!is_int($waterijsjeAantal) || $waterijsjeAantal < 0 || $waterijsjeAantal > 200) {
-    $errors['waterijsjeAantal'] = "Ongeldig aantal voor Waterijsje. Moet tussen 0 en 200 liggen.";
-}
-if (!is_int($pakjeDrinkenAantal) || $pakjeDrinkenAantal < 0 || $pakjeDrinkenAantal > 200) {
-    $errors['pakjeDrinkenAantal'] = "Ongeldig aantal voor Pakje Drinken. Moet tussen 0 en 200 liggen.";
-}
+    if (!is_int($remiseBreakAantal) || $remiseBreakAantal < 0 || $remiseBreakAantal > 200) {
+        $errors['remiseBreakAantal'] = "Ongeldig aantal voor Remise Break. Moet tussen 0 en 200 liggen.";
+    }
+    if (!is_int($kazerneBreakAantal) || $kazerneBreakAantal < 0 || $kazerneBreakAantal > 200) {
+        $errors['kazerneBreakAantal'] = "Ongeldig aantal voor Kazerne Break. Moet tussen 0 en 200 liggen.";
+    }
+    if (!is_int($fortgrachtBreakAantal) || $fortgrachtBreakAantal < 0 || $fortgrachtBreakAantal > 200) {
+        $errors['fortgrachtBreakAantal'] = "Ongeldig aantal voor Fortgracht Break. Moet tussen 0 en 200 liggen.";
+    }
+    if (!is_int($waterijsjeAantal) || $waterijsjeAantal < 0 || $waterijsjeAantal > 200) {
+        $errors['waterijsjeAantal'] = "Ongeldig aantal voor Waterijsje. Moet tussen 0 en 200 liggen.";
+    }
+    if (!is_int($pakjeDrinkenAantal) || $pakjeDrinkenAantal < 0 || $pakjeDrinkenAantal > 200) {
+        $errors['pakjeDrinkenAantal'] = "Ongeldig aantal voor Pakje Drinken. Moet tussen 0 en 200 liggen.";
+    }
 
-if (!is_int($remiseLunchAantal) || $remiseLunchAantal < 0 || $remiseLunchAantal > 200) {
-    $errors['remiseLunchAantal'] = "Ongeldig aantal voor Remise Lunch. Moet tussen 0 en 200 liggen.";
-}
+    if (!is_int($remiseLunchAantal) || $remiseLunchAantal < 0 || $remiseLunchAantal > 200) {
+        $errors['remiseLunchAantal'] = "Ongeldig aantal voor Remise Lunch. Moet tussen 0 en 200 liggen.";
+    }
 
-if (!in_array($eigenPicknick, [0, 1], true)) {
-    $errors['eigenPicknick'] = "Ongeldige waarde voor Eigen Picknick. Moet 0 of 1 zijn.";
-}
+    if (!in_array($eigenPicknick, [0, 1], true)) {
+        $errors['eigenPicknick'] = "Ongeldige waarde voor Eigen Picknick. Moet 0 of 1 zijn.";
+    }
 
-   
+    
     if (!empty($errors)) {
         error_log("Validatiefouten: " . print_r($errors, true));
         echo json_encode([
@@ -247,6 +307,7 @@ if (!in_array($eigenPicknick, [0, 1], true)) {
         ]);
         exit();
     }
+    error_log("Validatie geslaagd, doorgaan met SQL-query's...");
 
     // SQL-query om te controleren op bestaande boekingen
     $sql = "
@@ -267,7 +328,7 @@ if (!in_array($eigenPicknick, [0, 1], true)) {
             'success' => false,
             'errors' => ['bezoekdatum' => 'Er zijn al 2 definitieve boekingen voor deze datum. Geen extra boekingen toegestaan.']
         ]);
-        exit;
+        exit();
     }
 
     if ($result['aantal_definitieve_boekingen'] == 1 && ($result['totale_leerlingen'] + $aantalLeerlingen) > 160) {
@@ -277,7 +338,7 @@ if (!in_array($eigenPicknick, [0, 1], true)) {
             'success' => false,
             'errors' => ['aantalLeerlingen' => "Er is voor {$aantalLeerlingen} leerlingen geboekt: maximaal {$maxMogelijk} mogelijk."]
         ]);
-        exit;
+        exit();
     }
 
     // Voeg de aanvraag toe aan de database
@@ -348,76 +409,172 @@ if (!in_array($eigenPicknick, [0, 1], true)) {
     ':eigenPicknick' => $eigenPicknick
     ]);
 
-    $mail = new PHPMailer(true);
-
+     // Commit de transactie
+    if ($pdo->commit()){
+        $mail = new PHPMailer(true);
     try {
-        // Server instellingen
-        $mail->isSMTP();                                          
-        $mail->Host       = 'smtp.office365.com';                
-        $mail->SMTPAuth   =  true;                                  
-        $mail->Username   = 'kevin@geofort.nl';                
-        $mail->Password   = 'Mah67312'; 
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;        
-        $mail->Port       = 587;                                   
+        // Configuratie voor het gebruik van SMTP
+        $mail->isSMTP();
+        $mail->Host = 'smtp.office365.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'kevin@geofort.nl';
+        $mail->Password = 'Mah67312';  // Zorg ervoor dat wachtwoorden veilig worden opgeslagen en niet hardcoded
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        $mail->SMTPDebug = 0; // Toon SMTP-fouten en communicatie in de log
 
-        // Ontvangers
-        $mail->setFrom('onderwijs@geofort.nl', 'GeoFort Onderwijs');
-        $mail->addAddress($data['email'], $data['voornaam'] . ' ' . $data['achternaam']); // Naar de aanvrager
-        $mail->addBCC('onderwijs@geofort.nl'); // Kopie naar GeoFort team
+        $schooltype = $schooltypeMapping[$schooltype];
+       
 
-        // Inhoud
-        $mail->isHTML(true);                                  
-        $mail->Subject = 'Bevestiging Onderwijsaanvraag GeoFort';
+        setlocale(LC_TIME, 'nl_NL.UTF-8');
 
-        // Stel de e-mailinhoud samen
-        $mailContent = "<p>Beste " . htmlspecialchars($data['voornaam']) . ",</p>";
-        $mailContent .= "<p>Bedankt voor je aanvraag voor een schoolbezoek aan het GeoFort.</p>";
-        $mailContent .= "<p>Hieronder een overzicht van je aanvraag:</p>";
-        $mailContent .= "<ul>";
-        $mailContent .= "<li><strong>Schoolnaam:</strong> " . htmlspecialchars($data['schoolnaam']) . "</li>";
-        $mailContent .= "<li><strong>Bezoekdatum:</strong> " . htmlspecialchars($data['bezoekdatum']) . "</li>";
-        $mailContent .= "<li><strong>Aantal leerlingen:</strong> " . htmlspecialchars($data['aantal_leerlingen']) . "</li>";
-        $mailContent .= "<li><strong>Keuze module:</strong> " . htmlspecialchars($data['keuze_module']) . "</li>";
-        // Voeg andere relevante gegevens toe
-        $mailContent .= "</ul>";
-        $mailContent .= "<p>We nemen zo spoedig mogelijk contact met je op.</p>";
-        $mailContent .= "<p>Met vriendelijke groet,<br>Het GeoFort Team</p>";
+        // Maak een DateTime-object aan
+        $dateTime = new DateTime($bezoekdatum);
 
-        $mail->Body    = $mailContent;
+        // Formatter voor Nederlandse datuminstellingen
+        $fmt = new IntlDateFormatter('nl_NL', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'Europe/Amsterdam', IntlDateFormatter::GREGORIAN, 'EEEE d MMMM Y');
 
-        // Verstuur de e-mail
-        $mail->send();
+        // Datum omzetten naar het gewenste formaat
+        $nederlandseDatum = $fmt->format($dateTime);
+    
+        // Afzender en ontvangers
+        $mail->setFrom('kevin@geofort.nl', 'GeoFort Onderwijs');
+        $mail->addAddress($email, $voornaam . ' ' . $achternaam);  // Ontvanger
+        //$mail->addBCC('onderwijs@geofort.nl');  // Blind Carbon Copy
+        $mail->addBCC('kevin@geofort.nl');  // Zelf een BCC ontvangen
 
-        // Verwijder de sessiegegevens om dubbele verzending te voorkomen
-        unset($_SESSION['gevalideerde_data']);
 
-        // Optioneel: stuur een succesmelding terug
-        echo json_encode([
-            'success' => true,
-            'message' => 'E-mail succesvol verzonden!'
-        ]);
-
-    } catch (Exception $e) {
-        // Foutafhandeling
-        echo json_encode([
-            'success' => false,
-            'errors' => ['mail' => 'Er is een fout opgetreden bij het verzenden van de e-mail: ' . $mail->ErrorInfo]
-        ]);
-    }
-
-    // Succesvolle invoer
-    echo json_encode([
-        'success' => true,
-        'message' => 'Aanvraag succesvol ontvangen!'
-    ]);
-
-} catch (PDOException $e) {
-    // Foutafhandeling
-    error_log("Databasefout: " . $e->getMessage());
-    echo json_encode([
-        'success' => false,
-        'errors' => ['database' => 'Databasefout: ' . $e->getMessage()]
-    ]);
+    
+        // Zet het formaat van de e-mail op HTML
+        $mail->isHTML(true);
+        $mail->Subject = 'Bevestiging aanvraag schoolbezoek GeoFort';
+    
+        // Inhoud van de e-mail (HTML)
+        $mailContent = "
+        <p>Beste " . htmlspecialchars($voornaam) . ",<br></p>
+        <p>Bedankt voor uw aanvraag voor een schoolbezoek aan het GeoFort.</p>
+        <p>Hieronder het overzicht van uw aanvraag:</p>
+        
+        <h4 style='margin-bottom: 0; padding: 0; text-decoration: underline'>Algemene gegevens</h4>
+        <ul style='font-size: 12px;'>  <!-- Kleinere tekst -->
+            <li><strong>Voornaam:</strong> " . htmlspecialchars($voornaam) . "</li>
+            <li><strong>Achternaam:</strong> " . htmlspecialchars($achternaam) . "</li>
+            <li><strong>Email:</strong> " . htmlspecialchars($email) . "</li>
+            <li><strong>Schooltelefoon:</strong> " . htmlspecialchars($schooltelefoonnummer) . "</li>
+            <li><strong>Telefoon contactpersoon:</strong> " . htmlspecialchars($contacttelefoonnummer) . "</li>
+            <li><strong>Schoolnaam:</strong> " . htmlspecialchars($schoolnaam) . "</li>
+            <li><strong>Adres:</strong> " . htmlspecialchars($adres) . "</li>
+            <li><strong>Postcode:</strong> " . htmlspecialchars($postcode) . "</li>
+            <li><strong>Plaats:</strong> " . htmlspecialchars($plaats) . "<br></li>
+        </ul>  
+        
+        <h4 style='margin: 0; padding: 0; text-decoration: underline'>Bezoekgegevens</h4>
+        <ul style='font-size: 12px;'>
+            <li><strong>Aantal leerlingen:</strong> " . htmlspecialchars($aantalLeerlingen) . "</li>
+            <li><strong>Bezoekdatum:</strong> " . htmlspecialchars($nederlandseDatum) . "</li>
+            <li><strong>Schooltype:</strong> " . htmlspecialchars($schooltype) . "</li>
+            <li><strong>Keuze-module:</strong> " . htmlspecialchars($keuze_module) . "</li>
+        <br></ul>
+    ";
+    $etenDrinken = [];
+if ($remiseBreakAantal > 0) {
+    $etenDrinken[] = "<strong>Aantal Remise Break snacks: </strong>" . htmlspecialchars($remiseBreakAantal);
+}
+if ($kazerneBreakAantal > 0) {
+    $etenDrinken[] = "<strong>Aantal Kazerne Break snacks: </strong>" . htmlspecialchars($kazerneBreakAantal);
+}
+if ($fortgrachtBreakAantal > 0) {
+    $etenDrinken[] = "<strong>Aantal Fortgracht Break snacks: </strong>" . htmlspecialchars($fortgrachtBreakAantal);
+}
+if ($waterijsjeAantal > 0) {
+    $etenDrinken[] = "<strong>Aantal Waterijsjes: </strong>" . htmlspecialchars($waterijsjeAantal);
+}
+if ($pakjeDrinkenAantal > 0) {
+    $etenDrinken[] = "<strong>Aantal Pakjes Drinken: </strong>" . htmlspecialchars($pakjeDrinkenAantal);
+}
+if ($remiseLunchAantal > 0) {
+    $etenDrinken[] = "<strong>Aantal Remise Lunches: </strong>" . htmlspecialchars($remiseLunchAantal);
 }
 
+if ($eigenPicknick == 1)  {
+    $etenDrinken[] = "<strong>Eigen Picknick: </strong> Ja";
+
+}elseif($eigenPicknick== 0) {
+    $etenDrinken[] = "<strong>Eigen Picknick: </strong> Nee";
+}
+
+// Controleer of er iets besteld is en voeg dit toe aan de e-mail
+if (!empty($etenDrinken)) {
+    $mailContent .= "<h4 style='margin: 0; padding: 0; text-decoration: underline'><strong>Eten en drinken</strong></h4>";
+    $mailContent .= "<ul style='font-size: 12px;'>";
+    foreach ($etenDrinken as $item) {
+        $mailContent .= "<li>" . $item . "</li>"; // verwijder htmlspecialchars omdat de item al veilig is
+    }
+    $mailContent .= "<br></ul>";
+}
+
+    
+    $mailContent .= "
+    <p>Hieronder vindt u verder het prijsoverzicht van het geplande bezoek aan GeoFort. Mocht er iets niet kloppen in uw aanvraag of mocht u nog vragen hebben, aarzel dan niet om contact met ons op te nemen. Wij helpen u graag verder.<br></p>";
+
+
+    // Prijsoverzicht
+    $mailContent .= "
+    
+    <h4 style='margin: 0; padding: 0; text-decoration: underline'>Prijsoverzicht</h4>
+    <ul style='font-size: 12px;'>
+    <li style='font-size: 12px;'><strong>Prijs voor het bezoek:</strong> " . number_format($bezoekPrice, 2, ',', '.') . " euro</li>
+    <li style='font-size: 12px;'><strong>Prijs voor het bestelde eten en drinken:</strong> " . number_format($foodPrice, 2, ',', '.') . " euro<br></li>
+    </ul>
+    <p style='font-size: 14px;'><strong>Totale prijs voor het bezoek: <span style='text-decoration: underline;'> " . number_format($totalPrice, 2, ',', '.') . " euro </span></strong><br></p>
+    
+    ";
+    
+
+    $mailContent .= "
+        <p>We kijken ernaar uit om u binnenkort te mogen verwelkomen op GeoFort.<br></p>
+        <p>Met vriendelijke groet,<br></p>
+        <p>Het GeoFort Onderwijs Team</p>
+    ";
+
+    
+        // Stel de e-mail body in
+        $mail->Body = $mailContent;
+    
+        // Voor niet-HTML clients stel je een alternatieve tekstversie in
+        $mail->AltBody = strip_tags($mailContent);
+    
+        // Verstuur de e-mail
+        $mail->send();
+    
+        // JSON response naar de client
+        $response = json_encode(['success' => true, 'message' => 'Aanvraag succesvol ontvangen!']);
+        
+    } catch (Exception $e) {
+        // Fout bij het versturen van de e-mail
+        error_log("Emailfout: " . $e->getMessage());
+        $response = json_encode(['success' => false, 'servererror' => 'Er is een fout opgetreden bij verwerken van de aanvraag']);
+    }
+    
+
+    }
+
+    } catch (PDOException $e) {
+        // Foutafhandeling bij databaseproblemen
+        error_log("Databasefout: " . $e->getMessage());
+
+
+        if ($pdo) {
+            $pdo->rollBack();  // Alleen rollback als de verbinding succesvol was
+        }
+
+        $response = json_encode([
+            'success' => false,
+            'servererror' => 'Er is een fout opgetreden bij het verwerken van de aanvraag!'
+        ]);
+
+        error_log("de response" . $response);   
+    }
+    echo $response;
+    exit();
 ?>

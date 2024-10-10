@@ -14,6 +14,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    function applyCommonStyles(element, backgroundColor) {
+        element.style.left = '35%';
+        element.style.width = '30%'; 
+        element.style.fontSize = '18px';
+        element.style.backgroundColor = backgroundColor; 
+        element.style.color = '#ffffff'; 
+        element.style.padding = '15px'; 
+        element.style.borderRadius = '8px'; 
+        element.style.border = '4px solid white'; 
+        element.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
+        element.style.position = 'absolute';
+        element.style.zIndex = '2000';
+        element.style.opacity = '1';
+        element.style.display = 'flex'; 
+        element.style.alignItems = 'center'; 
+        element.style.justifyContent = 'center'; 
+        element.style.transition = 'opacity 0.6s ease, transform 0.3s ease';
+        element.style.transform = 'scale(1)';
+    }
+    
+
     function valideerInvoer(veld, foutElement, validatieFunctie) {
         let waarde;
     
@@ -27,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
             waarde = veld.value.trim(); // Haal de waarde uit het invoerveld zoals gewoonlijk
         }
         
-        console.log("Waarde van validatie:", waarde);
+        
         let foutmelding = validatieFunctie(waarde); // Roep de specifieke validatiefunctie aan
         
         if (foutmelding) {
@@ -45,36 +66,26 @@ document.addEventListener('DOMContentLoaded', function () {
             if (foutmelding === "Dit veld mag niet leeg blijven.") {
                 veld.style.border = ''; // Geen rand bij lege velden
                 veld.style.backgroundColor = ''; // Geen achtergrondkleur bij lege velden
+            } else if (foutmelding === "Selecteer een onderwijsniveau."){
+                veld.style.border = ''; // Geen rand bij lege velden
+               veld.style.backgroundColor = ''; // Geen achtergrondkleur bij lege velden
             } else if (foutmelding === "Voer een geldig getal in tussen 0 en 200.") {
                 veld.style.border = ''; 
                 veld.style.backgroundColor = '';         
             } else if (foutmelding === "Aanvraag succesvol ontvangen!") {
                 veld.style.border = ''; 
                 veld.style.backgroundColor = '';
-                foutElement.style.left = '35%';
-                foutElement.style.width = '30%'; // Zorg voor iets extra ruimte
-                foutElement.style.fontSize = '18px';  // Maak de tekst groter
-                foutElement.style.backgroundColor = '#1c2541'; // Donkerblauw voor een professionele uitstraling
-                foutElement.style.color = '#ffffff'; // Witte tekst voor contrast
-                foutElement.style.padding = '15px'; // Extra padding voor ruimtelijkheid
-                foutElement.style.borderRadius = '8px'; // Subtiel afgeronde hoeken
-                foutElement.style.border = '4px solid white'; // Witte rand
-                foutElement.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)'; // Lichte schaduw
-                foutElement.style.position = 'absolute';
-                foutElement.style.zIndex = '2000';
-                foutElement.style.opacity = '1';
-                foutElement.style.display = 'flex'; // Flexbox voor centrering
-                foutElement.style.alignItems = 'center'; // Verticaal centreren
-                foutElement.style.justifyContent = 'center'; // Horizontaal centreren
-                foutElement.style.transition = 'opacity 0.6s ease, transform 0.3s ease';
-                foutElement.style.transform = 'scale(1)'; // Animatie bij tonen
-            } else {
+                applyCommonStyles(foutElement, '#1c2541');  // Donkerblauw
+            } else if (foutmelding === "Er is een fout opgetreden bij het verwerken van de aanvraag!") {
+                veld.style.border = ''; 
+                veld.style.backgroundColor = '';
+                applyCommonStyles(foutElement, '#ff0000');  // Rood voor foutmeldingen
+            }
+            else {
                 // Voor andere foutmeldingen, toon wel visuele feedback
                 veld.style.border = '1px solid #ff9900'; // Lichte oranje rand
                 veld.style.backgroundColor = '#fff7e6'; // Pastel oranje achtergrond
             }
-     
-            
             return false; // Keer terug als er een foutmelding is
         } else {
             hideFoutmelding(foutElement); // Verberg de foutmelding als er geen is
@@ -152,17 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Valideer het telefoonnummer met de regex
         if (!telefoonRegex.test(waarde)) {
             return "Voer een geldig Nederlands telefoonnummer in.";
-        }
-    
-        return ""; // Geen foutmelding
-    }
-
-    function valideerAantalBegeleiders(waarde) {
- 
-        // Controleer of de invoer een geldig getal is tussen 1 en 50.
-        const aantal = parseInt(waarde, 10);
-        if (isNaN(aantal) || aantal < 1 || aantal > 50 ) {
-            return "Voer een getal in tussen 1 en 50.";
         }
     
         return ""; // Geen foutmelding
@@ -303,7 +303,13 @@ function valideerKeuzeModule(waarde) {
     // Stap 5: Gebruik `some()` om te controleren of de gekozen module geldig is
     const isGeldig = alleKeuzeModules.some(module => module === waarde);
 
-    return isGeldig ? "" : "De gekozen lesmodule is niet geldig."; // Retourneer lege string als alles geldig is, anders de foutmelding
+    if (!waarde){
+        return "Selecteer een keuze-module.";
+    } else if (!isGeldig){
+        return "Maak een keuze uit de lijst.";
+    } else {
+        return "";
+    }
 }
 
 
@@ -328,8 +334,16 @@ function valideerAantalLeerlingen(waarde) {
     return ""; // Geen foutmelding
 }
 
-let isTyping = false; // Vlag om te detecteren of de gebruiker aan het typen is
+function valideerAantalBegeleiders(waarde) {
+ 
+    // Controleer of de invoer een geldig getal is tussen 1 en 50.
+    const aantal = parseInt(waarde, 10);
+    if (isNaN(aantal) || aantal < 1 || aantal > 50 ) {
+        return "Voer een getal in tussen 1 en 50.";
+    }
 
+    return ""; // Geen foutmelding
+}
 
 function valideerInput(amountInput) {
     const cijferRegex = /^[0-9]+$/; // Regex om alleen cijfers toe te staan
@@ -512,6 +526,20 @@ function verzendknopFoutMelding(waarde) {
         
         valideerInvoer(plaatsVeld, plaatsFoutElement, valideerPlaats);
     });
+
+    document.getElementById('onderwijsNiveau').addEventListener('blur', function() {
+        const schooltypeVeld = document.getElementById('onderwijsNiveau');  // 'keuzeModule' met een kleine "k"
+        const schooltypeFoutElement = document.getElementById('onderwijsNiveauFout');
+        valideerInvoer(schooltypeVeld, schooltypeFoutElement, valideerOnderwijsNiveau);
+    });
+    
+
+    document.getElementById('keuzeModule').addEventListener('blur', function() {
+        const keuzeModuleVeld = document.getElementById('keuzeModule');  // 'keuzeModule' met een kleine "k"
+        const keuzeModuleFoutElement = document.getElementById('keuzeModuleFout');
+        valideerInvoer(keuzeModuleVeld, keuzeModuleFoutElement, valideerKeuzeModule);
+    });
+    
 
     document.getElementById('hoekentGeoFort').addEventListener('blur', function() {
         const hoekentGeoFortVeld = document.getElementById('hoekentGeoFort');
@@ -920,7 +948,7 @@ function verzendknopFoutMelding(waarde) {
         let totalPrice = 0;
         let foodPrice = 0;
         
-        const btwPercentage_bezoek = 21; // Btw percentage''
+        const btwPercentage_bezoek = 9; // Btw percentage''
         const btwPercentage_food = 9;
         const totalPriceSpan = document.getElementById('totalPrice');
         const foodSummaryDiv = document.getElementById('foodSummary');
@@ -963,7 +991,7 @@ function verzendknopFoutMelding(waarde) {
           // Toon de prijs exclusief btws
         const exclBtwSummary_bezoek = document.createElement('div');
         exclBtwSummary_bezoek.className = 'summary-item';
-        exclBtwSummary_bezoek.innerHTML = `<span style="font-size: 0.9em;">Totale bezoekprijs excl. btw (21%):</span><span style="font-size: 0.9em;">€${totalExclBtw_bezoek.toFixed(2)}</span>`;
+        exclBtwSummary_bezoek.innerHTML = `<span style="font-size: 0.9em;">Totale bezoekprijs excl. btw (9%):</span><span style="font-size: 0.9em;">€${totalExclBtw_bezoek.toFixed(2)}</span>`;
         bezoekDiv.appendChild(exclBtwSummary_bezoek);
     
         // Voeg de samenvatting van het eten toe
@@ -1004,11 +1032,11 @@ function verzendknopFoutMelding(waarde) {
 
         const exlBTWTotalDiv = document.createElement('div');
         exlBTWTotalDiv.className = 'summary-item';
-        exlBTWTotalDiv.innerHTML = `<span style="font-size: 0.6em;"><strong>Totale prijs exl. BTW:</strong></span><span style="font-size: 0.6em;"><strong> €${totalExlBtw.toFixed(2)}</strong></span>`;
+        exlBTWTotalDiv.innerHTML = `<span style="font-size: 0.6em;"><strong>Totale prijs excl. BTW:</strong></span><span style="font-size: 0.6em;"><strong> €${totalExlBtw.toFixed(2)}</strong></span>`;
         totalPriceSpan.appendChild(exlBTWTotalDiv);
 
-       
-    }
+       return [bezoekPrice, foodPrice, totalPrice];
+    };
     
     document.getElementById('aantalLeerlingen').addEventListener('input', updateFoodSummary9);
     document.getElementById('totaalbegeleiders').addEventListener('input', updateFoodSummary9);
@@ -1215,7 +1243,7 @@ document.getElementById('onderwijsFormulier').addEventListener('submit', functio
     }
     // Voeg de validatie toe voor de datum met de flatpickr
     const datumVeld = document.getElementById('bezoekdatum');
-    const datumFoutElement = document.getElementById('datumFout');
+    const datumFoutElement = document.getElementById('bezoekdatumFout');
     const datumPicker = datumVeld._flatpickr;
     const geselecteerdeDatum = datumPicker.selectedDates[0];
 
@@ -1296,134 +1324,181 @@ foodInputs.forEach(input => {
     } else if (input.id === 'eigenPicknickCheckbox') {
         formData.append('eigenPicknick', input.checked ? 1 : 0);  // Voeg eigenPicknick waarde toe
     }
-});
+})
 
 formData.delete('snack');
 formData.delete('lunch');
+
+bezoekPrice = updateFoodSummary9()[0];
+console.log("bezoekprijs formdata" , bezoekPrice);
+foodPrice = updateFoodSummary9()[1];
+totalPrice = updateFoodSummary9()[2];
+
+if (typeof bezoekPrice === 'number' && bezoekPrice >= 0 && bezoekPrice <= 4000) {
+    formData.append('bezoekPrice', bezoekPrice);
+}
+
+if (typeof foodPrice === 'number' && foodPrice >= 0 && foodPrice <= 4000) {
+    formData.append('foodPrice', foodPrice)
+}
+
+if (typeof totalPrice === 'number' && totalPrice >= 0 && totalPrice <= 4000) {
+    formData.append('totalPrice', totalPrice)
+}
+
+
 
 const xhr = new XMLHttpRequest();
 xhr.open('POST', 'validatie.php', true);  // Verwijs naar je PHP-bestand
 xhr.onload = function () {
     if (xhr.status === 200) {
-        // Verwerk de JSON-response van PHP
-        const response = JSON.parse(xhr.responseText);
-        console.log("Response van server:", response); // Log de volledige response
+        try {
+            // Verwerk de JSON-response van PHP
+            const response = JSON.parse(xhr.responseText);
+            console.log("Response van server:", response); // Log de volledige response
 
-        if (response.success) {
-            // Als het formulier succesvol is verwerkt, toon succesbericht
-            const verzendknopDiv = document.getElementById("verzendknop");
-            const verzendMeldingdiv = document.getElementById("verzendknopMeldingdiv");
-            verzendknopDiv.value = response.message;
-            valideerInvoer(verzendknopDiv, verzendMeldingdiv, verzendknopMelding);
-        } else {
-            // Als er fouten zijn, koppel deze terug aan de juiste velden en functies
-            console.log("Fouten ontvangen:", response.errors); // Log de ontvangen fouten
-
-            for (let veld in response.errors) {
-                const foutElement = document.getElementById(`${veld}Fout`);
-                const veldElement = document.getElementById(veld);
+            if (typeof response === 'object' && response !== null) {
+                console.log("Het is een JSON object:", response);
+            } else {
+                console.error("De response is geen geldig JSON object.");
+            }
 
 
-                if (foutElement && veldElement) {
-                    // Voeg de foutmelding toe aan het foutElement
-                    foutElement.textContent = response.errors[veld];  // Stel de nieuwe waarde in vanuit de server
-                    console.log(`Fout gevonden voor veld: ${veld}, fout: ${response.errors[veld]}`); // Log de fout en het veld
-                    
-                    // Roep de juiste validatiefunctie aan op basis van het veld
-                    switch (veld) {
-                        case 'contactpersoonvoornaam':
-                            console.log("Uitvoeren validatie voor voornaam");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'contactpersoonachternaam':
-                            console.log("Uitvoeren validatie voor achternaam");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'emailadres':
-                            console.log("Uitvoeren validatie voor e-mailadres");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'schoolTelefoonnummer':
-                            console.log("Uitvoeren validatie voor telefoonnummer");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'contactTelefoonnummer':
-                            console.log("Uitvoeren validatie voor telefoonnummer");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'totaalbegeleiders':
-                            console.log("Uitvoeren validatie voor aantal begeleiders");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'niveauleerjaar':
-                            console.log("Uitvoeren validatie voor niveau en leerjaar");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'schoolnaam':
-                            console.log("Uitvoeren validatie voor schoolnaam");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'adres':
-                            console.log("Uitvoeren validatie voor adres");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'postcode':
-                            console.log("Uitvoeren validatie voor postcode");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'plaats':
-                            console.log("Uitvoeren validatie voor plaats");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'aantalLeerlingen':
-                            console.log("Uitvoeren validatie voor aantal leerlingen");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'bezoekdatum':
-                            console.log("Uitvoeren validatie voor bezoekdatum");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'remiseBreakAantal':
-                            console.log("Uitvoeren validatie voor Remise break aantal");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'kazerneBreakAantal':
-                            console.log("Uitvoeren validatie voor Kazerne break aantal");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'fortgrachtBreakAantal':
-                            console.log("Uitvoeren validatie voor Fortgracht break aantal");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'waterijsjeAantal':
-                            console.log("Uitvoeren validatie voor Waterijsje aantal");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'pakjeDrinkenAantal':
-                            console.log("Uitvoeren validatie voor Pakje drinken aantal");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'remiseLunchAantal':
-                            console.log("Uitvoeren validatie voor Remise lunch aantal");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        case 'eigenPicknickCheckbox':
-                            console.log("Uitvoeren validatie voor Eigen picknick checkbox");
-                            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
-                            break;
-                        default:
-                            const verzendknopDiv = document.getElementById("verzendknop");
-                            const verzendMeldingdiv = document.getElementById("verzendknopMeldingdiv");
-                            verzendknopDiv.value = response.message;
-                            valideerInvoer(verzendknopDiv, verzendMeldingdiv, verzendknopFoutMelding);
-                            break;
+            if (response.success) {
+                // Als het formulier succesvol is verwerkt, toon succesbericht
+                const verzendknopDiv = document.getElementById("verzendknop");
+                const verzendMeldingdiv = document.getElementById("verzendknopMeldingdiv");
+                verzendknopDiv.value = response.message;
+                valideerInvoer(verzendknopDiv, verzendMeldingdiv, verzendknopMelding);
+            } else if(response.errors) {
+                for (let veld in response.errors) {
+                    const foutElement = document.getElementById(`${veld}Fout`);
+                    const veldElement = document.getElementById(veld);
+
+                    if (foutElement && veldElement) {
+                        // Voeg de foutmelding toe aan het foutElement
+                        foutElement.textContent = response.errors[veld];  // Stel de nieuwe waarde in vanuit de server
+                        console.log(`Fout gevonden voor veld: ${veld}, fout: ${response.errors[veld]}`); // Log de fout en het veld
+
+                        // Roep de juiste validatiefunctie aan op basis van het veld
+                        valideerVelden(veld, veldElement, foutElement);
                     }
                     
                 }
+            } else if (response.servererror) {
+                const verzendknopDiv = document.getElementById("verzendknop");
+                const verzendMeldingdiv = document.getElementById("verzendknopMeldingdiv");
+                verzendknopDiv.value = response.servererror;  // Gebruik textContent in plaats van value
+                valideerInvoer(verzendknopDiv, verzendMeldingdiv, () => response.servererror);
             }
+
+
+            
+        } catch (e) {
+            console.error("Fout bij het parsen van JSON:", e);
+            console.error("Response ontvangen van server:", xhr.responseText);
         }
-    } 
+    } else {
+        console.error("Verzoek mislukt, status code:", xhr.status);
+    }
 };
+
+function valideerVelden(veld, veldElement, foutElement) {
+    switch (veld) {
+        case 'contactpersoonvoornaam':
+            console.log("Uitvoeren validatie voor voornaam");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'contactpersoonachternaam':
+            console.log("Uitvoeren validatie voor achternaam");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'emailadres':
+            console.log("Uitvoeren validatie voor e-mailadres");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'schoolTelefoonnummer':
+            console.log("Uitvoeren validatie voor school telefoonnummer");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'contactTelefoonnummer':
+            console.log("Uitvoeren validatie voor contact telefoonnummer");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'totaalbegeleiders':
+            console.log("Uitvoeren validatie voor aantal begeleiders");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'niveauleerjaar':
+            console.log("Uitvoeren validatie voor niveau en leerjaar");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'schoolnaam':
+            console.log("Uitvoeren validatie voor schoolnaam");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'adres':
+            console.log("Uitvoeren validatie voor adres");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'postcode':
+            console.log("Uitvoeren validatie voor postcode");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'plaats':
+            console.log("Uitvoeren validatie voor plaats");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'onderwijsNiveau':
+            console.log("Uitvoeren validatie voor schooltype");
+            valideerInvoer(veldElement,foutElement, verzendknopFoutMelding);
+            break;
+        case 'keuzeModule':
+            console.log("Uitvoeren validatie voor keuzeModule");
+            valideerInvoer(veldElement,foutElement, verzendknopFoutMelding);
+            break;
+        case 'aantalLeerlingen':
+            console.log("Uitvoeren validatie voor aantal leerlingen");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'bezoekdatum':
+            console.log("Uitvoeren validatie voor bezoekdatum");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'remiseBreakAantal':
+            console.log("Uitvoeren validatie voor Remise break aantal");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'kazerneBreakAantal':
+            console.log("Uitvoeren validatie voor Kazerne break aantal");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'fortgrachtBreakAantal':
+            console.log("Uitvoeren validatie voor Fortgracht break aantal");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'waterijsjeAantal':
+            console.log("Uitvoeren validatie voor Waterijsje aantal");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'pakjeDrinkenAantal':
+            console.log("Uitvoeren validatie voor Pakje drinken aantal");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'remiseLunchAantal':
+            console.log("Uitvoeren validatie voor Remise lunch aantal");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'eigenPicknickCheckbox':
+            console.log("Uitvoeren validatie voor Eigen picknick checkbox");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        default:
+            console.warn(`Geen validatie gevonden voor veld: ${veld}`);
+            break;
+    }
+}
+
 
 xhr.send(formData);  // Verstuur de formulierdata naar PHP  
     

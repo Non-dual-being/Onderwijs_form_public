@@ -38,7 +38,9 @@ try {
             error_log("Fout: Te veel leerlingen of boekingen voor datum: {$row['bezoekdatum']}");
         } elseif ($row['totale_leerlingen'] == 160 || $row['aantal_definitieve_boekingen'] == 2) {
             $status = 'volgeboekt';
-        } elseif ($row['aantal_definitieve_boekingen'] == 1) {
+        } elseif (($row['aantal_definitieve_boekingen'] == 1 &&  $row['totale_leerlingen'] < 40)) {
+            $status = 'volgeboekt';
+        }elseif ($row['aantal_definitieve_boekingen'] == 1) {
             $status = 'beperkt beschikbaar';
         }
         
