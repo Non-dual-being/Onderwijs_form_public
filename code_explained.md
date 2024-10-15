@@ -815,4 +815,26 @@ $datumObject = DateTime::createFromFormat('d F Y', $ontvangenDatumEngels);
 // $datumObject is nu een DateTime object en je kunt er verder mee werken:
 echo $datumObject->format('Y-m-d');  // Geeft: 2024-09-25
 ```
+# Parameters en by-pass referentie
+```php
+function sanitize_input($data, $maxLength, &$errors, $fieldName) {
+    $sanitizedData = htmlspecialchars(stripslashes(trim($data)));
+    
+    if (strlen($sanitizedData) > $maxLength) {
+        $errors[$fieldName] = ucfirst($fieldName) . " mag niet langer zijn dan " . $maxLength . " tekens.";
+        return false;
+    }
+    
+    return $sanitizedData;
+}
+```
+Hier wordt de array $errors by reference doorgegeven, zodat de foutmeldingen die binnen de functie worden toegevoegd, direct effect hebben op de originele array buiten de functie. Dit voorkomt dat je expliciet de array hoeft terug te geven.
+
+Belangrijk:
+Pass-by-reference zorgt ervoor dat de originele variabele buiten de functie wordt aangepast.
+Het is handig voor het dynamisch aanpassen van gegevens zoals foutmeldingen.
+
+
+
+
 

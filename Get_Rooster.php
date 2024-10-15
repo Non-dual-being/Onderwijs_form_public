@@ -32,10 +32,6 @@ try {
     $keuzemodule = $_POST['lesmodule'] ?? '';
     $aantalLeerlingen = (int)($_POST['aantalleerlingen'] ?? 0); // Cast naar integer
 
-   
-
-   
-
     // Validatie van aantal leerlingen
     if ($aantalLeerlingen < 40 || $aantalLeerlingen > 160) {
         echo json_encode([

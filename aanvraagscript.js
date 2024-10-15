@@ -14,6 +14,28 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    const textarea = document.getElementById('vragenOpmerkingen');
+        const tekenTeller = document.getElementById('tekenTeller');
+        const maxTekens = 600;
+
+        // Update tekenteller
+        function updateTekenTeller() {
+            const resterendeTekens = maxTekens - textarea.value.length;
+            tekenTeller.textContent = resterendeTekens + ' tekens over';
+
+            // Als resterende tekens 0 is, blokkeer extra invoer
+            if (resterendeTekens <= 0) {
+                textarea.value = textarea.value.substring(0, maxTekens);  // Verwijder extra invoer
+                tekenTeller.textContent = '0 tekens over'; // Zorg dat dit altijd correct is
+            }
+        }
+
+        // Luister naar het invoerevenement om de teller te updaten
+        textarea.addEventListener('input', updateTekenTeller);
+
+        // Voor de zekerheid wordt de teller bij het laden van de pagina bijgewerkt
+        updateTekenTeller();
+
     function applyCommonStyles(element, backgroundColor) {
         element.style.left = '35%';
         element.style.width = '30%'; 
@@ -383,7 +405,7 @@ function valideerInput(amountInput) {
 
 function valideerVragenenOpmerkingen(waarde) {
     const maxLength = 600;  
-    const vragenenOpmerkingenRegex = /^[A-Za-z0-9\s.,:]+$/;
+    const vragenenOpmerkingenRegex = /^[A-Za-z0-9\s.,:?!]+$/;
 
     if (waarde.length === 0){
         return "";
@@ -627,7 +649,7 @@ function verzendknopFoutMelding(waarde) {
 
             // Pas de tekst van de toggle-link aan
             if (targetContent.classList.contains("open")) {
-                toggle.querySelector("span").textContent = "Verberg informatie";
+                toggle.querySelector("span").textContent = "Verberg ";
             } else {
                 // Voeg hier de check toe voor bezoektijdenInfo
                 if (targetId === "begeleidersInfo") {
@@ -636,6 +658,8 @@ function verzendknopFoutMelding(waarde) {
                     toggle.querySelector("span").textContent = "Meer informatie over telefoonnummers";
                 } else if (targetId === "bezoektijdenInfo") {
                     toggle.querySelector("span").textContent = "Meer informatie over bezoektijden";
+                } else if(targetId === "niveauleerjaarInfo"){
+                    toggle.querySelector("span").textContent = "Meer informatie over het niveau en het leerjaar";
                 }
             }
         });
@@ -1350,7 +1374,15 @@ if (typeof totalPrice === 'number' && totalPrice >= 0 && totalPrice <= 4000) {
 
 const xhr = new XMLHttpRequest();
 xhr.open('POST', 'validatie.php', true);  // Verwijs naar je PHP-bestand
+timeoutId = setTimeout(function () {
+    const verzendKnop = document.getElementById("verzendknop");
+    verzendKnop.textContent = "Het verwerken van de aanvraag is bezig en duurt langer dan verwacht...";
+ 
+}, 4000);  // 4000 milliseconden = 4 seconden
 xhr.onload = function () {
+    verzendKnop = document.getElementById("verzendknop");
+    verzendKnop.textContent = "verzenden";
+    clearTimeout(timeoutId);  // Stop de timeout zodra er een respons is van de server
     if (xhr.status === 200) {
         try {
             // Verwerk de JSON-response van PHP
@@ -1491,6 +1523,9 @@ function valideerVelden(veld, veldElement, foutElement) {
             break;
         case 'eigenPicknickCheckbox':
             console.log("Uitvoeren validatie voor Eigen picknick checkbox");
+            valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
+            break;
+        case 'vragenOpmerkingen':
             valideerInvoer(veldElement, foutElement, verzendknopFoutMelding);
             break;
         default:

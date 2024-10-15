@@ -45,6 +45,13 @@
             <input type="text" id="niveauleerjaar" name="niveauleerjaar" required>
             <div id="niveauLeerjaarFout" class="foute-invoermelding"></div>
 
+            <div class="meer-informatie-container">
+            <a href="#" class="meerInformatieToggle" data-target="niveauleerjaarInfo"><span>Meer informatie over het niveau en het leerjaar.</span></a>
+                <div id="niveauleerjaarInfo" class="meerInformatieContent">
+                    <p><strong>Omschrijving niveau en leerjaar: </strong> Met VMBO 3, HAVO 2 of groep 8 worden het niveau en het leerjaar correct omschreven.</p>
+                </div>
+            </div>
+
             
             <label for="schoolnaam">Naam school</label>
             <input type="text" id="schoolnaam" name="schoolnaam" required>
@@ -312,3 +319,4 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/nl.js"></script>
 </body>
 </html>
+

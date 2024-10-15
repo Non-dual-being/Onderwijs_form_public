@@ -5,9 +5,6 @@ ini_set('display_errors', 0);  // Schakel weergave van fouten in de browser uit
 ini_set('log_errors', 1);      // Log fouten naar een logbestand
 error_reporting(E_ALL);        // Log alle fouten
 
-
-
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -15,9 +12,9 @@ require 'vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
-$smtp_password = getenv('SMTP_PASSWORD');
 
-
+// Haal alleen de specifieke variabele op die je nodig hebt
+$smtp_password = $_ENV['SMTP_PASSWORD'] ?? null;
 
 
 // Database inloggegevens
@@ -92,7 +89,7 @@ function generateDisabledDates() {
 }
 
 function sanitize_input($data, $maxLength, &$errors, $fieldName) {
-    $sanitizedData = htmlspecialchars(stripslashes(trim($data)));
+     $sanitizedData = htmlspecialchars(strip_tags(stripslashes(trim($data))));
     
     if (strlen($sanitizedData) > $maxLength) {
         $errors[$fieldName] = ucfirst($fieldName) . " mag niet langer zijn dan " . $maxLength . " tekens.";
@@ -262,6 +259,18 @@ try {
         $plaats = sanitize_input($_POST['plaats'], 100, $errors, 'plaats');
     }
 
+    if (isset($_POST['vragenOpmerkingen']) && !empty($_POST['vragenOpmerkingen'])) {
+        if (!preg_match("/^[A-Za-z0-9\s,.:?!]+$/", $_POST['vragenOpmerkingen'])) { //de punt weer terug zetten, is nu zonder om te testen
+            $errors['vragenOpmerkingen'] = "Ongeldige invoer van vragen en opmerkingen: vermijd speciale tekens";
+        } else {
+            $vragenenOpmerkingen = sanitize_input($_POST['vragenOpmerkingen'], 600, $errors, 'vragenOpmerkingen');
+        }
+    } else {
+        // Als het veld leeg is, stel het in op een lege string
+        $vragenenOpmerkingen = '';
+    }
+    
+
     // Keuze module validatie
     $keuzemodule = $_POST['keuzeModule'] ?? '';
     $schooltype = $_POST['onderwijsNiveau'] ?? '';
@@ -297,6 +306,8 @@ try {
     if (!in_array($eigenPicknick, [0, 1], true)) {
         $errors['eigenPicknick'] = "Ongeldige waarde voor Eigen Picknick. Moet 0 of 1 zijn.";
     }
+
+
 
     
     if (!empty($errors)) {
@@ -409,16 +420,66 @@ try {
     ':eigenPicknick' => $eigenPicknick
     ]);
 
+    $lastInsertedId = $pdo->lastInsertId();
+
      // Commit de transactie
     if ($pdo->commit()){
         $mail = new PHPMailer(true);
+        // Roep get_rooster.php aan om het rooster op te halen
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "http://localhost/GeoFort/Get_Rooster.php"); // Zorg ervoor dat je de correcte URL gebruikt
+        curl_setopt($ch, CURLOPT_POST, 1);
+        
+        // Verzenden van de POST data
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+            'schooltype' => $schooltype,
+            'lesmodule' => $keuzemodule,
+            'aantalleerlingen' => $aantalLeerlingen
+        ]));
+        
+        // Ontvang het antwoord als string in plaats van het direct af te drukken
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        // Uitvoeren van de cURL-oproep
+        $response = curl_exec($ch);
+        
+        // Foutcontrole bij cURL
+        if ($response === false) {
+            die('Fout bij cURL: ' . curl_error($ch)); // Geeft de cURL-fout terug
+        }
+        
+        
+        // Sluit de cURL-verbinding
+        curl_close($ch);
+        
+        // JSON-decoding van de respons
+        $roosterData = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            die('Ongeldige JSON-respons: ' . json_last_error_msg());
+        }
+        
+        // Verwerking van het rooster
+        if ($roosterData['success']) {
+            $roosterAfbeelding = $roosterData['pdf'];  // Het pad naar de PDF-afbeelding
+            
+            // Controleer of het bestand daadwerkelijk bestaat voordat je het toevoegt
+            if (file_exists($roosterAfbeelding)) {
+                $mail->addAttachment($roosterAfbeelding);
+            } else {
+                error_log('Roosterbestand niet gevonden: ' . $roosterAfbeelding);
+            }
+        } else {
+            error_log('Fout bij ophalen rooster: ' . $roosterData['message']);
+        }
+        
+
     try {
         // Configuratie voor het gebruik van SMTP
         $mail->isSMTP();
-        $mail->Host = 'smtp.office365.com';
+        $mail->Host = 'smtp.office365.com'; // verander dit straks weer naar .com
         $mail->SMTPAuth = true;
         $mail->Username = 'kevin@geofort.nl';
-        $mail->Password = 'Mah67312';  // Zorg ervoor dat wachtwoorden veilig worden opgeslagen en niet hardcoded
+        $mail->Password = $smtp_password;  // Zorg ervoor dat wachtwoorden veilig worden opgeslagen en niet hardcoded
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
         $mail->SMTPDebug = 0; // Toon SMTP-fouten en communicatie in de log
@@ -452,9 +513,9 @@ try {
         // Inhoud van de e-mail (HTML)
         $mailContent = "
         <p>Beste " . htmlspecialchars($voornaam) . ",<br></p>
-        <p>Bedankt voor uw aanvraag voor een schoolbezoek aan het GeoFort.</p>
+        <p>Bedankt voor uw aanvraag voor een schoolbezoek aan het GeoFort, in de bijlage treft u het conceptrooster aan.</p>
         <p>Hieronder het overzicht van uw aanvraag:</p>
-        
+    
         <h4 style='margin-bottom: 0; padding: 0; text-decoration: underline'>Algemene gegevens</h4>
         <ul style='font-size: 12px;'>  <!-- Kleinere tekst -->
             <li><strong>Voornaam:</strong> " . htmlspecialchars($voornaam) . "</li>
@@ -467,15 +528,23 @@ try {
             <li><strong>Postcode:</strong> " . htmlspecialchars($postcode) . "</li>
             <li><strong>Plaats:</strong> " . htmlspecialchars($plaats) . "<br></li>
         </ul>  
-        
+    
         <h4 style='margin: 0; padding: 0; text-decoration: underline'>Bezoekgegevens</h4>
         <ul style='font-size: 12px;'>
             <li><strong>Aantal leerlingen:</strong> " . htmlspecialchars($aantalLeerlingen) . "</li>
             <li><strong>Bezoekdatum:</strong> " . htmlspecialchars($nederlandseDatum) . "</li>
             <li><strong>Schooltype:</strong> " . htmlspecialchars($schooltype) . "</li>
-            <li><strong>Keuze-module:</strong> " . htmlspecialchars($keuze_module) . "</li>
-        <br></ul>
-    ";
+            <li><strong>Keuze-module:</strong> " . htmlspecialchars($keuze_module) . "</li>";
+    
+    // Voeg 'Vragen en Opmerkingen' alleen toe als deze niet leeg is
+    if (!empty($vragenenOpmerkingen)) {
+        $mailContent .= "<li><strong>Vragen en Opmerkingen:</strong> " . htmlspecialchars($vragenenOpmerkingen) . "</li>";
+    }
+    
+    $mailContent .= "<br></ul>";
+    
+
+
     $etenDrinken = [];
 if ($remiseBreakAantal > 0) {
     $etenDrinken[] = "<strong>Aantal Remise Break snacks: </strong>" . htmlspecialchars($remiseBreakAantal);
@@ -520,15 +589,20 @@ if (!empty($etenDrinken)) {
 
     // Prijsoverzicht
     $mailContent .= "
-    
     <h4 style='margin: 0; padding: 0; text-decoration: underline'>Prijsoverzicht</h4>
     <ul style='font-size: 12px;'>
-    <li style='font-size: 12px;'><strong>Prijs voor het bezoek:</strong> " . number_format($bezoekPrice, 2, ',', '.') . " euro</li>
-    <li style='font-size: 12px;'><strong>Prijs voor het bestelde eten en drinken:</strong> " . number_format($foodPrice, 2, ',', '.') . " euro<br></li>
-    </ul>
-    <p style='font-size: 14px;'><strong>Totale prijs voor het bezoek: <span style='text-decoration: underline;'> " . number_format($totalPrice, 2, ',', '.') . " euro </span></strong><br></p>
-    
+    <li style='font-size: 12px;'><strong>Prijs voor het bezoek:</strong> " . number_format($bezoekPrice, 2, ',', '.') . " euro</li>";
+
+    // Alleen tonen als foodPrice niet NULL is
+    if ($foodPrice !== null) {
+        $mailContent .= "<li style='font-size: 12px;'><strong>Prijs voor het bestelde eten en drinken:</strong> " . number_format($foodPrice, 2, ',', '.') . " euro<br></li>";
+    }
+
+    $mailContent .= "
+        </ul>
+        <p style='font-size: 14px;'><strong>Totale prijs voor het bezoek: <span style='text-decoration: underline;'> " . number_format($totalPrice, 2, ',', '.') . " euro </span></strong><br></p>
     ";
+
     
 
     $mailContent .= "
@@ -552,8 +626,22 @@ if (!empty($etenDrinken)) {
         
     } catch (Exception $e) {
         // Fout bij het versturen van de e-mail
+        try {
+            $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $user, $pass);
+            $stmt = $pdo->prepare("DELETE FROM aanvragen WHERE id = :id");
+            $stmt->execute([':id' => $lastInsertedId]);
+
+            error_log("Laatste rij met ID $lastInsertedId is verwijderd vanwege e-mailfout.");
+
+        } catch (PDOException $dbError) {
+            error_log("Fout bij het verwijderen van de laatste rij: " . $dbError->getMessage());
+        }
+        
         error_log("Emailfout: " . $e->getMessage());
-        $response = json_encode(['success' => false, 'servererror' => 'Er is een fout opgetreden bij verwerken van de aanvraag']);
+        $response = json_encode(['success' => false, 'servererror' => 'Er is een fout opgetreden bij het verwerken van de aanvraag!']);
+        echo  $response;
+        exit();
+       
     }
     
 

@@ -814,3 +814,68 @@ html::-webkit-scrollbar-button {
 }
 
 
+/* Stijl voor de login form */
+.login-form {
+    max-width: 400px; /* Beperk de breedte van het formulier */
+    margin: 50px auto; /* Centraal op de pagina */
+    background-color: #fff; /* Witte achtergrond voor het formulier */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Zachte schaduw */
+}
+
+/* Labels voor inputvelden */
+.login-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #081540;
+}
+
+/* Inputvelden */
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #081540;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: white;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Hover en focus effecten voor inputvelden */
+.login-form input[type="email"]:hover,
+.login-form input[type="password"]:hover {
+    background-color: rgba(8, 21, 64, 0.1); /* Lichte blauwe achtergrond */
+}
+
+.login-form input[type="email"]:focus,
+.login-form input[type="password"]:focus {
+    border-color: #A6B1E1; /* Zachtere blauwe randkleur bij focus */
+    background-color: rgba(166, 177, 225, 0.15); /* Lichtere achtergrondkleur bij focus */
+    box-shadow: 0 0 8px rgba(166, 177, 225, 0.5); /* Zachte schaduw om het veld */
+    outline: none;
+    transition: all 0.3s ease; /* Voeg een vloeiende overgang toe voor een zachtere verandering */
+}
+
+
+/* Stijl voor de submit knop */
+.login-form .submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #081540;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect voor de submit knop */
+.login-form .submit-button:hover {
+    background-color: #152036c0; /* Iets donkerdere kleur bij hover */
+}
