@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Flatpickr configureren
+    
     function initFlatpickr(agendaData) {
         const uniqueWeeks = new Set(agendaData.map(item => item.weeknummer));
 
@@ -29,30 +29,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Functie om aanvragen op te halen
-    function fetchRequestsForDate() {
-        const selectedDate = document.getElementById('start_date').value;
+    // Functie om aanvragen op te halen bij klikken op "Bekijk aanvragen"
+    document.getElementById('submit-date').addEventListener('click', function() {
+        const datumVeld = document.getElementById('start_date');
+        const datumPicker = datumVeld._flatpickr;  // Verkrijg Flatpickr instance
+        const geselecteerdeDatum = datumPicker.selectedDates[0];  // Geselecteerde datum
 
-        if (!selectedDate) {
+        if (!geselecteerdeDatum) {
             alert("Selecteer een datum!");
             return;
         }
 
+        // Verstuur de geselecteerde datum via AJAX
         fetch('get_aanvragen_van_week.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ selectedDate: selectedDate })
+            body: JSON.stringify({ selectedDate: geselecteerdeDatum.toISOString().split('T')[0] })
         })
         .then(response => response.json())
-        .then(data => displayRequests(data))
-        .catch(error => console.error('Error fetching requests:', error));
-    }
-
-    // Knop click-event voor het ophalen van aanvragen
-    document.getElementById('submit-date').addEventListener('click', function() {
-        fetchRequestsForDate();
+        .then(data => {
+            // Toon de aanvragen van de geselecteerde week
+            displayRequests(data);
+        })
+        .catch(error => {
+            console.error('Error fetching requests:', error);
+        });
     });
 
     // Aanvragen weergeven
@@ -90,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Helperfunctie voor weeknummerberekening (ISO-week)
+    // Weeknummerberekening (ISO-week)
     function getWeekNumber(date) {
         const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
         const dayNum = d.getUTCDay() || 7;
@@ -99,32 +102,17 @@ document.addEventListener('DOMContentLoaded', function () {
         return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
     }
 
-    // Stijlen resetten
-    function resetDayStyles(dayElem) {
-        dayElem.style.backgroundColor = '';
-        dayElem.style.color = '';
-        dayElem.title = '';
-        dayElem.style.border = '';
-    }
-
-    // Stijlen toepassen
-    function applyStyling(dayElem, backgroundColor, textColor, title, border) {
-        dayElem.style.backgroundColor = backgroundColor;
-        dayElem.style.color = textColor;
-        dayElem.title = title;
-
-        if (border) {
-            dayElem.style.border = `3px solid ${border}`;
-        }
-    }
-
-    // AJAX: Kalenderdata ophalen
+    // Kalenderdata laden via AJAX
     function loadCalendarData() {
         fetch('get_aanvragen_dashboarddata.php')
             .then(response => response.json())
-            .then(data => initFlatpickr(data))
-            .catch(error => console.error('Error fetching calendar data:', error));
+            .then(data => {
+                initFlatpickr(data);
+            })
+            .catch(error => {
+                console.error('Error fetching calendar data:', error);
+            });
     }
 
-    loadCalendarData();
+    loadCalendarData();  // Laad de kalenderdata bij paginalaad
 });
