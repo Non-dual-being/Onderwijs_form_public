@@ -879,3 +879,65 @@ html::-webkit-scrollbar-button {
 .login-form .submit-button:hover {
     background-color: #152036c0; /* Iets donkerdere kleur bij hover */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.dashboard-container {
+    max-width: 800px;  /* Maak het iets breder dan het formulier */
+    margin: 0 auto;    /* Zorg ervoor dat het dashboard in het midden blijft */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+#date-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+button#submit-date, button#submit-statuses {
+    width: 100%; /* Laat de knop de volledige breedte innemen */
+    background-color: #D93134;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 0;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+button#submit-date:hover, button#submit-statuses:hover {
+    background-color: #B12A2A; /* Iets donkerder rood bij hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Schaduw voor een klein diepte-effect */
+}
+
+/* Extra padding voor de sectietekst */
+.welcome-section h2, .welcome-section p {
+    padding: 10px 0;
+}
+
+#start_date {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #081540;
+    border-radius: 5px;
+}

@@ -1208,7 +1208,7 @@ function verzendknopFoutMelding(waarde) {
     // Laad de agenda data van de server
    // Laad de agenda data van de server
 function loadCalendarData() {
-    fetch('get_aanvragen_data.php')
+    fetch('get_aanvragen_data_formulier.php')
         .then(response => response.json())
         .then(data => {
             // Controleer of de ontvangen data niet leeg is

@@ -59,6 +59,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
         <section class="overview-section">
             <h3>Overzicht van Aanvragen</h3>
             <div id="requests-container"></div>
+            <button id="submit-statuses">Submit statussen</button>
         </section>
     </div>
 

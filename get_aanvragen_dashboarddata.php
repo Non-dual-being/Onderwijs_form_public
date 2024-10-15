@@ -19,10 +19,11 @@ try {
 
     // SQL-query om de unieke weeknummers te verkrijgen van aanvragen met status 'In Optie' of 'Definitief'
     $sql = "
-        SELECT DISTINCT WEEK(bezoekdatum) AS weeknummer 
-        FROM aanvragen
-        WHERE status IN ('In Optie', 'Definitief')
-        ORDER BY weeknummer ASC;
+    SELECT DISTINCT WEEK(bezoekdatum, 3) AS weeknummer 
+    FROM aanvragen
+    WHERE status IN ('In Optie', 'Definitief')
+    ORDER BY weeknummer ASC;
+
     ";
 
     $stmt = $pdo->prepare($sql);
