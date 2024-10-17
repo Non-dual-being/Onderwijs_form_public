@@ -34,38 +34,42 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/nl.js"></script>
     <script src="dashboardscript.js"></script>
 </head>
-<body>
+<body class="body-dashboard">
+    <header class="header-dashboard"></header>
+    <h1 class="Title_Dashboard">GeoFort Dashboard</h1>
+        <div id="content-container">
+            <a href="logout.php" class="meerInformatieToggle" id="Uitlog_Dashboard"><span>Uitloggen</span></a>
+            <section class="welcome-section">
+                <h2>Welkom op het Dashboard, <?php echo $_SESSION['username']; ?>!</h2>
+                <p>Selecteer de maandag van de week om de aanvragen van die week te zien.</p>
+            </section>
 
-    <nav class="navbar">
-        <h1>GeoFort Dashboard</h1>
-        <ul class="navbar-list">
-            <li><a href="logout.php">Uitloggen</a></li>
-        </ul>
-    </nav>
+            <!-- Periodekiezer -->
+            <div id="date-picker">
+                <label for="start_date">Agenda</label>
+                <input type="text" id="start_date" >
+                <button id="submit-date">Bekijk aanvragen</button>
+            </div>
+            
+            <div class="meer-informatie-container">
+                <a href="#" class="meerInformatieToggle" data-target="aanvragenInfo"><span>Meer informatie over het bekijken van de aanvragen</span></a>
+                    <div id="aanvragenInfo" class="meerInformatieContent">
+                        <p><strong>Datum kiezen:</strong> In de agenda klik je op de maandagen om de aanvragen van die week te zien.</p>
+                        <p><strong>Overzicht aavragen:</strong> In het overzicht kun je per aanvraag de status veranderen en de veranderingen doorgeven.</p>
+                    </div>
+                </div>
 
-    <div class="dashboard-container">
-        <section class="welcome-section">
-            <h2>Welkom op het Dashboard, <?php echo $_SESSION['username']; ?>!</h2>
-            <p>Selecteer een week om de aanvragen te beheren.</p>
-        </section>
-
-        <!-- Periodekiezer -->
-        <div id="date-picker">
-            <label for="start_date">Startdatum:</label>
-            <input type="text" id="start_date" >
-            <button id="submit-date">Bekijk aanvragen</button>
+            <section class="overview-section" id="overview-aanvragen-dashboard">
+                <h3>Overzicht van Aanvragen</h3>
+                <div id="requests-container"></div>
+                <button id="submit-statuses">Submit statussen</button>
+            </section>
         </div>
 
-        <section class="overview-section">
-            <h3>Overzicht van Aanvragen</h3>
-            <div id="requests-container"></div>
-            <button id="submit-statuses">Submit statussen</button>
-        </section>
-    </div>
-
-    <footer>
-        <p>&copy; 2024 GeoFort</p>
+    <footer id="footer_dashboard">
+        <p id="copy_logo">&copy; 2024 GeoFort</p>
     </footer>
+
 
 </body>
 </html>

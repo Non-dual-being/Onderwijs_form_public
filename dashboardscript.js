@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
-
+    flatpickr.localize(flatpickr.l10ns.nl);
+    // Initialiseer Flatpickr kalender met agendaData
     function initFlatpickr(agendaData) {
         const uniqueWeeks = new Set(agendaData.map(item => item.weeknummer));
 
         flatpickr("#start_date", {
             locale: "nl",  // Stel in op Nederlands
             weekNumbers: true,  // Toon weeknummers
-            dateFormat: "Y-m-d",  // Datumformaat instellen
+            dateFormat: "d F Y",  // Dag, maand, jaar
             disable: [
                 function (date) {
                     const weekNumber = getWeekNumber(date);  // Bereken weeknummer
@@ -83,82 +84,78 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     // Functie om de aanvragen weer te geven
-    // Aanvragen weergeven
-function displayRequests(requests) {
-    const requestsContainer = document.getElementById('requests-container');
-    requestsContainer.innerHTML = '';  // Maak de container leeg
+    function displayRequests(requests) {
+        const requestsContainer = document.getElementById('requests-container');
+        requestsContainer.innerHTML = '';  // Maak de container leeg
 
-    if (requests.length === 0) {
-        requestsContainer.textContent = "Geen aanvragen gevonden voor de geselecteerde week.";
-        return;
-    }
+        if (requests.length === 0) {
+            requestsContainer.textContent = "Geen aanvragen gevonden voor de geselecteerde week.";
+            return;
+        }
 
-    requests.forEach(request => {
-        const requestDiv = document.createElement('div');
-        requestDiv.classList.add('request-item');
+        requests.forEach(request => {
+            const requestDiv = document.createElement('div');
+            requestDiv.classList.add('request-item');
 
-        const schoolInfo = document.createElement('p');
-        schoolInfo.textContent = `School: ${request.schoolnaam} | Aantal leerlingen: ${request.aantal_leerlingen} | Bezoekdatum: ${request.bezoekdatum}`;
-        requestDiv.appendChild(schoolInfo);
+            const schoolInfo = document.createElement('p');
+            schoolInfo.textContent = `School: ${request.schoolnaam} | Aantal leerlingen: ${request.aantal_leerlingen} | Bezoekdatum: ${request.bezoekdatum}`;
+            requestDiv.appendChild(schoolInfo);
 
-        const statusSelect = document.createElement('select');
-        statusSelect.name = `status[${request.id}]`;  // Voeg de id hier toe
-        ['In Optie', 'Definitief', 'Afgewezen'].forEach(status => {
-            const option = document.createElement('option');
-            option.value = status;
-            option.textContent = status;
-            if (status === request.status) {
-                option.selected = true;
-            }
-            statusSelect.appendChild(option);
+            const statusSelect = document.createElement('select');
+            statusSelect.name = `status[${request.id}]`;  // Voeg de id hier toe
+            ['In Optie', 'Definitief', 'Afgewezen'].forEach(status => {
+                const option = document.createElement('option');
+                option.value = status;
+                option.textContent = status;
+                if (status === request.status) {
+                    option.selected = true;
+                }
+                statusSelect.appendChild(option);
+            });
+            requestDiv.appendChild(statusSelect);
+
+            requestsContainer.appendChild(requestDiv);
         });
-        requestDiv.appendChild(statusSelect);
-
-        requestsContainer.appendChild(requestDiv);
-    });
-}
-
-    // Zorg ervoor dat de statusupdatenaar PHP gestuurd worden bij het klikken op de submit-knop
-document.getElementById('submit-statuses').addEventListener('click', function () {
-    const statusUpdates = [];
-
-    aanvragenData.forEach(request => {
-        const statusSelect = document.querySelector(`select[name="status[${request.id}]"]`);
-        const nieuweStatus = statusSelect.value;
-
-        if (nieuweStatus !== request.status) {  // Alleen verzenden als de status is gewijzigd
-            statusUpdates.push({ id: request.id, status: nieuweStatus });
-        }
-    });
-
-    if (statusUpdates.length === 0) {
-        alert('Geen statussen zijn gewijzigd.');
-        return;
     }
 
-    // Verstuur de statusupdates naar de PHP backend
-    fetch('update_aanvragen_status.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ updates: statusUpdates })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Statussen succesvol bijgewerkt');
-        } else {
-            alert('Er is iets fout gegaan: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error updating statuses:', error);
-    });
-});
+    // Zorg ervoor dat de statusupdates naar PHP gestuurd worden bij het klikken op de submit-knop
+    document.getElementById('submit-statuses').addEventListener('click', function () {
+        const statusUpdates = [];
 
-    
-    
+        aanvragenData.forEach(request => {
+            const statusSelect = document.querySelector(`select[name="status[${request.id}]"]`);
+            const nieuweStatus = statusSelect.value;
+
+            if (nieuweStatus !== request.status) {  // Alleen verzenden als de status is gewijzigd
+                statusUpdates.push({ id: request.id, status: nieuweStatus });
+            }
+        });
+
+        if (statusUpdates.length === 0) {
+            alert('Geen statussen zijn gewijzigd.');
+            return;
+        }
+
+        // Verstuur de statusupdates naar de PHP backend
+        fetch('update_aanvragen_status.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ updates: statusUpdates })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Statussen succesvol bijgewerkt');
+            } else {
+                alert('Er is iets fout gegaan: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating statuses:', error);
+        });
+    });
 
     // Functie om weeknummer te berekenen (ISO-week)
     function getWeekNumber(date) {
@@ -201,35 +198,31 @@ document.getElementById('submit-statuses').addEventListener('click', function ()
     }
 
     loadCalendarData();  // Laad de kalenderdata bij paginalaad
-});
 
-document.getElementById('submit-statuses').addEventListener('click', function () {
-    const statusInputs = document.querySelectorAll('select[name^="status"]');
-    const statusUpdates = [];
+    const toggles = document.querySelectorAll(".meerInformatieToggle");
 
-    statusInputs.forEach(select => {
-        const aanvraagId = select.name.match(/\d+/)[0];  // Haal het id uit de naam
-        const nieuweStatus = select.value;
-        statusUpdates.push({ id: parseInt(aanvraagId), status: nieuweStatus });
-    });
+    toggles.forEach(toggle => {
+        toggle.addEventListener("click", function(event) {
+            event.preventDefault(); // Voorkom dat de pagina scrollt naar de top
+            
+            // Haal het doel-element op via de data-target attribuut
+            const targetId = toggle.getAttribute("data-target");
+            const targetContent = document.getElementById(targetId);
+            
+            // Toggle de "open" class om de inhoud te tonen of verbergen
+            targetContent.classList.toggle("open");
 
-    // Verstuur de statusupdates naar de PHP backend
-    fetch('update_aanvragen_status.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ updates: statusUpdates })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Statussen succesvol bijgewerkt');
-        } else {
-            alert('Er is iets fout gegaan: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error updating statuses:', error);
+            // Pas de tekst van de toggle-link aan
+            if (targetContent.classList.contains("open")) {
+                toggle.querySelector("span").textContent = "Verberg ";
+            } else {
+                // Voeg hier de check toe voor bezoektijdenInfo
+                if (targetId === "aanvragenInfo") {
+                    toggle.querySelector("span").textContent = "Meer informatie over het bekijken van de aanvragen";
+                } 
+            }
+        });
     });
 });
+
+

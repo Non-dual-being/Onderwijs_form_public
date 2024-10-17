@@ -1,12 +1,12 @@
-body {
+body:not(.body-dashboard) {
     font-family: 'Avenir', sans-serif;
     margin: 20px;
     padding: 20px;
     background-color: #f9f9f9;
     justify-content: center; /* Centreren over de verticale as */
     align-items: center; /* Centreren over de horizontale as */
-
 }
+
 
 input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"], input[type="tel"] {
     background-color: white; /* Background color for the input box */
@@ -880,39 +880,69 @@ html::-webkit-scrollbar-button {
     background-color: #152036c0; /* Iets donkerdere kleur bij hover */
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-.dashboard-container {
-    max-width: 800px;  /* Maak het iets breder dan het formulier */
-    margin: 0 auto;    /* Zorg ervoor dat het dashboard in het midden blijft */
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-}
-
-#date-picker {
+.body-dashboard {
+    font-family: 'Avenir', sans-serif;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;  /* Zorg ervoor dat de body altijd minimaal 100% van de viewport-hoogte inneemt */
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    justify-content: center; /* Centreren over de verticale as */
+    align-items: center; /* Centreren over de horizontale as */
+    font-family: 'Avenir', sans-serif; /* Font voor consistentie */
+    min-width: 1200px;
+    overflow-x: hidden;
+    
+}
+
+.header-dashboard {
+    
+    display: flex;
     align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background-color: #081540;
+    color: white;
+    position: fixed;  /* Blijf bovenaan vaststaan */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 1000;
+}
+
+#content-container {
+    flex: 1;
+    padding: 20px;
+    min-width: 100px;
+    padding-bottom: 20px; 
+
+}
+
+
+#Uitlog_Dashboard {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    background-color: #D93134;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    border: 2px solid #081540;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    align-self: flex-end;
     margin-bottom: 20px;
+    max-width: 200px;
+}
+
+#Uitlog_Dashboard:hover {
+    background-color: #B12A2A;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 
 button#submit-date, button#submit-statuses {
-    width: 100%; /* Laat de knop de volledige breedte innemen */
+    width: 100%;
     background-color: #D93134;
     color: white;
     font-size: 18px;
@@ -925,19 +955,29 @@ button#submit-date, button#submit-statuses {
 }
 
 button#submit-date:hover, button#submit-statuses:hover {
-    background-color: #B12A2A; /* Iets donkerder rood bij hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Schaduw voor een klein diepte-effect */
+    background-color: #B12A2A;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Extra padding voor de sectietekst */
-.welcome-section h2, .welcome-section p {
-    padding: 10px 0;
+
+#footer_dashboard {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #081540;
+    color: white;
+    width: 100vw;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+
+    
 }
 
-#start_date {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 2px solid #081540;
-    border-radius: 5px;
+#copy_logo {
+    margin: 0;
+    text-align: center;
 }
