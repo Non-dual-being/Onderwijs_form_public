@@ -12,47 +12,7 @@
     <h1>ONDERWIJS AANVRAAG-FORMULIER</h1>
     <form id="onderwijsFormulier" method="post" novalidate>
         <fieldset>
-            <legend>Basis-Gegevens</legend>
-            <label for="contactpersoonvoornaam">Voornaam contactpersoon</label>
-            <input type="text" id="contactpersoonvoornaam" name="contactpersoonvoornaam" required>
-            <div id="voornaamFout" class="foute-invoermelding"></div>
 
-            <label for="contactpersoonachternaam">Achternaam contactpersoon</label>
-            <input type="text" id="contactpersoonachternaam" name="contactpersoonachternaam" required >
-            <div id="achternaamFout" class="foute-invoermelding"></div>
-            
-            <label for="emailadres">E-mailadres</label>
-            <input type="email" id="emailadres" name="emailadres" required>
-            <div id="emailFout" class="foute-invoermelding"></div>
-            
-            <label for="schoolTelefoonnummer">Telefoonnummer school</label>
-            <input type="tel" id="schoolTelefoonnummer" name="schoolTelefoonnummer" required>
-            <div id="schoolTelefoonnummerFout" class="foute-invoermelding"></div>
-
-            <label for="contactTelefoonnummer">Telefoonnummer contactpersoon</label>
-            <input type="tel" id="contactTelefoonnummer" name="contactTelefoonnummer" required>
-            <div id="contactTelefoonnummerFout" class="foute-invoermelding"></div>
-
-            <div class="meer-informatie-container">
-            <a href="#" class="meerInformatieToggle" data-target="telefoonInfo"><span>Meer informatie over telefoonnummers</span></a>
-                <div id="telefoonInfo" class="meerInformatieContent">
-                    <p><strong>Telefoonnummer van de school:</strong> Dit nummer wordt gebruikt voor alle communicatie met de school zelf.</p>
-                    <p><strong>Telefoonnummer contactpersoon:</strong> Dit nummer is voor de contactpersoon die tijdens het schoolbezoek bereikbaar is.</p>
-                </div>
-            </div>
-
-            <label for="niveauleerjaar">Niveau en Leerjaar</label>
-            <input type="text" id="niveauleerjaar" name="niveauleerjaar" required>
-            <div id="niveauLeerjaarFout" class="foute-invoermelding"></div>
-
-            <div class="meer-informatie-container">
-            <a href="#" class="meerInformatieToggle" data-target="niveauleerjaarInfo"><span>Meer informatie over het niveau en het leerjaar.</span></a>
-                <div id="niveauleerjaarInfo" class="meerInformatieContent">
-                    <p><strong>Omschrijving niveau en leerjaar: </strong> Met VMBO 3, HAVO 2 of groep 8 worden het niveau en het leerjaar correct omschreven.</p>
-                </div>
-            </div>
-
-            
             <label for="schoolnaam">Naam school</label>
             <input type="text" id="schoolnaam" name="schoolnaam" required>
             <div id="naamSchoolFout" class="foute-invoermelding"></div>
@@ -68,23 +28,70 @@
             <label for="plaats">Plaats</label>
             <input type="text" id="plaats" name="plaats" required>
             <div id="plaatsFout" class="foute-invoermelding"></div>
+
+            <label for="niveauleerjaar">Niveau en Leerjaar</label>
+            <input type="text" id="niveauleerjaar" name="niveauleerjaar" required>
+            <div id="niveauleerjaarFout" class="foute-invoermelding"></div>
+
+            <div class="meer-informatie-container">
+            <a href="#" class="meerInformatieToggle" data-target="niveauleerjaarInfo"><span>Meer informatie over het niveau en het leerjaar.</span></a>
+                <div id="niveauleerjaarInfo" class="meerInformatieContent">
+                    <p><strong>Omschrijving niveau en leerjaar: </strong> Met VMBO 3, HAVO 2 of groep 8 worden het niveau en het leerjaar correct omschreven.</p>
+                </div>
+            </div>
+
+            <label for="schoolTelefoonnummer">Telefoonnummer school</label>
+            <input type="tel" id="schoolTelefoonnummer" name="schoolTelefoonnummer" required>
+            <div id="schoolTelefoonnummerFout" class="foute-invoermelding"></div>
+
+            <div class="meer-informatie-container">
+            <a href="#" class="meerInformatieToggle" data-target="telefoonInfo"><span>Meer informatie over telefoonnummers</span></a>
+                <div id="telefoonInfo" class="meerInformatieContent">
+                    <p><strong>Telefoonnummer van de school:</strong> Dit nummer wordt gebruikt voor alle communicatie met de school zelf.</p>
+                    <p><strong>Telefoonnummer contactpersoon:</strong> Dit nummer is voor de contactpersoon die tijdens het schoolbezoek bereikbaar is.</p>
+                </div>
+            </div>
+
+            <legend>Basis-Gegevens</legend>
+            <label for="contactpersoonvoornaam">Voornaam contactpersoon</label>
+            <input type="text" id="contactpersoonvoornaam" name="contactpersoonvoornaam" required>
+            <div id="voornaamFout" class="foute-invoermelding"></div>
+
+            <label for="contactpersoonachternaam">Achternaam contactpersoon</label>
+            <input type="text" id="contactpersoonachternaam" name="contactpersoonachternaam" required >
+            <div id="achternaamFout" class="foute-invoermelding"></div>
+            
+            <label for="emailadres">E-mailadres</label>
+            <input type="email" id="emailadres" name="emailadres" required>
+            <div id="emailFout" class="foute-invoermelding"></div>
+            
+
+            <label for="contactTelefoonnummer">Telefoonnummer contactpersoon</label>
+            <input type="tel" id="contactTelefoonnummer" name="contactTelefoonnummer" required>
+            <div id="contactTelefoonnummerFout" class="foute-invoermelding"></div>
+
             
             <label for="bezoekdatum">Datum bezoek</label>
             <input type="date" id="bezoekdatum" name="bezoekdatum" required>
             <div id="bezoekdatumFout" class="foute-invoermelding"></div>
             
-            
-            <label for="aankomsttijd">Wij verwachten u om</label>
-            <input type="time" id="aankomsttijd" name="aankomsttijd" value="09:45" readonly required data-hover-message="Standaard aankomsttijd">
+            <label for="Aankomsttijd">Aankomsttijd</label>
+            <div id ="aankomsttijd" class="overview-section-tijden">
+                <p>Standaard aankomsttijd: 09:45</p>
+            </div>
 
-            <label for="vertrektijd">Het vertrek is om</label>
-            <input type="time" id="vertrektijd" name="vertrektijd" value="15:00" readonly required data-hover-message="Standaard vertrektijd">
+
+            <label for="vertrektijd">Vertrektijd</label>
+            <div id ="vertrektijd" class="overview-section-tijden">
+                <p>Standaard vetrektijd: 15:00</p>
+            </div>
+
+           
 
             <div class="meer-informatie-container">
             <a href="#" class="meerInformatieToggle" data-target="bezoektijdenInfo"><span>Meer informatie over bezoektijden</span></a>
             <div id="bezoektijdenInfo" class="meerInformatieContent">
-                <p>GeoFort hanteert standaard bezoektijden, in overleg kan het bezoek afwijken van de standaardtijden.</p>
-                <p>Vul onderaan het formulier bij de sectie <strong class="highlighted-text">Vragen en Opmerkingen</strong> je wensen in ten aanzien van de bezoektijden.</p>
+                <p>GeoFort hanteert <strong class="highlighted-text">standaard</strong> bezoektijden, in overleg kan bij uitzondering het bezoek afwijken van de standaardtijden.</p>
             </div>
 
             

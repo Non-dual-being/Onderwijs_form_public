@@ -167,14 +167,14 @@ try {
     error_log("Validatie van invoervelden gestart...");
 
     // Voornaam validatie
-    if (empty($_POST['contactpersoonvoornaam']) || !preg_match("/^[A-Za-z\s.]*$/", $_POST['contactpersoonvoornaam'])) {
+    if (empty($_POST['contactpersoonvoornaam']) || !preg_match("/^[\p{L}\s.-]*$/u", $_POST['contactpersoonvoornaam'])) {
         $errors['contactpersoonvoornaam'] = "Ongeldige voornaam.";
     } else {
         $voornaam = sanitize_input($_POST['contactpersoonvoornaam'], 50, $errors, 'voornaam');
     }
 
     // Achternaam validatie
-    if (empty($_POST['contactpersoonachternaam']) || !preg_match("/^[A-Za-z\s]*$/", $_POST['contactpersoonachternaam'])) {
+    if (empty($_POST['contactpersoonachternaam']) || !preg_match("/^[\p{L}\s.-]*$/u", $_POST['contactpersoonachternaam'])) {
         $errors['contactpersoonachternaam'] = "Ongeldige achternaam.";
     } else {
         $achternaam = sanitize_input($_POST['contactpersoonachternaam'], 50, $errors, 'achternaam');
@@ -200,6 +200,8 @@ try {
     } else {
         $contacttelefoonnummer = sanitize_input($_POST['contactTelefoonnummer'], 15, $errors,'contactTelefoonnummer' );
     }
+
+
 
     // Aantal leerlingen validatie
     $aantalLeerlingen = (int) ($_POST['aantalLeerlingen'] ?? 0);
@@ -258,6 +260,13 @@ try {
     } else {
         $plaats = sanitize_input($_POST['plaats'], 100, $errors, 'plaats');
     }
+
+    if (empty($_POST['niveauleerjaar']) || !preg_match("/^[A-Za-z\s',]+\s[0-9]{1,2}$/", $_POST['niveauleerjaar'])) {
+        $errors['niveauleerjaar'] = "Ongeldige aanduiding van het niveau en het leerjaar";
+    } else {
+        $niveauleerjaar = sanitize_input($_POST['niveauleerjaar'], 40, $errors, 'niveauleerjaar');
+    }
+
 
     if (isset($_POST['vragenOpmerkingen']) && !empty($_POST['vragenOpmerkingen'])) {
         if (!preg_match("/^[A-Za-z0-9\s,.:?!]+$/", $_POST['vragenOpmerkingen'])) { //de punt weer terug zetten, is nu zonder om te testen
@@ -464,7 +473,7 @@ try {
             
             // Controleer of het bestand daadwerkelijk bestaat voordat je het toevoegt
             if (file_exists($roosterAfbeelding)) {
-                $mail->addAttachment($roosterAfbeelding);
+                $mail->addAttachment($roosterAfbeelding, 'GeoFort_Onderwijs_Conceptrooster.pdf');
             } else {
                 error_log('Roosterbestand niet gevonden: ' . $roosterAfbeelding);
             }
@@ -527,6 +536,7 @@ try {
             <li><strong>Adres:</strong> " . htmlspecialchars($adres) . "</li>
             <li><strong>Postcode:</strong> " . htmlspecialchars($postcode) . "</li>
             <li><strong>Plaats:</strong> " . htmlspecialchars($plaats) . "<br></li>
+            <li><strong>Niveau en leerjaar:</strong> " . htmlspecialchars($niveauleerjaar) . "<br></li>
         </ul>  
     
         <h4 style='margin: 0; padding: 0; text-decoration: underline'>Bezoekgegevens</h4>

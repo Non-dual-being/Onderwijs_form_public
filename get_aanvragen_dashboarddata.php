@@ -21,7 +21,7 @@ try {
     $sql = "
     SELECT DISTINCT WEEK(bezoekdatum, 3) AS weeknummer 
     FROM aanvragen
-    WHERE status IN ('In Optie', 'Definitief')
+    WHERE status IN ('In Optie', 'Definitief', 'Afgewezen')
     ORDER BY weeknummer ASC;
 
     ";

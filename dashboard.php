@@ -38,7 +38,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
     <header class="header-dashboard"></header>
     <h1 class="Title_Dashboard">GeoFort Dashboard</h1>
         <div id="content-container">
-            <a href="logout.php" class="meerInformatieToggle" id="Uitlog_Dashboard"><span>Uitloggen</span></a>
+            <a class="meerInformatieToggle" id="Uitlog_Dashboard"><span>Uitloggen</span></a>
             <section class="welcome-section">
                 <h2>Welkom op het Dashboard, <?php echo $_SESSION['username']; ?>!</h2>
                 <p>Selecteer de maandag van de week om de aanvragen van die week te zien.</p>

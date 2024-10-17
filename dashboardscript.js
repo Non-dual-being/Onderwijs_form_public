@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
             requestDiv.classList.add('request-item');
 
             const schoolInfo = document.createElement('p');
-            schoolInfo.textContent = `School: ${request.schoolnaam} | Aantal leerlingen: ${request.aantal_leerlingen} | Bezoekdatum: ${request.bezoekdatum}`;
+            schoolInfo.textContent = ` Bezoekdatum: ${request.bezoekdatum} | School: ${request.schoolnaam} | Aantal leerlingen: ${request.aantal_leerlingen} `;
             requestDiv.appendChild(schoolInfo);
 
             const statusSelect = document.createElement('select');
@@ -223,6 +223,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    document.getElementById('Uitlog_Dashboard').addEventListener('click', function(e) {
+        e.preventDefault(); // Zorg ervoor dat de standaard actie niet wordt geblokkeerd.
+        window.location.href = 'logout.php'; // navigeer naar de logout pagina
+        
+    });
+    
 });
 
 

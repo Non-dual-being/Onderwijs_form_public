@@ -142,7 +142,7 @@ fieldset ul li {
 }
 
 .informative-text h4 {
-    color: #DC493A;
+    color: #BCC7E5;
     margin-bottom: 10px;
     font-weight: bold;
     font-size: 1.5em;
@@ -175,16 +175,11 @@ fieldset ul li {
     margin-top: 10px; /* Add some margin to separate from the gray background */
 }
 
-.overview-section legend {
-    font: 24px Avenir, sans-serif;
-    font-weight: normal;
-    color: #DC493A;
-    margin-left: 10px;
-}
 
 .overview-section h3, .overview-section h4 {
-    color: #DC493A; /* Similar to the information section */
+    color: #A6B1E1; /* Lichtgrijsblauwe kleur die past bij de blauwe achtergrond */
 }
+
 
 .overview-section p, .overview-section ul {
     color: white; /* Ensure text is white for contrast */
@@ -364,6 +359,22 @@ p {
 .highlighted-text {
     font-size: 0.9em; /* Vergroot de tekst */
     color: #ff5722;   /* Fel oranje kleur */
+}
+
+.overview-section-tijden{
+    background-color: #081540; /* Donkerblauwe achtergrond */
+    padding: 12px; /* Iets minder padding om het subtieler te maken */
+    border-radius: 8px; /* Rondere hoeken voor een zachtere uitstraling */
+    margin-top: 5px; /* Minder marge aan de bovenkant */
+    border: 3px solid #f0f0f0; /* Zachtere witte rand */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Zachte schaduw voor diepte */
+    font-family: 'Avenir', sans-serif; /* Consistent lettertype */
+}
+
+.overview-section-tijden p {
+    font-size: 16px;
+    color: white;
+    margin: 0; /* Verwijdert overbodige marge van de paragraaf */
 }
 
 

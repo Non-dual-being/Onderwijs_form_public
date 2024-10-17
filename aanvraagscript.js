@@ -120,7 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function valideerVoornaam(waarde) {
         const maxLength = 50;
-        const onlyLetters = /^[A-Za-z\s.]*$/;
+        const onlyLetters = /^[\p{L}\s.-]*$/u
+
+;
 
         if (waarde.length === 0) {
             return "Dit veld mag niet leeg blijven."; 
@@ -136,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function valideerAchternaam(waarde) {
         const maxLength = 50;
-        const onlyLetters = /^[A-Za-z\s]*$/;
+        const onlyLetters = /^[\p{L}\s.-]*$/u;
 
         if (waarde.length === 0) {
             return "Dit veld mag niet leeg blijven."; 
@@ -192,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function valideerNiveauEnLeerjaar(waarde) {
         const maxLength = 50;
-        const niveauRegex = /^[A-Za-z0-9\s.]+$/;
+        const niveauRegex = /^[A-Za-z\s',]+\s[0-9]{1,2}$/;
 
         if (waarde.length === 0) {
             return "Dit veld mag niet leeg blijven."; 
@@ -514,7 +516,7 @@ function verzendknopFoutMelding(waarde) {
 
     document.getElementById('niveauleerjaar').addEventListener('blur', function() {
         const niveauLeerVeld = document.getElementById('niveauleerjaar');
-        const niveauLeerFoutElement = document.getElementById('niveauLeerjaarFout')
+        const niveauLeerFoutElement = document.getElementById('niveauleerjaarFout');
         
         // Roep de validatiefunctie aan
         valideerInvoer(niveauLeerVeld, niveauLeerFoutElement, valideerNiveauEnLeerjaar);
@@ -788,18 +790,7 @@ function verzendknopFoutMelding(waarde) {
     // Voeg event listeners voor hover-meldingen toe
     let hoverTimeout;
 
-    const aankomsttijdInput = document.getElementById('aankomsttijd');
-    const vertrektijdInput = document.getElementById('vertrektijd');
-
-    aankomsttijdInput.addEventListener('mouseenter', () => {
-        scheduleHoverMessage4(aankomsttijdInput.dataset.hoverMessage, aankomsttijdInput);
-    });
-    aankomsttijdInput.addEventListener('mouseleave', cancelHoverMessage5);
-
-    vertrektijdInput.addEventListener('mouseenter', () => {
-        scheduleHoverMessage4(vertrektijdInput.dataset.hoverMessage, vertrektijdInput);
-    });
-    vertrektijdInput.addEventListener('mouseleave', cancelHoverMessage5);
+   
 
     function scheduleHoverMessage4(message, element, className = 'hover-message') {
         clearTimeout(hoverTimeout);
@@ -1202,11 +1193,6 @@ function verzendknopFoutMelding(waarde) {
     }
     
     
-    
-    
-    
-    // Laad de agenda data van de server
-   // Laad de agenda data van de server
 function loadCalendarData() {
     fetch('get_aanvragen_data_formulier.php')
         .then(response => response.json())
@@ -1237,7 +1223,7 @@ document.getElementById('onderwijsFormulier').addEventListener('submit', functio
         { veld: document.getElementById('schoolTelefoonnummer'), foutElement: document.getElementById('schoolTelefoonnummerFout'), validatieFunctie: valideerTelefoonnummer },
         { veld: document.getElementById('contactTelefoonnummer'), foutElement: document.getElementById('contactTelefoonnummerFout'), validatieFunctie: valideerTelefoonnummer },
         { veld: document.getElementById('totaalbegeleiders'), foutElement: document.getElementById('aantalBegeleidersFout'), validatieFunctie: valideerAantalBegeleiders },
-        { veld: document.getElementById('niveauleerjaar'), foutElement: document.getElementById('niveauLeerjaarFout'), validatieFunctie: valideerNiveauEnLeerjaar },
+        { veld: document.getElementById('niveauleerjaar'), foutElement: document.getElementById('niveauleerjaarFout'), validatieFunctie: valideerNiveauEnLeerjaar },
         { veld: document.getElementById('schoolnaam'), foutElement: document.getElementById('naamSchoolFout'), validatieFunctie: valideerNaamSchool },
         { veld: document.getElementById('adres'), foutElement: document.getElementById('adresFout'), validatieFunctie: valideerAdres },
         { veld: document.getElementById('postcode'), foutElement: document.getElementById('postcodeFout'), validatieFunctie: valideerPostcode },
@@ -1388,14 +1374,6 @@ xhr.onload = function () {
             // Verwerk de JSON-response van PHP
             const response = JSON.parse(xhr.responseText);
             console.log("Response van server:", response); // Log de volledige response
-
-            if (typeof response === 'object' && response !== null) {
-                console.log("Het is een JSON object:", response);
-            } else {
-                console.error("De response is geen geldig JSON object.");
-            }
-
-
             if (response.success) {
                 // Als het formulier succesvol is verwerkt, toon succesbericht
                 const verzendknopDiv = document.getElementById("verzendknop");
@@ -1403,6 +1381,7 @@ xhr.onload = function () {
                 verzendknopDiv.value = response.message;
                 valideerInvoer(verzendknopDiv, verzendMeldingdiv, verzendknopMelding);
             } else if(response.errors) {
+                console.log("dit is ingegaan");
                 for (let veld in response.errors) {
                     const foutElement = document.getElementById(`${veld}Fout`);
                     const veldElement = document.getElementById(veld);
