@@ -5,6 +5,7 @@ body:not(.body-dashboard) {
     background-color: #f9f9f9;
     justify-content: center; /* Centreren over de verticale as */
     align-items: center; /* Centreren over de horizontale as */
+    overflow-x:hidden;
 }
 
 
@@ -84,7 +85,7 @@ select option:checked {
 }
 
 h1 {
-    color: #DC493A;
+    color:#D93134;
     font: 32px Montserrat, sans-serif;
     margin: 0px 0px 32px;
     position: relative;
@@ -108,6 +109,28 @@ fieldset {
     padding: 30px; 
     background-color: #f2f2f2; /* Subtiele achtergrondkleur */
 }
+
+.fieldset-informative {
+    border: 2px solid #081540;
+    position: relative;
+    margin-bottom: 25px;
+    padding: 40px; 
+    background-color: #D93134; /* Subtiele achtergrondkleur */
+    z-index: 2;
+    
+}
+
+.fieldset-informative-price {
+    border: 2px solid #081540;
+    position: relative;
+    margin-bottom: 20px;
+    padding: 35px; 
+    background-color: #A6B1E1;
+    z-index: 2;
+    
+}
+
+
 
 fieldset p {
     margin: 10px 0;
@@ -134,21 +157,48 @@ fieldset ul li {
 
 .informative-text {
     font-size: 16px;
-    background-color: #081540; /* Match the footer color */
+    background-color: white; /* Match the footer color */
     padding: 15px;
-    color: white; /* White text for contrast */
+    padding-top: 0px;
+    color: black; /* White text for contrast */
     border-radius: 5px;
-    border: 1px solid #e0e0e0; /* Lichtgrijze rand */
+    border: 1px solid   #081540; /* Lichtgrijze rand */
 }
 
-.informative-text h4 {
-    color: #BCC7E5;
+.informative-text-rooster {
+    font-size: 16px;
+    background-color:   white; /* Match the footer color */
+    padding: 15px;
+    padding-top: 0px;
+    color: black; /* White text for contrast */
+    border-radius: 5px;
+    border: 1px solid  black; /* Lichtgrijze rand */
+}
+
+
+.informative-text-rooster h4 {
+    color:#D93134;
     margin-bottom: 10px;
     font-weight: bold;
     font-size: 1.5em;
+    top: 30px;
+}
+
+
+
+.informative-text h4 {
+    color: #D93134;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.5em;
+    top: 30px;
 }
 
 .informative-text p {
+    margin-left: 10px; /* Indent the text */
+}
+
+.informative-text-rooster p {
     margin-left: 10px; /* Indent the text */
 }
 
@@ -158,18 +208,55 @@ fieldset ul li {
     font-size: 1em; /* Standard font size */
     padding-left: 20px;
     margin-top: 10px;
-    color: white; /* Ensure text is white for contrast */
+    color: black; /* Ensure text is white for contrast */
+}
+
+.informative-text-rooster ul {
+    list-style: disc;
+    margin-left: 20px; /* Align with headers */
+    font-size: 1em; /* Standard font size */
+    padding-left: 20px;
+    margin-top: 10px;
+    color: black; /* Ensure text is white for contrast */
+    font-weight: bold;
+}
+
+#gekozenKeuzeModule {
+    list-style-type: disc; /* Zorg dat het puntje een disc is */
+    list-style-position: inside; /* Zorg dat de bullet binnen de marge blijft */
+    margin-left: 8px; /* Ruimte vanaf de linkerkant */
+    font-size: 1em;
+    padding-left: 20px;
+    margin-top: 10px;
+    color: black;
+    font-weight: bold;
 }
 
 .informative-text ul.secondary-list {
     margin-left: 40px; /* Verdere links inspringen voor de tweede opsomming */
     font-size: 0.9em; /* Iets kleiner lettertype voor de tweede opsomming */
-    color: white; /* Ensure text is white for contrast */
+    color: black; /* Ensure text is white for contrast */
+
+}
+
+.informative-text-rooster ul.secondary-list {
+    margin-left: 40px; /* Verdere links inspringen voor de tweede opsomming */
+    font-size: 0.9em; /* Iets kleiner lettertype voor de tweede opsomming */
+    color: black; /* Ensure text is white for contrast */
+}
+
+
+#groepAantal{
+    color: black;
+    font-weight: bold;
+    font-size: 1.6em;
+
 }
 
 .overview-section {
     background-color: #081540; /* Match the information section background */
     color: white; /* White text for contrast */
+    border: 2px solid white;
     padding: 20px;
     border-radius: 5px;
     margin-top: 10px; /* Add some margin to separate from the gray background */
@@ -199,6 +286,36 @@ legend {
     color: #DC493A;
     font-weight: bold;
 }
+
+.fieldset-informative legend {
+    font-size: 1.6em; /* Grotere tekst voor de titel */
+    font-weight: bold; /* Vetgedrukte tekst */
+    color: white !important; /* Contrasterende tekstkleur */
+    border-radius: 5px; /* Licht afgeronde hoeken voor een subtiele stijl */
+    text-align: center;
+    position: absolute; /* Absolute positionering */
+    top: 0px; /* Plaats de legend boven het fieldset */
+    left: 50%;
+    transform: translateX(-50%); /* Centreer de tekst horizontaal */
+    padding: 5px 10px; /* Voeg wat padding toe om de tekst beter te positioneren */
+    z-index: 2; /* Zorg ervoor dat de legend bovenop de fieldset blijft */
+}
+
+.fieldset-informative-price legend {
+    font-size: 1.6em; /* Grotere tekst voor de titel */
+    font-weight: bold; /* Vetgedrukte tekst */
+    color: #f2f2f2 !important; /* Contrasterende tekstkleur */
+    border-radius: 5px; /* Licht afgeronde hoeken voor een subtiele stijl */
+    text-align: center;
+    position: absolute; /* Absolute positionering */
+    top: 0px; /* Plaats de legend boven het fieldset */
+    left: 50%;
+    transform: translateX(-50%); /* Centreer de tekst horizontaal */
+    padding: 5px 10px; /* Voeg wat padding toe om de tekst beter te positioneren */
+    z-index: 2; /* Zorg ervoor dat de legend bovenop de fieldset blijft */
+}
+
+
 
 label {
     display: block;
@@ -268,7 +385,7 @@ p {
     border: 1px solid #e0e0e0; /* Lichtgrijze rand */
     border-radius: 5px; /* Subtiel afgerond zoals andere secties */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Zachte schaduw voor diepte */
-    font-family: 'Courier New', Courier, monospace; /* Notitieblokstijl */
+    font-family: Arial, sans-serif;
     font-size: 14px;
     color: white; /* Witte tekst voor contrast */
     max-width: 100%;
@@ -313,7 +430,7 @@ p {
     border: 1px solid #e0e0e0; /* Lichtgrijze rand */
     border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Zachte schaduw */
-    font-family: 'Courier New', Courier, monospace;
+    font-family: Arial, sans-serif;
     font-size: 14px;
     color: white;
     max-width: 100%;
@@ -386,7 +503,7 @@ p {
     padding: 10px;
     max-height: 300px;
     overflow: auto;
-    background-color: #ede6e6;
+    background-color:  #f2f2f2;
     border-radius: 5px;
 }
 
@@ -598,7 +715,7 @@ input[type="number"]:disabled:hover {
 
 .price-summary-section h3{
     font-size: 1.5em; /* Grotere lettergrootte */
-    color: #DC493A;   /* Gebruik dezelfde rode kleur als andere titels */
+    color: #D93134;   /* Gebruik dezelfde rode kleur als andere titels */
     margin-bottom: 7px; /* Wat extra ruimte onder de titel */
     text-transform: uppercase; /* Zorg ervoor dat de tekst in hoofdletters verschijnt */
     font-weight: bold; /* Zorg voor een dikke tekst */
@@ -629,7 +746,7 @@ input[type="number"]:disabled:hover {
 
 .price-summary-section .summary-category .summary-item span {
     font-size: 1.1em;
-    color: #fff;
+    color: black;
 }
 
 .price-summary-section .total-price {
@@ -984,9 +1101,41 @@ button#submit-date:hover, button#submit-statuses:hover {
     bottom: 0;
     left: 0;
     z-index: 1000;
-
     
 }
+
+
+
+.main-footer {
+    background-color: #081540;  /* GeoFort's donkerblauwe kleur */
+    color: white;
+    min-height: 80px;
+    left: -80px;
+    position: relative;
+    display: flex;
+    text-align: center;
+    width: 105vw;
+    box-sizing: border-box; /* Zorgt ervoor dat de padding binnen de breedte van de footer valt */
+    bottom: -50px;
+    margin-top: 30px;
+    justify-content: center;  /* Centreert de inhoud horizontaal */
+    align-items: center;  /* Centreert de inhoud verticaal */
+}
+
+
+
+.footer-logo-container {
+    display: inline-block;  /* Zorg ervoor dat de container de grootte van de inhoud (het logo) aanneemt */
+    position: absolute;
+    right: 110px; /* Plaatsing van het logo aan de rechterkant */
+    bottom: 25px;
+}
+
+.footer-logo {
+    width: 75px; /* Pas de grootte van het logo aan */
+}
+
+
 
 #copy_logo {
     margin: 0;

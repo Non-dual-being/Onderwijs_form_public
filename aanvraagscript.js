@@ -120,9 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function valideerVoornaam(waarde) {
         const maxLength = 50;
-        const onlyLetters = /^[\p{L}\s.-]*$/u
-
-;
+        const onlyLetters = /^[\p{L}\s.-]*$/u;
 
         if (waarde.length === 0) {
             return "Dit veld mag niet leeg blijven."; 
@@ -612,8 +610,11 @@ function verzendknopFoutMelding(waarde) {
             });
         }
 
-        const gekozenKeuzeModule2 = document.getElementById('gekozenKeuzeModule');
+        const gekozenKeuzeModule2 = document.getElementById('gekozenKeuzeModule2');
+        gekozenKeuzeModule2.style.listStyleType = 'disc';
         gekozenKeuzeModule2.textContent = keuzeModule2 || 'Geen keuzevak geselecteerd';
+
+        return standaardModulesLijst2;
     }
 
     function initialiseerFormulier() {
@@ -625,6 +626,7 @@ function verzendknopFoutMelding(waarde) {
     // Voeg event listeners toe om modules bij te werken wanneer het onderwijsniveau verandert
     document.getElementById('onderwijsNiveau').addEventListener('change', () => {
         werkKeuzeModulesBij1();
+        updateMeerInformatieLink();
     });
 
     // Voeg event listener toe om geselecteerde modules bij te werken wanneer de keuzemodule verandert
@@ -635,37 +637,66 @@ function verzendknopFoutMelding(waarde) {
     // Roep de initialisatiefunctie aan bij het laden van de pagina
     initialiseerFormulier();
 
+    function updateMeerInformatieLink() {
+        const onderwijsNiveau = document.getElementById('onderwijsNiveau').value;
+        const meerInformatieLink = document.querySelector('.meerInformatieToggle[data-target="onderwijsNiveauInfo"] span');
+    
+        // Mapping van onderwijsniveaus naar de volledige beschrijvingen
+        const onderwijsNiveauMapping = {
+            primairOnderwijs: 'Primair Onderwijs',
+            voortgezetOnderbouw: 'Voortgezet Onderwijs - Onderbouw',
+            voortgezetBovenbouw: 'Voortgezet Onderwijs - Bovenbouw'
+        };
+    
+        // Verkrijg de volledige naam op basis van de gekozen waarde
+        const volledigeNaam = onderwijsNiveauMapping[onderwijsNiveau] || onderwijsNiveau;
+    
+        // Update de tekst van de link
+        meerInformatieLink.textContent = `Klik om de standaardmodules van ${volledigeNaam} te bekijken`;
+
+        const weergaveStandaardModules = document.getElementById("weergaveStandaardModules");
+        weergaveStandaardModules.innerText = ""
+        const standaardModules = werkGeselecteerdeModulesWeergaveBij2().children; // Haal de lijstitems op
+
+        for (let i = 0; i < standaardModules.length; i++) {
+            weergaveStandaardModules.appendChild(standaardModules[i].cloneNode(true)); // Voeg elk item toe
+        }
+    };
+    
    // Selecteer alle toggles en inhoudsblokken
    const toggles = document.querySelectorAll(".meerInformatieToggle");
 
-    toggles.forEach(toggle => {
-        toggle.addEventListener("click", function(event) {
-            event.preventDefault(); // Voorkom dat de pagina scrollt naar de top
-            
-            // Haal het doel-element op via de data-target attribuut
-            const targetId = toggle.getAttribute("data-target");
-            const targetContent = document.getElementById(targetId);
-            
-            // Toggle de "open" class om de inhoud te tonen of verbergen
-            targetContent.classList.toggle("open");
+   toggles.forEach(toggle => {
+    toggle.addEventListener("click", function(event) {
+        event.preventDefault(); // Voorkom dat de pagina scrollt naar de top
+        
+        // Haal het doel-element op via de data-target attribuut
+        const targetId = toggle.getAttribute("data-target");
+        const targetContent = document.getElementById(targetId);
+        
+        // Toggle de "open" class om de inhoud te tonen of verbergen
+        targetContent.classList.toggle("open");
+        updateMeerInformatieLink();
 
-            // Pas de tekst van de toggle-link aan
-            if (targetContent.classList.contains("open")) {
-                toggle.querySelector("span").textContent = "Verberg ";
-            } else {
-                // Voeg hier de check toe voor bezoektijdenInfo
-                if (targetId === "begeleidersInfo") {
-                    toggle.querySelector("span").textContent = "Meer informatie over aantal begeleiders";
-                } else if (targetId === "telefoonInfo") {
-                    toggle.querySelector("span").textContent = "Meer informatie over telefoonnummers";
-                } else if (targetId === "bezoektijdenInfo") {
-                    toggle.querySelector("span").textContent = "Meer informatie over bezoektijden";
-                } else if(targetId === "niveauleerjaarInfo"){
-                    toggle.querySelector("span").textContent = "Meer informatie over het niveau en het leerjaar";
-                }
+        // Pas de tekst van de toggle-link aan
+        if (targetContent.classList.contains("open")) {
+            toggle.querySelector("span").textContent = "Verberg ";
+        } else {
+            // Voeg hier de check toe voor bezoektijdenInfo
+            if (targetId === "begeleidersInfo") {
+                toggle.querySelector("span").textContent = "Meer informatie over aantal begeleiders";
+            } else if (targetId === "telefoonInfo") {
+                toggle.querySelector("span").textContent = "Meer informatie over telefoonnummers";
+            } else if (targetId === "bezoektijdenInfo") {
+                toggle.querySelector("span").textContent = "Meer informatie over bezoektijden";
+            } else if(targetId === "niveauleerjaarInfo"){
+                toggle.querySelector("span").textContent = "Meer informatie over het niveau en het leerjaar";
+            } else if(targetId === "meerInformatieAantalLeerlingen"){
+                toggle.querySelector("span").textContent = "Meer informatie over het aantal leerlingen";
             }
-        });
+        }
     });
+});
 
 
 
@@ -901,9 +932,7 @@ function verzendknopFoutMelding(waarde) {
     
     
     const foodInputs = document.querySelectorAll('input[type="checkbox"][name="snack"], input[type="checkbox"][name="lunch"]');
-    const foodSummaryDiv = document.getElementById('foodSummary');
-    const totalPriceSpan = document.getElementById('totalPrice');
-    const bezoekDiv = document.getElementById('bezoek');
+   
 
     foodInputs.forEach(input => {
         const snackOption = input.closest('.snack-option');
@@ -962,8 +991,8 @@ function verzendknopFoutMelding(waarde) {
     function updateFoodSummary9() {
         let totalPrice = 0;
         let foodPrice = 0;
-        
-        const btwPercentage_bezoek = 9; // Btw percentage''
+    
+        const btwPercentage_bezoek = 9; // Btw percentage
         const btwPercentage_food = 9;
         const totalPriceSpan = document.getElementById('totalPrice');
         const foodSummaryDiv = document.getElementById('foodSummary');
@@ -972,86 +1001,75 @@ function verzendknopFoutMelding(waarde) {
         foodSummaryDiv.innerHTML = '';
         bezoekDiv.innerHTML = '';
     
-        // Haal de bezoekprijs, aantal leerlingen en begeleiders op
         const bezoekPrice = parseFloat(calculateVisitPrice8()[0]);
         const aantalLeerlingen = calculateVisitPrice8()[1];
         const teBetalenBegeleiders = calculateVisitPrice8()[2];
         const prijsLeerlingen = aantalLeerlingen * 20;
     
-        // Voeg de samenvatting van de leerlingen toe
-        if (aantalLeerlingen > 0){
+        if (aantalLeerlingen > 0) {
             const leerlingSummary = document.createElement('div');
             leerlingSummary.className = 'summary-item';
-            leerlingSummary.innerHTML = `<span>${aantalLeerlingen} leerlingen:</span><span>€${prijsLeerlingen.toFixed(2)}</span>`;
+            // Gebruik toLocaleString voor de weergave
+            leerlingSummary.innerHTML = `<span>${aantalLeerlingen} leerlingen:</span><span>€ ${prijsLeerlingen.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
             bezoekDiv.appendChild(leerlingSummary);
         }
     
-        // Voeg de samenvatting van te betalen begeleiders toe, als ze er zijn
         if (teBetalenBegeleiders > 0) {
-            const begeleidersPrijs = teBetalenBegeleiders * 20; // Aannemen dat elke begeleider €20 kost
+            const begeleidersPrijs = teBetalenBegeleiders * 20;
             const begeleiderSummary = document.createElement('div');
             begeleiderSummary.className = 'summary-item';
-            begeleiderSummary.innerHTML = `<span>${teBetalenBegeleiders} te betalen begeleiders:</span><span>€${begeleidersPrijs.toFixed(2)}</span>`;
+            begeleiderSummary.innerHTML = `<span>${teBetalenBegeleiders} te betalen begeleiders:</span><span>€ ${begeleidersPrijs.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
             bezoekDiv.appendChild(begeleiderSummary);
         }
     
         const bezoekTotalSummary = document.createElement('div');
         bezoekTotalSummary.className = 'summary-item';
-        bezoekTotalSummary.innerHTML = `<span style="font-size: 1.2em;"><strong>Totale bezoekprijs:</strong></span><span style="font-size: 1.2em;"><strong>€${bezoekPrice.toFixed(2)}</strong></span>`;
+        bezoekTotalSummary.innerHTML = `<span style="font-size: 1.2em;"><strong>Totale bezoekprijs:</strong></span><span style="font-size: 1.2em;"><strong>€ ${bezoekPrice.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>`;
         bezoekDiv.appendChild(bezoekTotalSummary);
-
-          // Bereken de prijs exclusief en inclusief btw
+    
         const totalExclBtw_bezoek = bezoekPrice / (1 + btwPercentage_bezoek / 100);
-        
-          // Toon de prijs exclusief btws
         const exclBtwSummary_bezoek = document.createElement('div');
         exclBtwSummary_bezoek.className = 'summary-item';
-        exclBtwSummary_bezoek.innerHTML = `<span style="font-size: 0.9em;">Totale bezoekprijs excl. btw (9%):</span><span style="font-size: 0.9em;">€${totalExclBtw_bezoek.toFixed(2)}</span>`;
+        exclBtwSummary_bezoek.innerHTML = `<span style="font-size: 0.9em;">Totale bezoekprijs excl. btw (9%):</span><span style="font-size: 0.9em;"> € ${totalExclBtw_bezoek.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
         bezoekDiv.appendChild(exclBtwSummary_bezoek);
     
-        // Voeg de samenvatting van het eten toe
         foodInputs.forEach(input => {
             const amountInput = input.closest('.snack-option').querySelector('input[type="number"]');
             if (input.checked && amountInput && amountInput.value > 0) {
-                const itemTotal = (input.value * amountInput.value).toFixed(2);
-                foodPrice += parseFloat(itemTotal);
-                totalPrice += parseFloat(itemTotal);
+                const itemTotal = (input.value * amountInput.value);
+                foodPrice += itemTotal;
+                totalPrice += itemTotal;
                 const itemSummary = document.createElement('div');
                 itemSummary.className = 'summary-item';
                 const itemName = input.labels[0].innerText.split(':')[0];
-                itemSummary.innerHTML = `<span>${amountInput.value} ${itemName}:</span><span>€${itemTotal}</span>`;
+                itemSummary.innerHTML = `<span>${amountInput.value} ${itemName}:</span><span>€${itemTotal.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
                 foodSummaryDiv.appendChild(itemSummary);
             }
         });
     
-        // Voeg totale prijs eten toe
         const foodTotalSummary = document.createElement('div');
         foodTotalSummary.className = 'summary-item';
-        foodTotalSummary.innerHTML = `<span style="font-size: 1.2em;"><strong>Totale bestelprijs:</strong></span><span style="font-size: 1.2em;"><strong>€${foodPrice.toFixed(2)}</strong></span>`;
+        foodTotalSummary.innerHTML = `<span style="font-size: 1.2em;"><strong>Totale bestelprijs:</strong></span><span style="font-size: 1.2em;"><strong>€ ${foodPrice.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>`;
         foodSummaryDiv.appendChild(foodTotalSummary);
     
-        
-    
-        // Bereken de prijs exclusief en inclusief btw
         const totalExclBtwfood = foodPrice / (1 + btwPercentage_food / 100);
-
-        // Toon de prijs exclusief btw
         const exclBtwSummary_food = document.createElement('div');
         exclBtwSummary_food.className = 'summary-item';
-        exclBtwSummary_food.innerHTML = `<span style="font-size: 0.9em;">Totale bestelprijs excl. btw (9%):</span><span style="font-size: 0.9em;">€${totalExclBtwfood.toFixed(2)}</span>`;
+        exclBtwSummary_food.innerHTML = `<span style="font-size: 0.9em;">Totale bestelprijs excl. btw (9%):</span><span style="font-size: 0.9em;">€ ${totalExclBtwfood.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
         foodSummaryDiv.appendChild(exclBtwSummary_food);
-
+    
         totalPrice += bezoekPrice;
         const totalExlBtw = parseFloat(totalExclBtw_bezoek + totalExclBtwfood);
-        totalPriceSpan.textContent = `${totalPrice.toFixed(2)}`;
-
+        totalPriceSpan.textContent = ` ${totalPrice.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    
         const exlBTWTotalDiv = document.createElement('div');
         exlBTWTotalDiv.className = 'summary-item';
-        exlBTWTotalDiv.innerHTML = `<span style="font-size: 0.6em;"><strong>Totale prijs excl. BTW:</strong></span><span style="font-size: 0.6em;"><strong> €${totalExlBtw.toFixed(2)}</strong></span>`;
+        exlBTWTotalDiv.innerHTML = `<span style="font-size: 0.6em;"><strong>Totale prijs excl. BTW:</strong></span><span style="font-size: 0.6em;"><strong>€ ${totalExlBtw.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>`;
         totalPriceSpan.appendChild(exlBTWTotalDiv);
-
-       return [bezoekPrice, foodPrice, totalPrice];
-    };
+    
+        return [bezoekPrice, foodPrice, totalPrice];
+    }
+    
     
     document.getElementById('aantalLeerlingen').addEventListener('input', updateFoodSummary9);
     document.getElementById('totaalbegeleiders').addEventListener('input', updateFoodSummary9);

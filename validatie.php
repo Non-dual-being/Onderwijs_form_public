@@ -114,6 +114,16 @@ function convertDutchToEnglishDate($date) {
 
 }
 
+$prijzen = [
+    'remiseBreak' => 2.60,
+    'kazerneBreak' => 2.60,
+    'fortgrachtBreak' => 2.60,
+    'waterijsje' => 1.00,
+    'pakjeDrinken' => 1.00,
+    'remiseLunch' => 5.20
+];
+
+
 $remiseBreakAantal = isset($_POST['remiseBreakAantal']) ? (int) $_POST['remiseBreakAantal'] : 0;
 $kazerneBreakAantal = isset($_POST['kazerneBreakAantal']) ? (int) $_POST['kazerneBreakAantal'] : 0;
 $fortgrachtBreakAantal = isset($_POST['fortgrachtBreakAantal']) ? (int) $_POST['fortgrachtBreakAantal'] : 0;
@@ -522,7 +532,8 @@ try {
         // Inhoud van de e-mail (HTML)
         $mailContent = "
         <p>Beste " . htmlspecialchars($voornaam) . ",<br></p>
-        <p>Bedankt voor uw aanvraag voor een schoolbezoek aan het GeoFort, in de bijlage treft u het conceptrooster aan.</p>
+        <p>Bedankt voor uw aanvraag voor een schoolbezoek aan het GeoFort.<p>
+        <p>In de bijlage treft u het conceptrooster aan.</p>
         <p>Hieronder het overzicht van uw aanvraag:</p>
     
         <h4 style='margin-bottom: 0; padding: 0; text-decoration: underline'>Algemene gegevens</h4>
@@ -554,47 +565,64 @@ try {
     $mailContent .= "<br></ul>";
     
 
-
     $etenDrinken = [];
-if ($remiseBreakAantal > 0) {
-    $etenDrinken[] = "<strong>Aantal Remise Break snacks: </strong>" . htmlspecialchars($remiseBreakAantal);
-}
-if ($kazerneBreakAantal > 0) {
-    $etenDrinken[] = "<strong>Aantal Kazerne Break snacks: </strong>" . htmlspecialchars($kazerneBreakAantal);
-}
-if ($fortgrachtBreakAantal > 0) {
-    $etenDrinken[] = "<strong>Aantal Fortgracht Break snacks: </strong>" . htmlspecialchars($fortgrachtBreakAantal);
-}
-if ($waterijsjeAantal > 0) {
-    $etenDrinken[] = "<strong>Aantal Waterijsjes: </strong>" . htmlspecialchars($waterijsjeAantal);
-}
-if ($pakjeDrinkenAantal > 0) {
-    $etenDrinken[] = "<strong>Aantal Pakjes Drinken: </strong>" . htmlspecialchars($pakjeDrinkenAantal);
-}
-if ($remiseLunchAantal > 0) {
-    $etenDrinken[] = "<strong>Aantal Remise Lunches: </strong>" . htmlspecialchars($remiseLunchAantal);
-}
+    $totaalEtenDrinken = 0; // Variabele om het totaal van eten en drinken bij te houden
+    if ($remiseBreakAantal > 0) {
+        $remiseBreakPrijs = $remiseBreakAantal * $prijzen['remiseBreak'];
+        $totaalEtenDrinken += $remiseBreakPrijs;
+        $etenDrinken[] = "<strong>Aantal Remise Break snacks: </strong>" . htmlspecialchars($remiseBreakAantal) . " (" . number_format($remiseBreakPrijs, 2, ',', '.') . " euro)";
+    }
+    
+    if ($kazerneBreakAantal > 0) {
+        $kazerneBreakPrijs = $kazerneBreakAantal * $prijzen['kazerneBreak'];
+        $totaalEtenDrinken += $kazerneBreakPrijs;
+        $etenDrinken[] = "<strong>Aantal Kazerne Break snacks: </strong>" . htmlspecialchars($kazerneBreakAantal) . " (" . number_format($kazerneBreakPrijs, 2, ',', '.') . " euro)";
+    }
+    
+    if ($fortgrachtBreakAantal > 0) {
+        $fortgrachtBreakPrijs = $fortgrachtBreakAantal * $prijzen['fortgrachtBreak'];
+        $totaalEtenDrinken += $fortgrachtBreakPrijs;
+        $etenDrinken[] = "<strong>Aantal Fortgracht Break snacks: </strong>" . htmlspecialchars($fortgrachtBreakAantal) . " (" . number_format($fortgrachtBreakPrijs, 2, ',', '.') . " euro)";
+    }
+    
+    if ($waterijsjeAantal > 0) {
+        $waterijsjePrijs = $waterijsjeAantal * $prijzen['waterijsje'];
+        $totaalEtenDrinken += $waterijsjePrijs;
+        $etenDrinken[] = "<strong>Aantal Waterijsjes: </strong>" . htmlspecialchars($waterijsjeAantal) . " (" . number_format($waterijsjePrijs, 2, ',', '.') . " euro)";
+    }
+    
+    if ($pakjeDrinkenAantal > 0) {
+        $pakjeDrinkenPrijs = $pakjeDrinkenAantal * $prijzen['pakjeDrinken'];
+        $totaalEtenDrinken += $pakjeDrinkenPrijs;
+        $etenDrinken[] = "<strong>Aantal Pakjes Drinken: </strong>" . htmlspecialchars($pakjeDrinkenAantal) . " (" . number_format($pakjeDrinkenPrijs, 2, ',', '.') . " euro)";
+    }
+    
+    if ($remiseLunchAantal > 0) {
+        $remiseLunchPrijs = $remiseLunchAantal * $prijzen['remiseLunch'];
+        $totaalEtenDrinken += $remiseLunchPrijs;
+        $etenDrinken[] = "<strong>Aantal Remise Lunches: </strong>" . htmlspecialchars($remiseLunchAantal) . " (" . number_format($remiseLunchPrijs, 2, ',', '.') . " euro)";
+    }
+    
+    if ($eigenPicknick == 1)  {
+        $etenDrinken[] = "<strong>Eigen Picknick: </strong> Ja";
 
-if ($eigenPicknick == 1)  {
-    $etenDrinken[] = "<strong>Eigen Picknick: </strong> Ja";
-
-}elseif($eigenPicknick== 0) {
-    $etenDrinken[] = "<strong>Eigen Picknick: </strong> Nee";
-}
+    }elseif($eigenPicknick== 0) {
+        $etenDrinken[] = "<strong>Eigen Picknick: </strong> Nee";
+    }
 
 // Controleer of er iets besteld is en voeg dit toe aan de e-mail
-if (!empty($etenDrinken)) {
-    $mailContent .= "<h4 style='margin: 0; padding: 0; text-decoration: underline'><strong>Eten en drinken</strong></h4>";
-    $mailContent .= "<ul style='font-size: 12px;'>";
-    foreach ($etenDrinken as $item) {
-        $mailContent .= "<li>" . $item . "</li>"; // verwijder htmlspecialchars omdat de item al veilig is
+    if (!empty($etenDrinken)) {
+        $mailContent .= "<h4 style='margin: 0; padding: 0; text-decoration: underline'><strong>Eten en drinken</strong></h4>";
+        $mailContent .= "<ul style='font-size: 12px;'>";
+        foreach ($etenDrinken as $item) {
+            $mailContent .= "<li>" . $item . "</li>"; 
+        }
+        $mailContent .= "<br></ul>";
     }
-    $mailContent .= "<br></ul>";
-}
 
     
     $mailContent .= "
-    <p>Hieronder vindt u verder het prijsoverzicht van het geplande bezoek aan GeoFort. Mocht er iets niet kloppen in uw aanvraag of mocht u nog vragen hebben, aarzel dan niet om contact met ons op te nemen. Wij helpen u graag verder.<br></p>";
+    <p>Hieronder vindt u verder het prijsoverzicht van het geplande bezoek aan GeoFort. Mocht er iets niet kloppen in uw aanvraag of heeft u nog vragen, aarzel dan niet om contact met ons op te nemen. Wij helpen u graag verder.<br></p>";
 
 
     // Prijsoverzicht

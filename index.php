@@ -75,15 +75,15 @@
             <input type="date" id="bezoekdatum" name="bezoekdatum" required>
             <div id="bezoekdatumFout" class="foute-invoermelding"></div>
             
-            <label for="Aankomsttijd">Aankomsttijd</label>
+            <label for="Aankomsttijd">Standaard Aankomsttijd</label>
             <div id ="aankomsttijd" class="overview-section-tijden">
-                <p>Standaard aankomsttijd: 09:45</p>
+                <p><strong> 09:45</strong></p>
             </div>
 
 
-            <label for="vertrektijd">Vertrektijd</label>
+            <label for="vertrektijd"> Standaard Vertrektijd</label>
             <div id ="vertrektijd" class="overview-section-tijden">
-                <p>Standaard vetrektijd: 15:00</p>
+                <p><strong>15:00</strong></p>
             </div>
 
            
@@ -100,13 +100,13 @@
             <div id="hoekentGeoFortFout" class="foute-invoermelding"></div>
         </fieldset>
 
-        <fieldset>
-            <legend>Praktische Informatie</legend>
+        <fieldset class="fieldset-informative">
+            <legend class="legend-informative">Praktische Informatie</legend>
             <div class="informative-text">
                 <h4>Kosten en Voorwaarden</h4>
                 <p>
                     • Minimaal 40 leerlingen, maximaal 160 leerlingen.<br>
-                    • €20,- per leerling (incl. BTW), per 8 leerlingen is 1 begeleider gratis. <br>
+                    • €20,- per leerling, per 8 leerlingen is 1 begeleider gratis. <br>
                     • Deze kosten zijn inclusief:
                   
                 </p>
@@ -136,6 +136,12 @@
                 <option value="voortgezetBovenbouw">Voortgezet Onderwijs - Bovenbouw</option>
             </select>
             <div id="onderwijsNiveauFout" class="foute-invoermelding"></div>
+            <div class="meer-informatie-container">
+            <a href="#" class="meerInformatieToggle" data-target="onderwijsNiveauInfo"><span>Klik om de standaard modules van Primair Onderwijs te bekijken</span></a>
+                <div id="onderwijsNiveauInfo" class="meerInformatieContent">
+                    <p><lu id="weergaveStandaardModules"><!--standaardmodules worden hier dynamisch weergegeven--></lu></p>
+                </div>
+            </div>
         
             <div id="keuzeModuleSelectie">
                 <label for="keuzeModule">Kies een lesmodule</label>
@@ -148,6 +154,15 @@
             <label for="aantalLeerlingen">Vul het aantal leerlingen in</label>
             <input type="number" id="aantalLeerlingen" name="aantalLeerlingen" min="40" max="160" step="1" required placeholder="min=40, max=160">
             <div id="aantalLeerlingenFout" class="foutmelding"></div>
+
+            <div class="meer-informatie-container">
+            <a href="#" class="meerInformatieToggle" data-target="meerInformatieAantalLeerlingen"><span>Meer informatie over het aantal leerlingen</span></a>
+                <div id="meerInformatieAantalLeerlingen" class="meerInformatieContent">
+                    <p> Standaard hanteert GeoFort voor een schoolbezoek een minimaal aantal van 40 leerlingen en een maximum van 160.</p>
+                    <p> GeoFort brengt minimaal de prijs voor 40 leerlingen in rekening, het bezoek kan wel met minder leerlingen plaatsvinden.</p>
+                    <p> Onderaan het aanvraag formulier bij de sectie <strong class="highlighted-text">vragen en opmerkingen </strong> kunt u aangeven als u met minder leerlingen wil komen </p>
+                </div>
+            </div>
 
             <label for="totaalbegeleiders">Aantal begeleiders</label>
             <input type="number" id="totaalbegeleiders" name="totaalbegeleiders" min="1" max="50" step="1" inputmode="numeric" pattern="[0-9]*" required>
@@ -164,9 +179,9 @@
         </fieldset>
         
 
-        <fieldset>
+        <fieldset class="fieldset-informative" >
             <legend>Overzicht rooster</legend>
-            <div class="informative-text">
+            <div class="informative-text-rooster">
                 <div id="groepAantalWeergave">
                     <h4>Aantal groepen</h4>
                     <p id="groepAantal">-</p>
@@ -178,7 +193,7 @@
                     </ul>
                     <h4>Keuze lesmodule</h4>
                     <ul id="gekozenKeuzeModule">
-                        <!-- Keuze module will be populated here -->
+                        <li id="gekozenKeuzeModule2"></li>
                     </ul>
                 </div>
                 <div id="roosterWeergave">
@@ -191,8 +206,8 @@
             </div>
         </fieldset>
         
-        <fieldset>
-            <legend>Eten en Drinken</legend>
+        <fieldset class="fieldset-informative">
+            <legend >Eten en Drinken informatie</legend>
             <div class="informative-text">
                 <h4>STANDAARD INBEGREPEN</h4>
                 <ul>
@@ -207,11 +222,19 @@
                 </ul>
                 <h5>Lunch</h5>
                 <ul>
-                <li><strong>Remiselunch</strong> - tarwebolletjes met vegetarisch beleg <strong><small>(leerlingen en begeleiders)</small></strong></li>
-                <li><strong>Nemen eigen picknick mee</strong></li>
-                
+                <li>Remiselunch: tarwebolletjes met vegetarisch beleg <small>(leerlingen en begeleiders)</small></li>
+                <li>Er is optie om een eigen lunch mee te nemen</li>
+                </ul>
+                <h4>EXTRA INFORMATIE</h4>
+                <ul>
+                    <li>Het eten en drinken kunt u alleen vooraf bestellen</li>
+                    <li>Het restaurant is tijdens het schoolbezoek dicht</li>
                 </ul>
             </div>
+        </fieldset>
+        
+        <fieldset>
+        <legend >Eten en Drinken keuzemenu</legend>
             <h4 class="snacks-heading">Snack keuze menu</h4>
     <span class="subtitle">Vink aan en vul een aantal in</span>
     <div class="snacks-section">
@@ -283,11 +306,12 @@
         <label for="eigenPicknickCheckbox">Nemen eigen picknick mee</label>
         <input type="checkbox" id="eigenPicknickCheckbox" name="lunch" value="0">
     </div>
+</fieldset>
 
         </fieldset>
-        <fieldset>
-            <legend>Overzicht totaalprijs</legend>
-            <div class="informative-text overview-section">
+        <fieldset class="fieldset-informative">
+            <legend class="legend-informative">Overzicht totaalprijs</legend>
+            <div class="informative-text">
                 <div class="price-summary-section">
                     <div>
                         <h3>Bezoek</h3>
@@ -322,6 +346,12 @@
         <button type="submit" id="verzendknop">Verzenden</button>
         <div id="verzendknopMeldingdiv" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
     </form>
+    <footer class="main-footer">
+    <div class="footer-logo-container">
+        <p id="copy_logo">&copy; 2024 GeoFort</p>
+        <img src="images/geofort_logo.png" alt="GeoFort Logo" class="footer-logo">
+    </div>
+</footer>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/nl.js"></script>
 </body>

@@ -66,10 +66,9 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
             </section>
         </div>
 
-    <footer id="footer_dashboard">
+        <footer class="footer_dashboard">
         <p id="copy_logo">&copy; 2024 GeoFort</p>
-    </footer>
-
-
+ 
+        </footer>
 </body>
 </html>
