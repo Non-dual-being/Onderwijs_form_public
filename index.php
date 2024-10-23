@@ -12,7 +12,7 @@
     <h1>ONDERWIJS AANVRAAG-FORMULIER</h1>
     <form id="onderwijsFormulier" method="post" novalidate>
         <fieldset>
-
+            <legend>BASIS-GEGEVENS</legend>
             <label for="schoolnaam">Naam school</label>
             <input type="text" id="schoolnaam" name="schoolnaam" required>
             <div id="naamSchoolFout" class="foute-invoermelding"></div>
@@ -29,6 +29,24 @@
             <input type="text" id="plaats" name="plaats" required>
             <div id="plaatsFout" class="foute-invoermelding"></div>
 
+
+            <label for="schoolTelefoonnummer">Telefoonnummer school</label>
+            <input type="tel" id="schoolTelefoonnummer" name="schoolTelefoonnummer" required>
+            <div id="schoolTelefoonnummerFout" class="foute-invoermelding"></div>
+
+            <label for="contactTelefoonnummer">Telefoonnummer contactpersoon</label>
+            <input type="tel" id="contactTelefoonnummer" name="contactTelefoonnummer" required>
+            <div id="contactTelefoonnummerFout" class="foute-invoermelding"></div>
+
+
+            <div class="meer-informatie-container">
+            <a href="#" class="meerInformatieToggle" data-target="telefoonInfo"><span>Meer informatie over telefoonnummers</span></a>
+                <div id="telefoonInfo" class="meerInformatieContent">
+                    <p><strong>Telefoonnummer van de school:</strong> Dit nummer wordt gebruikt voor alle communicatie met de school zelf.</p>
+                    <p><strong>Telefoonnummer contactpersoon:</strong> Dit nummer is voor de contactpersoon die tijdens het schoolbezoek bereikbaar is.</p>
+                </div>
+            </div>
+
             <label for="niveauleerjaar">Niveau en Leerjaar</label>
             <input type="text" id="niveauleerjaar" name="niveauleerjaar" required>
             <div id="niveauleerjaarFout" class="foute-invoermelding"></div>
@@ -40,19 +58,7 @@
                 </div>
             </div>
 
-            <label for="schoolTelefoonnummer">Telefoonnummer school</label>
-            <input type="tel" id="schoolTelefoonnummer" name="schoolTelefoonnummer" required>
-            <div id="schoolTelefoonnummerFout" class="foute-invoermelding"></div>
-
-            <div class="meer-informatie-container">
-            <a href="#" class="meerInformatieToggle" data-target="telefoonInfo"><span>Meer informatie over telefoonnummers</span></a>
-                <div id="telefoonInfo" class="meerInformatieContent">
-                    <p><strong>Telefoonnummer van de school:</strong> Dit nummer wordt gebruikt voor alle communicatie met de school zelf.</p>
-                    <p><strong>Telefoonnummer contactpersoon:</strong> Dit nummer is voor de contactpersoon die tijdens het schoolbezoek bereikbaar is.</p>
-                </div>
-            </div>
-
-            <legend>Basis-Gegevens</legend>
+           
             <label for="contactpersoonvoornaam">Voornaam contactpersoon</label>
             <input type="text" id="contactpersoonvoornaam" name="contactpersoonvoornaam" required>
             <div id="voornaamFout" class="foute-invoermelding"></div>
@@ -64,12 +70,6 @@
             <label for="emailadres">E-mailadres</label>
             <input type="email" id="emailadres" name="emailadres" required>
             <div id="emailFout" class="foute-invoermelding"></div>
-            
-
-            <label for="contactTelefoonnummer">Telefoonnummer contactpersoon</label>
-            <input type="tel" id="contactTelefoonnummer" name="contactTelefoonnummer" required>
-            <div id="contactTelefoonnummerFout" class="foute-invoermelding"></div>
-
             
             <label for="bezoekdatum">Datum bezoek</label>
             <input type="date" id="bezoekdatum" name="bezoekdatum" required>
@@ -101,7 +101,7 @@
         </fieldset>
 
         <fieldset class="fieldset-informative">
-            <legend class="legend-informative">Praktische Informatie</legend>
+            <legend class="legend-informative">PRAKTISCHE INFORMATIE</legend>
             <div class="informative-text">
                 <h4>Kosten en Voorwaarden</h4>
                 <p>
@@ -128,7 +128,7 @@
         </fieldset>
 
         <fieldset class="lesprogramma">
-            <legend>Lesprogramma</legend>
+            <legend>LESPROGRAMMA</legend>
             <label for="onderwijsNiveau">Selecteer het Schooltype</label>
             <select id="onderwijsNiveau" name="onderwijsNiveau" required>
                 <option value="primairOnderwijs" selected>Primair Onderwijs</option>
@@ -180,7 +180,7 @@
         
 
         <fieldset class="fieldset-informative" >
-            <legend>Overzicht rooster</legend>
+            <legend>OVERZICHT ROOSTER</legend>
             <div class="informative-text-rooster">
                 <div id="groepAantalWeergave">
                     <h4>Aantal groepen</h4>
@@ -207,7 +207,7 @@
         </fieldset>
         
         <fieldset class="fieldset-informative">
-            <legend >Eten en Drinken informatie</legend>
+            <legend >ETEN EN DRINKEN</legend>
             <div class="informative-text">
                 <h4>STANDAARD INBEGREPEN</h4>
                 <ul>
@@ -234,8 +234,8 @@
         </fieldset>
         
         <fieldset>
-        <legend >Eten en Drinken keuzemenu</legend>
-            <h4 class="snacks-heading">Snack keuze menu</h4>
+        <legend >ETEN EN DRINKEN KEUZEMENU</legend>
+            <h4 class="snacks-heading">SNACK AANBOD</h4>
     <span class="subtitle">Vink aan en vul een aantal in</span>
     <div class="snacks-section">
         <div class="snack-option">
@@ -290,7 +290,7 @@
         </div>
     </div>
 
-    <h4 class="lunch-heading">Lunch aanbod</h4>
+    <h4 class="lunch-heading">LUNCH AANBOD</h4>
     <span class="subtitle">Vink aan en vul een aantal in</span>
     <div class="snack-option">
         <label for="remiseLunchCheckbox">Remiselunch: tarwebolletjes met vegetarisch beleg</label>
@@ -310,7 +310,7 @@
 
         </fieldset>
         <fieldset class="fieldset-informative">
-            <legend class="legend-informative">Overzicht totaalprijs</legend>
+            <legend class="legend-informative">PRIJS OVERZICHT</legend>
             <div class="informative-text">
                 <div class="price-summary-section">
                     <div>
@@ -333,8 +333,8 @@
         </fieldset>
 
         <fieldset>
-            <legend>Vragen en Opmerkingen</legend>
-            <label for="vragenOpmerkingen">Vragen en Opmerkingen</label>
+            <legend>VRAGEN EN OPMERKINGEN</legend>
+            <label for="vragenOpmerkingen">Vragen en opmerkingen invulveld</label>
             <textarea id="vragenOpmerkingen" name="vragenOpmerkingen" maxlength="600" rows="5"></textarea>
             <div id="vragenOpmerkingenFout" class="foute-invoermelding"></div>
             <div id="tekenTeller">600 tekens over</div>
@@ -347,8 +347,15 @@
         <div id="verzendknopMeldingdiv" class="foute-invoermelding"></div> <!-- Foutdiv toegevoegd -->
     </form>
     <footer class="main-footer">
+    <p id="copy_logo">&copy; <span id="currentYear"></span> GeoFort</p>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+
+    <script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
     <div class="footer-logo-container">
-        <p id="copy_logo">&copy; 2024 GeoFort</p>
         <img src="images/geofort_logo.png" alt="GeoFort Logo" class="footer-logo">
     </div>
 </footer>

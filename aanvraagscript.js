@@ -930,9 +930,7 @@ function verzendknopFoutMelding(waarde) {
     }
     
     
-    
     const foodInputs = document.querySelectorAll('input[type="checkbox"][name="snack"], input[type="checkbox"][name="lunch"]');
-   
 
     foodInputs.forEach(input => {
         const snackOption = input.closest('.snack-option');
@@ -1042,7 +1040,7 @@ function verzendknopFoutMelding(waarde) {
                 const itemSummary = document.createElement('div');
                 itemSummary.className = 'summary-item';
                 const itemName = input.labels[0].innerText.split(':')[0];
-                itemSummary.innerHTML = `<span>${amountInput.value} ${itemName}:</span><span>€${itemTotal.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
+                itemSummary.innerHTML = `<span>${amountInput.value} ${itemName}:</span><span>€ ${itemTotal.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
                 foodSummaryDiv.appendChild(itemSummary);
             }
         });
@@ -1137,10 +1135,19 @@ function verzendknopFoutMelding(waarde) {
                     } else if (dateMatch.status === 'volgeboekt') {
                         applyStyling(dayElem, 'red', 'white', 'Volgeboekt', '#081540');
                         dayElem.classList.add('flatpickr-disabled');
-                    } else if (dateMatch.status === 'beperkt beschikbaar') {
+                    } else // Beperkt beschikbaar - met geel en groen gradient
+                    if (dateMatch.status === 'beperkt beschikbaar') {
                         const beschikbarePlaatsen = 160 - parseInt(dateMatch.totale_leerlingen, 10);
-                        applyStyling(dayElem, '#081540', 'white', `Beperkt te boeken voor ${beschikbarePlaatsen} leerlingen`, 'green');
+                        applyStyling(
+                            dayElem, 
+                            '#32CD32',  // Lichte groene tint naar een donkerder groen
+                            'white',  // Tekstkleur
+                            `Beperkt te boeken voor ${beschikbarePlaatsen} leerlingen`, 
+                            'white'  // Gouden rand voor een subtiele waarschuwing
+                        );
                     }
+                    
+                    
                 } else {
                     const isFutureDate = dayElem.dateObj >= currentDate && dayElem.dateObj <= endOfYearDate;
                     if (isFutureDate && !disabledDates.includes(dayTimestamp)) {
@@ -1235,17 +1242,17 @@ document.getElementById('onderwijsFormulier').addEventListener('submit', functio
 
     // Definieer alle verplichte velden die niet leeg mogen zijn
     const verplichteVelden = [
-        { veld: document.getElementById('contactpersoonvoornaam'), foutElement: document.getElementById('voornaamFout'), validatieFunctie: valideerVoornaam },
-        { veld: document.getElementById('contactpersoonachternaam'), foutElement: document.getElementById('achternaamFout'), validatieFunctie: valideerAchternaam },
-        { veld: document.getElementById('emailadres'), foutElement: document.getElementById('emailFout'), validatieFunctie: valideerEmail },
-        { veld: document.getElementById('schoolTelefoonnummer'), foutElement: document.getElementById('schoolTelefoonnummerFout'), validatieFunctie: valideerTelefoonnummer },
-        { veld: document.getElementById('contactTelefoonnummer'), foutElement: document.getElementById('contactTelefoonnummerFout'), validatieFunctie: valideerTelefoonnummer },
-        { veld: document.getElementById('totaalbegeleiders'), foutElement: document.getElementById('aantalBegeleidersFout'), validatieFunctie: valideerAantalBegeleiders },
-        { veld: document.getElementById('niveauleerjaar'), foutElement: document.getElementById('niveauleerjaarFout'), validatieFunctie: valideerNiveauEnLeerjaar },
         { veld: document.getElementById('schoolnaam'), foutElement: document.getElementById('naamSchoolFout'), validatieFunctie: valideerNaamSchool },
         { veld: document.getElementById('adres'), foutElement: document.getElementById('adresFout'), validatieFunctie: valideerAdres },
         { veld: document.getElementById('postcode'), foutElement: document.getElementById('postcodeFout'), validatieFunctie: valideerPostcode },
         { veld: document.getElementById('plaats'), foutElement: document.getElementById('plaatsFout'), validatieFunctie: valideerPlaats },
+        { veld: document.getElementById('schoolTelefoonnummer'), foutElement: document.getElementById('schoolTelefoonnummerFout'), validatieFunctie: valideerTelefoonnummer },
+        { veld: document.getElementById('contactTelefoonnummer'), foutElement: document.getElementById('contactTelefoonnummerFout'), validatieFunctie: valideerTelefoonnummer },
+        { veld: document.getElementById('niveauleerjaar'), foutElement: document.getElementById('niveauleerjaarFout'), validatieFunctie: valideerNiveauEnLeerjaar },
+        { veld: document.getElementById('contactpersoonvoornaam'), foutElement: document.getElementById('voornaamFout'), validatieFunctie: valideerVoornaam },
+        { veld: document.getElementById('contactpersoonachternaam'), foutElement: document.getElementById('achternaamFout'), validatieFunctie: valideerAchternaam },
+        { veld: document.getElementById('emailadres'), foutElement: document.getElementById('emailFout'), validatieFunctie: valideerEmail },
+        { veld: document.getElementById('totaalbegeleiders'), foutElement: document.getElementById('aantalBegeleidersFout'), validatieFunctie: valideerAantalBegeleiders },
         { veld: document.getElementById('aantalLeerlingen'), foutElement: document.getElementById('aantalLeerlingenFout'), validatieFunctie: valideerAantalLeerlingen },
         { veld: document.getElementById('onderwijsNiveau'), foutElement: document.getElementById('onderwijsNiveauFout'), validatieFunctie: valideerOnderwijsNiveau },
         { veld: document.getElementById('keuzeModule'), foutElement: document.getElementById('keuzeModuleFout'), validatieFunctie: valideerKeuzeModule }

@@ -17,7 +17,7 @@ if (!isset($_SESSION['csrf_token'])) {
     <link rel="stylesheet" href="styles.css">
     <script src="inlog.js"></script>
 </head>
-<body>
+<body >
 <form method="POST" class="login-form" id="login-form">
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 

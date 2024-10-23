@@ -1,4 +1,4 @@
-body:not(.body-dashboard) {
+body:not(.body-dashboard){
     font-family: 'Avenir', sans-serif;
     margin: 20px;
     padding: 20px;
@@ -6,6 +6,7 @@ body:not(.body-dashboard) {
     justify-content: center; /* Centreren over de verticale as */
     align-items: center; /* Centreren over de horizontale as */
     overflow-x:hidden;
+
 }
 
 
@@ -88,19 +89,25 @@ h1 {
     color:#D93134;
     font: 32px Montserrat, sans-serif;
     margin: 0px 0px 32px;
+    font-weight: 600;
     position: relative;
     text-align: center;
     
 }
 
 
-form {
+form:not(#login-form) {
     max-width: 700px;
     margin: 0 auto;
     background: #fff;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-image: url('./images/hoogtelijnen-1.png');
+    background-size: contain;  /* Zorgt ervoor dat de afbeelding de hele achtergrond vult */
+    background-position: center;  /* Plaatst de afbeelding in het midden van de achtergrond */
+    background-repeat: repeat;  /* Zorgt ervoor dat de afbeelding niet herhaald wordt */
+
 }
 
 fieldset {
@@ -264,7 +271,9 @@ fieldset ul li {
 
 
 .overview-section h3, .overview-section h4 {
-    color: #A6B1E1; /* Lichtgrijsblauwe kleur die past bij de blauwe achtergrond */
+    color: white; /* Lichtgrijsblauwe kleur die past bij de blauwe achtergrond */
+    text-align: center;
+    
 }
 
 
@@ -280,12 +289,24 @@ fieldset ul li {
     margin-top: 10px;
 }
 
-legend {
-    font: 20px Avenir, sans-serif;
-    font-weight: normal;
+legend:not(.fieldset-informative legend):not(.dashboard-legend) {
+    font: 30px Avenir, sans-serif;
+    font-weight: 700;
     color: #DC493A;
-    font-weight: bold;
+    background-color: #ffffffd5;
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid black;
+    text-align: center;
+    box-sizing: content-box;
+    justify-content: space-between; /* Plaatst elementen gelijkmatig verdeeld */
+    display: inline-block;
+    flex-direction: row;
+    min-width: max-content; 
+    white-space: nowrap; 
+
 }
+
 
 .fieldset-informative legend {
     font-size: 1.6em; /* Grotere tekst voor de titel */
@@ -299,6 +320,7 @@ legend {
     transform: translateX(-50%); /* Centreer de tekst horizontaal */
     padding: 5px 10px; /* Voeg wat padding toe om de tekst beter te positioneren */
     z-index: 2; /* Zorg ervoor dat de legend bovenop de fieldset blijft */
+    min-width: max-content; 
 }
 
 .fieldset-informative-price legend {
@@ -393,6 +415,7 @@ p {
     overflow: hidden;
     max-height: 0;
     opacity: 0;
+    max-width: inherit;
 }
 
 /* Algemene stijl voor de 'meer informatie' link */
@@ -942,6 +965,7 @@ html::-webkit-scrollbar-button {
 }
 
 
+
 /* Stijl voor de login form */
 .login-form {
     max-width: 400px; /* Beperk de breedte van het formulier */
@@ -1029,7 +1053,7 @@ html::-webkit-scrollbar-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 15px;
+    padding: 5px;
     background-color: #081540;
     color: white;
     position: fixed;  /* Blijf bovenaan vaststaan */
@@ -1039,11 +1063,68 @@ html::-webkit-scrollbar-button {
     z-index: 1000;
 }
 
+.body-dashboard h1{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    justify-content: center;
+    top: 10px;
+
+    
+}
+
+.welcome-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-legend {
+    font: 30px Avenir, sans-serif;
+    font-weight: 700;
+    color: #DC493A;
+    padding: 5px;
+    text-align: center;
+    box-sizing: content-box;
+    justify-content: space-between; /* Plaatst elementen gelijkmatig verdeeld */
+    display: inline-block;
+    flex-direction: row;
+    white-space: nowrap; 
+    width: fit-content;
+
+}
+
+
+
+
+
+/* Overzicht sectie */
+#overview-aanvragen-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+}
+
+/* Start date input styling */
+#start_date {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #081540;
+    border-radius: 5px;
+}
+
 #content-container {
     flex: 1;
     padding: 20px;
     min-width: 100px;
     padding-bottom: 20px; 
+    align-items: left;
+
 
 }
 
@@ -1082,29 +1163,137 @@ button#submit-date, button#submit-statuses {
     cursor: pointer;
 }
 
+.overview-section-dashboard {
+    background-color: #081540;
+    border: 2px solid white;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+.overview-section-dashboard h3 {
+    color: white;
+    text-align: center;
+}
+
+
+.date-group {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f0f4ff; /* Zeer lichte blauw voor contrast */
+    border: 2px solid #081540;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Container voor elke aanvraag */
+.request-item.card {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color:white; /* Witte achtergrond voor de kaarten */
+    border: 3px solid #081540; /* Zachte grijze rand voor subtiele scheiding */
+    color: #333333; /* Donkere tekstkleur voor leesbaarheid */
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* Stilering voor de schoolinfo */
+.request-item p {
+    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+    color: #081540; /* Donkerblauwe tekstkleur voor consistentie */
+    padding: 5px;
+    background-color:  #fdfdfd;
+    border: 2px solid  #081540;
+    margin-right: 6px;
+    border-radius: 4px;
+   
+}
+
+/* Stilering voor de status dropdown */
+.request-item select {
+    padding: 8px 10px; /* Iets meer padding voor een comfortabelere klikervaring */
+    border-radius: 6px; /* Meer afgerond voor een zachtere uitstraling */
+    border: 1px solid #cccccc; /* Zachtere grijze rand voor minder hard contrast */
+    background-color: #f9f9f9; /* Zeer lichtgrijze achtergrond voor een subtiele opvulling */
+    color: #333; /* Donkere tekstkleur voor leesbaarheid */
+    font-size: 1em; /* Houd de tekstgrootte consistent met de rest van de content */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Zachte overgang voor interactie */
+}
+
+/* Hover- en focusstijlen voor select-elementen */
+.request-item select:hover,
+.request-item select:focus {
+    border-color: #081540; /* Donkerblauwe rand bij hover/focus voor consistentie */
+    box-shadow: 0 0 5px rgba(8, 21, 64, 0.3); /* Zachte blauwe gloed voor visuele focus */
+    outline: none; /* Verwijder de standaard outline voor een schonere look */
+}
+
+.overview-section-dashboard h4 {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #081540; /* Donkerblauw voor consistentie */
+    text-align: center;
+}
+
+#date-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+button#submit-date, button#submit-statuses {
+    width: 100%;
+    background-color: #D93134;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 0;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+button#submit-date:hover, button#submit-statuses:hover {
+    background-color: #B12A2A;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 button#submit-date:hover, button#submit-statuses:hover {
     background-color: #B12A2A;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 
-#footer_dashboard {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-color: #081540;
+.footer_dashboard {
+    background-color: #081540;  /* GeoFort's donkerblauwe kleur */
     color: white;
-    width: 100vw;
+    min-height: 80px;
+    left: -60px;
     position: relative;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    
+    display: flex;
+    text-align: center;
+    width: 105vw;
+    box-sizing: border-box; /* Zorgt ervoor dat de padding binnen de breedte van de footer valt */
+    bottom: -50px;
+    margin-top: 30px;
+    justify-content: center;  /* Centreert de inhoud horizontaal */
+    align-items: center;  /* Centreert de inhoud verticaal */
 }
 
 
+#aanvragenInfo{
+    max-width: 400px;
+    font-size: 1.1em;
+}
 
 .main-footer {
     background-color: #081540;  /* GeoFort's donkerblauwe kleur */
@@ -1127,12 +1316,12 @@ button#submit-date:hover, button#submit-statuses:hover {
 .footer-logo-container {
     display: inline-block;  /* Zorg ervoor dat de container de grootte van de inhoud (het logo) aanneemt */
     position: absolute;
-    right: 110px; /* Plaatsing van het logo aan de rechterkant */
-    bottom: 25px;
+    right: 150px; /* Plaatsing van het logo aan de rechterkant */
+    bottom: 20px;
 }
 
 .footer-logo {
-    width: 75px; /* Pas de grootte van het logo aan */
+    width: 85px; /* Pas de grootte van het logo aan */
 }
 
 

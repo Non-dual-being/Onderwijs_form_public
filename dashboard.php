@@ -35,16 +35,16 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
     <script src="dashboardscript.js"></script>
 </head>
 <body class="body-dashboard">
-    <header class="header-dashboard"></header>
+    <header class="header-dashboard">
     <h1 class="Title_Dashboard">GeoFort Dashboard</h1>
+    </header>
         <div id="content-container">
             <a class="meerInformatieToggle" id="Uitlog_Dashboard"><span>Uitloggen</span></a>
             <section class="welcome-section">
                 <h2>Welkom op het Dashboard, <?php echo $_SESSION['username']; ?>!</h2>
-                <p>Selecteer de maandag van de week om de aanvragen van die week te zien.</p>
             </section>
-
-            <!-- Periodekiezer -->
+            <fieldset>
+            <legend class="dashboard-legend">Datum Selectie</legend>
             <div id="date-picker">
                 <label for="start_date">Agenda</label>
                 <input type="text" id="start_date" >
@@ -54,21 +54,31 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
             <div class="meer-informatie-container">
                 <a href="#" class="meerInformatieToggle" data-target="aanvragenInfo"><span>Meer informatie over het bekijken van de aanvragen</span></a>
                     <div id="aanvragenInfo" class="meerInformatieContent">
-                        <p><strong>Datum kiezen:</strong> In de agenda klik je op de maandagen om de aanvragen van die week te zien.</p>
-                        <p><strong>Overzicht aavragen:</strong> In het overzicht kun je per aanvraag de status veranderen en de veranderingen doorgeven.</p>
+                        <p><strong class = "highlighted-text" >Datum kiezen:</strong> In de agenda klik je op de maandagen om de aanvragen van die week te zien.</p>
+                        <p><strong class = "highlighted-text">Overzicht aavragen:</strong> In het overzicht kun je per aanvraag de status veranderen en de veranderingen doorgeven.</p>
                     </div>
                 </div>
+            </fieldset>
 
-            <section class="overview-section" id="overview-aanvragen-dashboard">
-                <h3>Overzicht van Aanvragen</h3>
+            <section class="overview-section-dashboard" id="overview-aanvragen-dashboard">
+                <h3>Overzicht van aanvragen</h3>
                 <div id="requests-container"></div>
                 <button id="submit-statuses">Submit statussen</button>
             </section>
         </div>
 
         <footer class="footer_dashboard">
-        <p id="copy_logo">&copy; 2024 GeoFort</p>
- 
-        </footer>
+    <p id="copy_logo">&copy; <span id="currentYear"></span> GeoFort</p>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+
+    <script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+    <div class="footer-logo-container">
+        <img src="images/geofort_logo.png" alt="GeoFort Logo" class="footer-logo">
+    </div>
+</footer>
 </body>
 </html>

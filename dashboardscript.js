@@ -33,9 +33,33 @@ document.addEventListener('DOMContentLoaded', function () {
                         applyStyling(dayElem, 'green', 'white', 'Beschikbaar voor boeking', 'white');
                     } else if (dayOfWeek > 1 && dayOfWeek < 6) {
                         // Andere weekdagen blauw en disabled
-                        applyStyling(dayElem, 'blue', 'white', 'Weekdag binnen de aanvragen', 'green');
+                        applyStyling(dayElem, '#32CD32', 'white', 'Weekdag binnen de aanvragen', 'green');
                         dayElem.classList.add('flatpickr-disabled');
                     }
+                }
+                if (!dayElem.classList.contains('flatpickr-disabled')) {
+                    // Hover effect
+                    dayElem.addEventListener('mouseenter', () => {
+                        dayElem.style.transition = 'box-shadow 0.3s ease, transform 0.3s ease';
+                        dayElem.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.4)';
+                        dayElem.style.borderRadius = '30px'; // Maak de hoeken ronder bij hover
+                    });
+        
+                    dayElem.addEventListener('mouseleave', () => {
+                        dayElem.style.boxShadow = 'none';
+                        dayElem.style.transform = 'scale(1)';
+                        dayElem.style.borderRadius = '30px'; // Herstel de cirkelvorm
+                    });
+        
+                }
+                const originalBorderColor = window.getComputedStyle(dayElem).borderColor;
+                if (dayElem.classList.contains('selected')) {   
+                    dayElem.style.fontWeight = 'bold';
+                    dayElem.style.color = 'white';
+                    dayElem.style.border = '2px solid white';
+                    dayElem.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.7), rgba(8, 21, 64, 0.7))'; // Goud en donkerblauw
+                    dayElem.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.4)'; // Iets donkerdere schaduw
+                    
                 }
             },
             firstDayOfWeek: 1
@@ -84,39 +108,76 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     // Functie om de aanvragen weer te geven
-    function displayRequests(requests) {
-        const requestsContainer = document.getElementById('requests-container');
-        requestsContainer.innerHTML = '';  // Maak de container leeg
+   // Functie om de aanvragen weer te geven, gegroepeerd per datum
+   function displayRequests(requests) {
+    const requestsContainer = document.getElementById('requests-container');
+    requestsContainer.innerHTML = '';  // Maak de container leeg
 
-        if (requests.length === 0) {
-            requestsContainer.textContent = "Geen aanvragen gevonden voor de geselecteerde week.";
-            return;
+    if (requests.length === 0) {
+        requestsContainer.textContent = "Geen aanvragen gevonden voor de geselecteerde week.";
+        return;
+    }
+
+    // Eerst sorteren op bezoekdatum
+    requests.sort((a, b) => new Date(a.bezoekdatum) - new Date(b.bezoekdatum));
+
+    // Groepeer de aanvragen per datum
+    let currentDate = '';
+    let dateContainer;
+
+    requests.forEach(request => {
+        if (request.bezoekdatum !== currentDate) {
+            currentDate = request.bezoekdatum;
+            dasboardDate = new Date(request.bezoekdatum);
+
+            const maandNamen = [
+                'januari', 'februari', 'maart', 'april', 'mei', 'juni',
+                'juli', 'augustus', 'september', 'oktober', 'november', 'december'
+            ];
+    
+
+            const year = dasboardDate.getFullYear();
+            const monthIndex = dasboardDate.getMonth(); // Maand index (0-11)
+            const month = maandNamen[monthIndex]; // Haal de maandnaam op uit de array
+            const day = String(dasboardDate.getDate()).padStart(2, '0');
+            const displayDate = `${day} ${month} ${year}`; // Datum weergegeven als dd-mm-jjjj
+
+            // Maak een container voor elke nieuwe datum
+            dateContainer = document.createElement('div');
+            dateContainer.classList.add('date-group');
+            const dateHeader = document.createElement('h4');
+            dateHeader.textContent = `Bezoekdatum: ${displayDate}`;
+            dateContainer.appendChild(dateHeader);
+
+            requestsContainer.appendChild(dateContainer);
         }
 
-        requests.forEach(request => {
-            const requestDiv = document.createElement('div');
-            requestDiv.classList.add('request-item');
+        // Maak een container voor de schoolaanvraag
+        const requestDiv = document.createElement('div');
+        requestDiv.classList.add('request-item', 'card');
 
-            const schoolInfo = document.createElement('p');
-            schoolInfo.textContent = ` Bezoekdatum: ${request.bezoekdatum} | School: ${request.schoolnaam} | Aantal leerlingen: ${request.aantal_leerlingen} `;
-            requestDiv.appendChild(schoolInfo);
+        const schoolInfo = document.createElement('p');
+        schoolInfo.textContent = `School: ${request.schoolnaam} Aantal leerlingen: ${request.aantal_leerlingen}`;
+        requestDiv.appendChild(schoolInfo);
 
-            const statusSelect = document.createElement('select');
-            statusSelect.name = `status[${request.id}]`;  // Voeg de id hier toe
-            ['In Optie', 'Definitief', 'Afgewezen'].forEach(status => {
-                const option = document.createElement('option');
-                option.value = status;
-                option.textContent = status;
-                if (status === request.status) {
-                    option.selected = true;
-                }
-                statusSelect.appendChild(option);
-            });
-            requestDiv.appendChild(statusSelect);
-
-            requestsContainer.appendChild(requestDiv);
+        const statusSelect = document.createElement('select');
+        statusSelect.name = `status[${request.id}]`;
+        ['In Optie', 'Definitief', 'Afgewezen'].forEach(status => {
+            const option = document.createElement('option');
+            option.value = status;
+            option.textContent = status;
+            if (status === request.status) {
+                option.selected = true;
+            }
+            statusSelect.appendChild(option);
         });
-    }
+        requestDiv.appendChild(statusSelect);
+
+        dateContainer.appendChild(requestDiv);
+    });
+}
+
+
 
     // Zorg ervoor dat de statusupdates naar PHP gestuurd worden bij het klikken op de submit-knop
     document.getElementById('submit-statuses').addEventListener('click', function () {

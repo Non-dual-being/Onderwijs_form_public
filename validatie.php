@@ -125,12 +125,26 @@ $prijzen = [
 
 
 $remiseBreakAantal = isset($_POST['remiseBreakAantal']) ? (int) $_POST['remiseBreakAantal'] : 0;
+$remiseBreakAantal = ($remiseBreakAantal >= 0 && $remiseBreakAantal <= 200) ? $remiseBreakAantal : 0;
+
 $kazerneBreakAantal = isset($_POST['kazerneBreakAantal']) ? (int) $_POST['kazerneBreakAantal'] : 0;
+$kazerneBreakAantal = ($kazerneBreakAantal >= 0 && $kazerneBreakAantal <= 200) ? $kazerneBreakAantal : 0;
+
 $fortgrachtBreakAantal = isset($_POST['fortgrachtBreakAantal']) ? (int) $_POST['fortgrachtBreakAantal'] : 0;
+$fortgrachtBreakAantal = ($fortgrachtBreakAantal >= 0 && $fortgrachtBreakAantal <= 200) ? $fortgrachtBreakAantal : 0;
+
 $waterijsjeAantal = isset($_POST['waterijsjeAantal']) ? (int) $_POST['waterijsjeAantal'] : 0;
+$waterijsjeAantal = ($waterijsjeAantal >= 0 && $waterijsjeAantal <= 200) ? $waterijsjeAantal : 0;
+
 $pakjeDrinkenAantal = isset($_POST['pakjeDrinkenAantal']) ? (int) $_POST['pakjeDrinkenAantal'] : 0;
+$pakjeDrinkenAantal = ($pakjeDrinkenAantal >= 0 && $pakjeDrinkenAantal <= 200) ? $pakjeDrinkenAantal : 0;
+
 $remiseLunchAantal = isset($_POST['remiseLunchAantal']) ? (int) $_POST['remiseLunchAantal'] : 0;
+$remiseLunchAantal = ($remiseLunchAantal >= 0 && $remiseLunchAantal <= 200) ? $remiseLunchAantal : 0;
+
 $eigenPicknick = isset($_POST['eigenPicknick']) && ($_POST['eigenPicknick'] == 1 || $_POST['eigenPicknick'] == 0) ? (int)$_POST['eigenPicknick'] : 0;
+$eigenPicknick = ($eigenPicknick >= 0 && $eigenPicknick <= 200) ? $eigenPicknick : 0;
+
 
 $foodPrice = null; // Initialiseer de variabele
 if (isset($_POST['foodPrice'])) {
