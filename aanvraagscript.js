@@ -74,27 +74,15 @@ document.addEventListener('DOMContentLoaded', function () {
         let foutmelding = validatieFunctie(waarde); // Roep de specifieke validatiefunctie aan
         
         if (foutmelding) {
-            // Als de functie "verzendknopFoutMelding" is
             if (validatieFunctie.name === "verzendknopFoutMelding") {
-                // Controleer of het veld een input of textarea is en focus erop
-                if (veld && (veld.tagName === "INPUT" || veld.tagName === "TEXTAREA")) {
-                    veld.focus();
-                } else {
-                    // Forceren van focus met een korte vertraging als het geen input/textarea is
-                    setTimeout(() => veld.focus(), 0);
-                }
-        
-                // Toon de foutmelding met een vertraging van 600ms
+                veld.focus();
+
                 setTimeout(() => {
                     toonFoutmelding(foutElement, foutmelding, veld);
-                }, 600);
-        
-            } else {
+                },600);
+            } else{
                 toonFoutmelding(foutElement, foutmelding, veld);
             }
-        
-        
-        
           
             
             // Speciale weergave voor specifieke foutmeldingen
@@ -640,8 +628,10 @@ function verzendknopFoutMelding(waarde) {
 
     // Voeg event listeners toe om modules bij te werken wanneer het onderwijsniveau verandert
     document.getElementById('onderwijsNiveau').addEventListener('change', () => {
+        const meerInformatieLink = document.querySelector('.meerInformatieToggle[data-target="onderwijsNiveauInfo"] span');
         werkKeuzeModulesBij1();
-        updateMeerInformatieLink();
+        if (meerInformatieLink.textContent.trim() !== 'Verberg'){
+            updateMeerInformatieLink()}
     });
 
     // Voeg event listener toe om geselecteerde modules bij te werken wanneer de keuzemodule verandert
@@ -667,6 +657,7 @@ function verzendknopFoutMelding(waarde) {
         const volledigeNaam = onderwijsNiveauMapping[onderwijsNiveau] || onderwijsNiveau;
     
         // Update de tekst van de link
+   
         meerInformatieLink.textContent = `Klik om de standaardmodules van ${volledigeNaam} te bekijken`;
 
         const weergaveStandaardModules = document.getElementById("weergaveStandaardModules");
@@ -691,12 +682,13 @@ function verzendknopFoutMelding(waarde) {
         
         // Toggle de "open" class om de inhoud te tonen of verbergen
         targetContent.classList.toggle("open");
-        updateMeerInformatieLink();
+    
 
         // Pas de tekst van de toggle-link aan
         if (targetContent.classList.contains("open")) {
             toggle.querySelector("span").textContent = "Verberg ";
         } else {
+            updateMeerInformatieLink();
             // Voeg hier de check toe voor bezoektijdenInfo
             if (targetId === "begeleidersInfo") {
                 toggle.querySelector("span").textContent = "Meer informatie over aantal begeleiders";

@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     flatpickr.localize(flatpickr.l10ns.nl);
     // Initialiseer Flatpickr kalender met agendaData
     function initFlatpickr(agendaData) {
-        const uniqueWeeks = new Set(agendaData.map(item => item.weeknummer));
+        const uniqueWeeks = new Set(agendaData.map(item => `${item.jaar}-${item.weeknummer}`));
+
 
         flatpickr("#start_date", {
             locale: "nl",  // Stel in op Nederlands
@@ -11,15 +12,25 @@ document.addEventListener('DOMContentLoaded', function () {
             disable: [
                 function (date) {
                     const weekNumber = getWeekNumber(date);  // Bereken weeknummer
-                    // Disable alle dagen die niet in de juiste week vallen of weekenden
-                    return !uniqueWeeks.has(weekNumber) || date.getDay() === 0 || date.getDay() === 6;
+                    const year = date.getFullYear();  // Haal het jaar op
+    
+                    // Controleer zowel het weeknummer als het jaar
+                    const isValidDate = uniqueWeeks.has(`${year}-${weekNumber}`);
+                    
+                    // Log data voor debugging
+            
+    
+                    return !isValidDate || date.getDay() === 0 || date.getDay() === 6;
                 }
             ],
             onDayCreate: function (dObj, dStr, fp, dayElem) {
                 const weekNumber = getWeekNumber(dayElem.dateObj);
+                const year = dayElem.dateObj.getFullYear();
                 const dayOfWeek = dayElem.dateObj.getDay();
+                const isValidDate = uniqueWeeks.has(`${year}-${weekNumber}`);
+            
                 resetDayStyles(dayElem);  // Reset stijlen
-
+            
                 if (dayElem.classList.contains('selected')) {
                     dayElem.style.fontWeight = 'bold';
                     dayElem.style.color = 'white';
@@ -27,7 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     dayElem.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.7), rgba(8, 21, 64, 0.7))';  // Goud en donkerblauw
                     dayElem.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.4)';  // Donkere schaduw
                 }
-                if (uniqueWeeks.has(weekNumber)) {
+            
+                // Gebruik nu de juiste controle met jaar en weeknummer
+                if (isValidDate) {
                     if (dayOfWeek === 1) {
                         // Maandagen groen en enabled
                         applyStyling(dayElem, 'green', 'white', 'Beschikbaar voor boeking', 'white');
@@ -37,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         dayElem.classList.add('flatpickr-disabled');
                     }
                 }
+            
                 if (!dayElem.classList.contains('flatpickr-disabled')) {
                     // Hover effect
                     dayElem.addEventListener('mouseenter', () => {
@@ -44,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         dayElem.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.4)';
                         dayElem.style.borderRadius = '30px'; // Maak de hoeken ronder bij hover
                     });
-        
+            
                     dayElem.addEventListener('mouseleave', () => {
                         dayElem.style.boxShadow = 'none';
                         dayElem.style.transform = 'scale(1)';

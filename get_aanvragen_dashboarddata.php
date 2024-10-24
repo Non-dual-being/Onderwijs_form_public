@@ -18,13 +18,18 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // SQL-query om de unieke weeknummers te verkrijgen van aanvragen met status 'In Optie' of 'Definitief'
-    $sql = "
-    SELECT DISTINCT WEEK(bezoekdatum, 3) AS weeknummer 
+   
+   $sql = "
+    SELECT DISTINCT 
+        WEEK(bezoekdatum, 3) AS weeknummer, 
+        YEAR(bezoekdatum) AS jaar 
     FROM aanvragen
     WHERE status IN ('In Optie', 'Definitief', 'Afgewezen')
-    ORDER BY weeknummer ASC;
+    ORDER BY jaar ASC, weeknummer ASC;
+";
 
-    ";
+
+    
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
