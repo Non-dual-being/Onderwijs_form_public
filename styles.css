@@ -1045,6 +1045,7 @@ html::-webkit-scrollbar-button {
     font-family: 'Avenir', sans-serif; /* Font voor consistentie */
     min-width: 1200px;
     overflow-x: hidden;
+    padding-top: 60px;
     
 }
 
@@ -1061,6 +1062,7 @@ html::-webkit-scrollbar-button {
     left: 0;
     width: 100vw;
     z-index: 1000;
+    height: 60px; /* Stel de hoogte in */
 }
 
 .body-dashboard h1{
@@ -1124,6 +1126,9 @@ html::-webkit-scrollbar-button {
     min-width: 100px;
     padding-bottom: 20px; 
     align-items: left;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
 
 
 }
@@ -1291,6 +1296,11 @@ button#submit-date:hover, button#submit-statuses:hover {
 
 
 #aanvragenInfo{
+    max-width: 400px;
+    font-size: 1.1em;
+}
+
+#aanvrageninoptieInfo{
     max-width: 400px;
     font-size: 1.1em;
 }

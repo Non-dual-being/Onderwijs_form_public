@@ -12,10 +12,10 @@
     <h1>ONDERWIJS AANVRAAG-FORMULIER</h1>
     <form id="onderwijsFormulier" method="post" novalidate>
         <fieldset>
-            <legend>BASIS-GEGEVENS</legend>
+            <legend>BASISGEGEVENS</legend>
             <label for="schoolnaam">Naam school</label>
             <input type="text" id="schoolnaam" name="schoolnaam" required>
-            <div id="naamSchoolFout" class="foute-invoermelding"></div>
+            <div id="schoolnaamFout" class="foute-invoermelding"></div>
             
             <label for="adres">Adres</label>
             <input type="text" id="adres" name="adres" required>
@@ -54,34 +54,34 @@
             <div class="meer-informatie-container">
             <a href="#" class="meerInformatieToggle" data-target="niveauleerjaarInfo"><span>Meer informatie over het niveau en het leerjaar.</span></a>
                 <div id="niveauleerjaarInfo" class="meerInformatieContent">
-                    <p><strong>Omschrijving niveau en leerjaar: </strong> Met VMBO 3, HAVO 2 of groep 8 worden het niveau en het leerjaar correct omschreven.</p>
+                    <p><strong>Omschrijving niveau en leerjaar: </strong> met bijvoorbeeld groep 8, vmbo 2 of havo 3 wordt dit veld correct ingevuld.</p>
                 </div>
             </div>
 
            
             <label for="contactpersoonvoornaam">Voornaam contactpersoon</label>
             <input type="text" id="contactpersoonvoornaam" name="contactpersoonvoornaam" required>
-            <div id="voornaamFout" class="foute-invoermelding"></div>
+            <div id="contactpersoonvoornaamFout" class="foute-invoermelding"></div>
 
             <label for="contactpersoonachternaam">Achternaam contactpersoon</label>
             <input type="text" id="contactpersoonachternaam" name="contactpersoonachternaam" required >
-            <div id="achternaamFout" class="foute-invoermelding"></div>
+            <div id="contactpersoonachternaamFout" class="foute-invoermelding"></div>
             
             <label for="emailadres">E-mailadres</label>
             <input type="email" id="emailadres" name="emailadres" required>
-            <div id="emailFout" class="foute-invoermelding"></div>
+            <div id="emailadresFout" class="foute-invoermelding"></div>
             
             <label for="bezoekdatum">Datum bezoek</label>
             <input type="date" id="bezoekdatum" name="bezoekdatum" required>
             <div id="bezoekdatumFout" class="foute-invoermelding"></div>
             
-            <label for="Aankomsttijd">Standaard Aankomsttijd</label>
+            <label for="Aankomsttijd">Standaard aankomsttijd</label>
             <div id ="aankomsttijd" class="overview-section-tijden">
                 <p><strong> 09:45</strong></p>
             </div>
 
 
-            <label for="vertrektijd"> Standaard Vertrektijd</label>
+            <label for="vertrektijd"> Standaard vertrektijd</label>
             <div id ="vertrektijd" class="overview-section-tijden">
                 <p><strong>15:00</strong></p>
             </div>
@@ -115,21 +115,21 @@
                     <li>De indeling van de dag d.m.v. een rooster</li>
                     <li>Begeleiding bij de meeste lesmodules</li>
                     <li>Een vegetarische snack en plantaardige chocolademelk voor de leerlingen (inbegrepen bij de lesmodule voedselinnovatie)</li>
-                    <li>Bij aankomst een kop koffie of thee voor de docenten/begeleiders</li>
+                    <li>Bij aankomst een kop koffie of thee voor de docenten/ begeleiders</li>
                     <li>Een onvergetelijke dag!</li>
                 </ul>
                 <h4>Tijdschema</h4>
                 <p>
-                    • Een bezoek kan plaatsvinden tussen 09:45 en 15:00 uur, met een maximum van 5 ronden. Na een welkomswoord start de eerste lesmodule om 10:15 en eindigt de laatste om 14:45.<br>
-                    • Museumjaarkaart is niet geldig op onderwijsarrangementen. Cultuurkaart / CJP zijn wel geldig. Vul bij de opmerkingen naam, pashouder en CJP-nummer in.<br>
-                    • In geval van allergieën, graag zelf lunch meenemen.
+                    • Een bezoek vindt plaats tussen 09:45 en 15:00 uur, met een maximum van 5 ronden. Na een welkomswoord start de eerste lesmodule om 10:15 en eindigt de laatste om 14:45.<br>
+                    • Museumjaarkaart is niet geldig op onderwijsarrangementen. Cultuurkaart/ CJP zijn wel geldig. Vul bij de opmerkingen naam, pashouder en CJP-nummer in.<br>
+                    • In geval van allergieën, deze graag doorgeven via het invulveld <strong><span class="highlighted-text">Vragen en opmerkingen</span></strong>.
                 </p>
             </div>
         </fieldset>
 
         <fieldset class="lesprogramma">
             <legend>LESPROGRAMMA</legend>
-            <label for="onderwijsNiveau">Selecteer het Schooltype</label>
+            <label for="onderwijsNiveau">Selecteer het schooltype</label>
             <select id="onderwijsNiveau" name="onderwijsNiveau" required>
                 <option value="primairOnderwijs" selected>Primair Onderwijs</option>
                 <option value="voortgezetOnderbouw">Voortgezet Onderwijs - Onderbouw</option>
@@ -212,23 +212,23 @@
                 <h4>STANDAARD INBEGREPEN</h4>
                 <ul>
                     <li>Koffie en thee voor begeleiders bij aankomst.</li>
-                    <li>Vegetarische snack en plantaardige chocolademelk voor leerlingen tijdens de lesmodule voedselinnovatie</li>
+                    <li>Vegetarische snack en plantaardige chocolademelk voor leerlingen tijdens de lesmodule voedselinnovatie.</li>
                 </ul>
                 <h4>OPTIONEEL BIJ TE BOEKEN</h4>
                 <h5>Snacks</h5>
                 <ul>
-                    <li>Remise break, Kazerne break en Fortgracht break</li>
-                    <li>Waterijsje en glaasje limonade</li>
+                    <li>Remise break, Kazerne break en Fortgracht break.</li>
+                    <li>Waterijsje en glaasje limonade.</li>
                 </ul>
                 <h5>Lunch</h5>
                 <ul>
-                <li>Remiselunch: tarwebolletjes met vegetarisch beleg <small>(leerlingen en begeleiders)</small></li>
-                <li>Er is optie om een eigen lunch mee te nemen</li>
+                <li>Remiselunch: tarwebolletjes met vegetarisch beleg <small>(leerlingen en begeleiders).</small></li>
+                <li>Neem je eigen lunch mee.</li>
                 </ul>
                 <h4>EXTRA INFORMATIE</h4>
                 <ul>
-                    <li>Het eten en drinken kunt u alleen vooraf bestellen</li>
-                    <li>Het restaurant is tijdens het schoolbezoek dicht</li>
+                    <li>Het eten en drinken kunt u alleen vooraf bestellen.</li>
+                    <li>Het restaurant is tijdens het schoolbezoek dicht.</li>
                 </ul>
             </div>
         </fieldset>
@@ -279,7 +279,7 @@
             </div>
         </div>
         <div class="snack-option">
-            <label for="pakjeDrinkenCheckbox">limonade drink</label>
+            <label for="pakjeDrinkenCheckbox">Limonade</label>
             <span class="subtitle">€1.00</span>
             <div class="input-group">
                 <input type="checkbox" id="pakjeDrinkenCheckbox" name="snack" value="1.00">
@@ -303,7 +303,7 @@
         </div>
     </div>
     <div class="snack-option">
-        <label for="eigenPicknickCheckbox">Nemen eigen picknick mee</label>
+        <label for="eigenPicknickCheckbox">Nemen eigen lunch mee</label>
         <input type="checkbox" id="eigenPicknickCheckbox" name="lunch" value="0">
     </div>
 </fieldset>

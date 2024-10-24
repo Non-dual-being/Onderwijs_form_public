@@ -44,11 +44,11 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
                 <h2>Welkom op het Dashboard, <?php echo $_SESSION['username']; ?>!</h2>
             </section>
             <fieldset>
-            <legend class="dashboard-legend">Datum Selectie</legend>
+            <legend class="dashboard-legend">Aanvragen per week</legend>
             <div id="date-picker">
                 <label for="start_date">Agenda</label>
                 <input type="text" id="start_date" >
-                <button id="submit-date">Bekijk aanvragen</button>
+                <button id="submit-date" name="weekaanvragen">Bekijk aanvragen voor de week</button>
             </div>
             
             <div class="meer-informatie-container">
@@ -59,11 +59,22 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
                     </div>
                 </div>
             </fieldset>
+            <fieldset>
+            <legend class="dashboard-legend">Aanvragen in optie</legend>
+                <button id="submit-date" name="In optie">Bekijk alle in optie aanvragen</button>
+                
+                <p><div class="meer-informatie-container">
+                <a href="#" class="meerInformatieToggle" data-target="aanvrageninoptieInfo"><span>Meer informatie over het bekijken van de aanvragen in optie</span></a>
+                    <div id="aanvrageninoptieInfo" class="meerInformatieContent">
+                        <p><strong class = "highlighted-text">Overzicht in optie aavragen:</strong> Klik op deze knop om alle opestaande in optie aanvragen te zien.</p>
+                    </div>
+                </div></p>
+            </fieldset>
 
             <section class="overview-section-dashboard" id="overview-aanvragen-dashboard">
                 <h3>Overzicht van aanvragen</h3>
                 <div id="requests-container"></div>
-                <button id="submit-statuses">Submit statussen</button>
+                <button id="submit-statuses">Wijzigingen opslaan</button>
             </section>
         </div>
 

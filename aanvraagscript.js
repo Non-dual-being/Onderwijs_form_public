@@ -74,15 +74,28 @@ document.addEventListener('DOMContentLoaded', function () {
         let foutmelding = validatieFunctie(waarde); // Roep de specifieke validatiefunctie aan
         
         if (foutmelding) {
+            // Als de functie "verzendknopFoutMelding" is
             if (validatieFunctie.name === "verzendknopFoutMelding") {
-                veld.focus();
+                // Controleer of het veld een input of textarea is en focus erop
+                if (veld && (veld.tagName === "INPUT" || veld.tagName === "TEXTAREA")) {
+                    veld.focus();
+                } else {
+                    // Forceren van focus met een korte vertraging als het geen input/textarea is
+                    setTimeout(() => veld.focus(), 0);
+                }
+        
+                // Toon de foutmelding met een vertraging van 600ms
                 setTimeout(() => {
                     toonFoutmelding(foutElement, foutmelding, veld);
-                },600);
-            } else{
+                }, 600);
+        
+            } else {
                 toonFoutmelding(foutElement, foutmelding, veld);
             }
-            // Toon de foutmelding in foutElement
+        
+        
+        
+          
             
             // Speciale weergave voor specifieke foutmeldingen
             if (foutmelding === "Dit veld mag niet leeg blijven.") {
@@ -205,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         // Valideer het telefoonnummer met de regex
         if (!niveauRegex.test(waarde)) {
-            return "In dit veld kun je alleen letters en cijfers gebruiken";
+            return "Het niveau en leerjaar worden correct omschreven als volgt: groep 6 of vmbo 3";
         }
     
         return ""; // Geen foutmelding
@@ -369,8 +382,8 @@ function valideerAantalBegeleiders(waarde) {
 
 function valideerInput(amountInput) {
     const cijferRegex = /^[0-9]+$/; // Regex om alleen cijfers toe te staan
-    console.log("amountINput zelf in de valideercheck: ", amountInput)
-    console.log("amountINput.value zelf in de valideercheck: ", amountInput.value)
+    console.log("amountInput zelf in de valideercheck: ", amountInput)
+    console.log("amountInput.value zelf in de valideercheck: ", amountInput.value)
     let waarde = amountInput.value.trim();
    
     // Als de invoer leeg is, zet de waarde automatisch op 0 en geen foutmelding
@@ -469,23 +482,25 @@ function verzendknopFoutMelding(waarde) {
     
     document.getElementById('contactpersoonvoornaam').addEventListener('blur', function() {
         const voornaamVeld = document.getElementById('contactpersoonvoornaam');
-        const voornaamFoutElement = document.getElementById('voornaamFout');
+        const contactpersoonvoornaamFoutElement = document.getElementById('contactpersoonvoornaamFout');
         
-        valideerInvoer(voornaamVeld, voornaamFoutElement, valideerVoornaam);
+        valideerInvoer(voornaamVeld, contactpersoonvoornaamFoutElement, valideerVoornaam);
     });
 
     document.getElementById('contactpersoonachternaam').addEventListener('blur', function() {
         const achternaamVeld = document.getElementById('contactpersoonachternaam');
-        const achternaamFoutElement = document.getElementById('achternaamFout');
+        const contactpersoonachternaamFoutElement = document.getElementById('contactpersoonachternaamFout');
         
-        valideerInvoer(achternaamVeld, achternaamFoutElement, valideerAchternaam);
+        valideerInvoer(achternaamVeld, contactpersoonachternaamFoutElement, valideerAchternaam);
     });
+
+
 
     document.getElementById('emailadres').addEventListener('blur', function() {
         const emailVeld = document.getElementById('emailadres');
-        const emailFoutElement = document.getElementById('emailFout');
+        const emailadresFoutElement = document.getElementById('emailadresFout');
     
-        valideerInvoer(emailVeld, emailFoutElement, valideerEmail);
+        valideerInvoer(emailVeld, emailadresFoutElement, valideerEmail);
     });
 
     
@@ -522,7 +537,7 @@ function verzendknopFoutMelding(waarde) {
 
     document.getElementById('schoolnaam').addEventListener('blur', function() {
         const schoolVeld = document.getElementById('schoolnaam');
-        const schoolFoutElement = document.getElementById('naamSchoolFout');
+        const schoolFoutElement = document.getElementById('schoolnaamFout');
         
         valideerInvoer(schoolVeld, schoolFoutElement, valideerNaamSchool);
     });
@@ -1076,16 +1091,20 @@ function verzendknopFoutMelding(waarde) {
 
     function initFlatpickr(agendaData) {
         const currentDate = new Date();
-        const endOfYearDate = new Date(currentDate.getFullYear(), 11, 31);  // 31 december van dit jaar
+        const endOfYearDate = new Date(currentDate.getFullYear()+1, 11, 31);  // 31 december van dit jaar
     
         // Array met schoolvakanties
         const schoolVacations = [
-            { start: '2024-02-19', end: '2024-02-23' },  // Voorjaarsvakantie
-            { start: '2024-04-29', end: '2024-05-03' },  // Meivakantie
-            { start: '2024-07-15', end: '2024-08-23' },  // Zomervakantie
-            { start: '2024-10-21', end: '2024-10-25' },  // Herfstvakantie
-            { start: '2024-12-23', end: '2024-12-31' }   // Kerstvakantie
+            { start: '2024-07-15', end: '2024-08-23' },  // Zomervakantie 2024
+            { start: '2024-10-21', end: '2024-10-25' },  // Herfstvakantie 2024
+            { start: '2024-12-23', end: '2024-12-31' },  // Kerstvakantie 2024
+            { start: '2025-02-23', end: '2025-02-28' },  // Voorjaarsvakantie 2025
+            { start: '2025-04-27', end: '2025-05-02' },  // Meivakantie 2025
+            { start: '2025-07-13', end: '2025-08-22' },  // Zomervakantie 2025
+            { start: '2025-10-19', end: '2025-10-24' },  // Herfstvakantie 2025
+            { start: '2025-12-21', end: '2025-12-31' }   // Kerstvakantie 2025
         ];
+        
     
         // Functie om te checken of een datum in de vakantieperiode valt
         function isVacation(date) {
@@ -1242,16 +1261,16 @@ document.getElementById('onderwijsFormulier').addEventListener('submit', functio
 
     // Definieer alle verplichte velden die niet leeg mogen zijn
     const verplichteVelden = [
-        { veld: document.getElementById('schoolnaam'), foutElement: document.getElementById('naamSchoolFout'), validatieFunctie: valideerNaamSchool },
+        { veld: document.getElementById('schoolnaam'), foutElement: document.getElementById('schoolnaamFout'), validatieFunctie: valideerNaamSchool },
         { veld: document.getElementById('adres'), foutElement: document.getElementById('adresFout'), validatieFunctie: valideerAdres },
         { veld: document.getElementById('postcode'), foutElement: document.getElementById('postcodeFout'), validatieFunctie: valideerPostcode },
         { veld: document.getElementById('plaats'), foutElement: document.getElementById('plaatsFout'), validatieFunctie: valideerPlaats },
         { veld: document.getElementById('schoolTelefoonnummer'), foutElement: document.getElementById('schoolTelefoonnummerFout'), validatieFunctie: valideerTelefoonnummer },
         { veld: document.getElementById('contactTelefoonnummer'), foutElement: document.getElementById('contactTelefoonnummerFout'), validatieFunctie: valideerTelefoonnummer },
         { veld: document.getElementById('niveauleerjaar'), foutElement: document.getElementById('niveauleerjaarFout'), validatieFunctie: valideerNiveauEnLeerjaar },
-        { veld: document.getElementById('contactpersoonvoornaam'), foutElement: document.getElementById('voornaamFout'), validatieFunctie: valideerVoornaam },
-        { veld: document.getElementById('contactpersoonachternaam'), foutElement: document.getElementById('achternaamFout'), validatieFunctie: valideerAchternaam },
-        { veld: document.getElementById('emailadres'), foutElement: document.getElementById('emailFout'), validatieFunctie: valideerEmail },
+        { veld: document.getElementById('contactpersoonvoornaam'), foutElement: document.getElementById('contactpersoonvoornaamFout'), validatieFunctie: valideerVoornaam },
+        { veld: document.getElementById('contactpersoonachternaam'), foutElement: document.getElementById('contactpersoonachternaamFout'), validatieFunctie: valideerAchternaam },
+        { veld: document.getElementById('emailadres'), foutElement: document.getElementById('emailadresFout'), validatieFunctie: valideerEmail },
         { veld: document.getElementById('totaalbegeleiders'), foutElement: document.getElementById('aantalBegeleidersFout'), validatieFunctie: valideerAantalBegeleiders },
         { veld: document.getElementById('aantalLeerlingen'), foutElement: document.getElementById('aantalLeerlingenFout'), validatieFunctie: valideerAantalLeerlingen },
         { veld: document.getElementById('onderwijsNiveau'), foutElement: document.getElementById('onderwijsNiveauFout'), validatieFunctie: valideerOnderwijsNiveau },
@@ -1408,8 +1427,13 @@ xhr.onload = function () {
             } else if(response.errors) {
                 console.log("dit is ingegaan");
                 for (let veld in response.errors) {
+        
+
                     const foutElement = document.getElementById(`${veld}Fout`);
                     const veldElement = document.getElementById(veld);
+
+              
+                    
 
                     if (foutElement && veldElement) {
                         // Voeg de foutmelding toe aan het foutElement

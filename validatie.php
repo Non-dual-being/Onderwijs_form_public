@@ -57,7 +57,7 @@ function generateDisabledDates() {
 
     // Voeg weekenden en vakantiedata toe aan de lijst van niet-beschikbare data
     $currentDate = new DateTime('now');
-    $endOfYearDate = new DateTime($currentDate->format('Y') . '-12-31');
+    $endOfYearDate = new DateTime($currentDate->format('Y')+1 . '-12-31');
     
     // Voeg weekenden toe
     while ($currentDate <= $endOfYearDate) {
@@ -67,14 +67,17 @@ function generateDisabledDates() {
         $currentDate->modify('+1 day');
     }
 
-    // Voeg vakanties toe
-    $schoolVacations = [
-        ['start' => '2024-02-19', 'end' => '2024-02-23'],  // Voorjaarsvakantie
-        ['start' => '2024-04-29', 'end' => '2024-05-03'],  // Meivakantie
-        ['start' => '2024-07-15', 'end' => '2024-08-23'],  // Zomervakantie
-        ['start' => '2024-10-21', 'end' => '2024-10-25'],  // Herfstvakantie
-        ['start' => '2024-12-23', 'end' => '2024-12-31'],  // Kerstvakantie
-    ];
+ // Voeg vakanties toe
+$schoolVacations = [
+    ['start' => '2024-10-21', 'end' => '2024-10-25'],  // Herfstvakantie 2024
+    ['start' => '2024-12-23', 'end' => '2024-12-31'],  // Kerstvakantie 2024
+    ['start' => '2025-02-24', 'end' => '2025-02-28'],  // Voorjaarsvakantie 2025
+    ['start' => '2025-04-28', 'end' => '2025-05-02'],  // Meivakantie 2025
+    ['start' => '2025-07-14', 'end' => '2025-08-22'],  // Zomervakantie 2025
+    ['start' => '2025-10-20', 'end' => '2025-10-24'],  // Herfstvakantie 2025
+    ['start' => '2025-12-22', 'end' => '2025-12-31']   // Kerstvakantie 2025
+];
+
 
     foreach ($schoolVacations as $vacation) {
         $start = new DateTime($vacation['start']);
@@ -190,6 +193,7 @@ try {
     $errors = [];
     error_log("Validatie van invoervelden gestart...");
 
+
     // Voornaam validatie
     if (empty($_POST['contactpersoonvoornaam']) || !preg_match("/^[\p{L}\s.-]*$/u", $_POST['contactpersoonvoornaam'])) {
         $errors['contactpersoonvoornaam'] = "Ongeldige voornaam.";
@@ -204,6 +208,8 @@ try {
         $achternaam = sanitize_input($_POST['contactpersoonachternaam'], 50, $errors, 'achternaam');
     }
 
+   
+
     // E-mail validatie
     if (empty($_POST['emailadres']) || !filter_var($_POST['emailadres'], FILTER_VALIDATE_EMAIL)) {
         $errors['emailadres'] = "Ongeldig e-mailadres.";
@@ -211,12 +217,14 @@ try {
         $email = sanitize_input($_POST['emailadres'], 100, $errors, 'email');
     }
 
+
     // Telefoonnummer validatie 1
     if (empty($_POST['schoolTelefoonnummer']) || !preg_match("/^(\+31|0)[1-9][0-9]{8}$/", $_POST['schoolTelefoonnummer'])) {
         $errors['schoolTelefoonnummer'] = "Ongeldig school-telefoonnummer.";
     } else {
         $schooltelefoonnummer = sanitize_input($_POST['schoolTelefoonnummer'], 15, $errors, 'schooltelefoonnummer');
     }
+
 
      // Telefoonnummer validatie 1
      if (empty($_POST['contactTelefoonnummer']) || !preg_match("/^(\+31|0)[1-9][0-9]{8}$/", $_POST['contactTelefoonnummer'])) {
@@ -226,13 +234,13 @@ try {
     }
 
 
-
+    
     // Aantal leerlingen validatie
     $aantalLeerlingen = (int) ($_POST['aantalLeerlingen'] ?? 0);
     if ($aantalLeerlingen < 40 || $aantalLeerlingen > 160) {
         $errors['aantalLeerlingen'] = "Aantal leerlingen moet tussen 40 en 160 zijn.";
     }
-
+  
     // Bezoekdatum validatie
     if (empty($_POST['bezoekdatum'])) {
         $errors['bezoekdatum'] = "Bezoekdatum is verplicht.";
@@ -257,12 +265,16 @@ try {
         }
     }
 
+ 
+
     // Schoolnaam validatie
     if (empty($_POST['schoolnaam']) || !preg_match("/^[A-Za-z0-9\s.]+$/", $_POST['schoolnaam'])) {
         $errors['schoolnaam'] = "Ongeldige schoolnaam.";
     } else {
         $schoolnaam = sanitize_input($_POST['schoolnaam'], 80, $errors, 'schoolnaam');
     }
+
+    
 
     // Adres validatie
     if (empty($_POST['adres']) || !preg_match("/^[A-Za-z0-9\s.,'-]+$/", $_POST['adres'])) {
@@ -271,13 +283,15 @@ try {
         $adres = sanitize_input($_POST['adres'], 100, $errors, 'adres');
     }
 
+   
+
     // Postcode validatie
     if (empty($_POST['postcode']) || !preg_match("/^[1-9][0-9]{3}\s?[A-Za-z]{2}$/", $_POST['postcode'])) {
         $errors['postcode'] = "Ongeldige postcode.";
     } else {
         $postcode = sanitize_input($_POST['postcode'], 7, $errors, 'postcode');
     }
-
+    
     // Plaats validatie
     if (empty($_POST['plaats']) || !preg_match("/^[A-Za-z\s'-]+$/", $_POST['plaats'])) {
         $errors['plaats'] = "Ongeldige plaatsnaam.";
@@ -285,8 +299,10 @@ try {
         $plaats = sanitize_input($_POST['plaats'], 100, $errors, 'plaats');
     }
 
+  
+
     if (empty($_POST['niveauleerjaar']) || !preg_match("/^[A-Za-z\s',]+\s[0-9]{1,2}$/", $_POST['niveauleerjaar'])) {
-        $errors['niveauleerjaar'] = "Ongeldige aanduiding van het niveau en het leerjaar";
+        $errors['niveauleerjaar'] = "Het niveau met leerjaar wordt correct omschreven met groep 8 of vmbo 4";
     } else {
         $niveauleerjaar = sanitize_input($_POST['niveauleerjaar'], 40, $errors, 'niveauleerjaar');
     }
@@ -304,6 +320,7 @@ try {
     }
     
 
+
     // Keuze module validatie
     $keuzemodule = $_POST['keuzeModule'] ?? '';
     $schooltype = $_POST['onderwijsNiveau'] ?? '';
@@ -316,25 +333,37 @@ try {
 
    // Voor elke snack/lunch validatie met het juiste veldnaam in geval van fout
 
+   
+
     if (!is_int($remiseBreakAantal) || $remiseBreakAantal < 0 || $remiseBreakAantal > 200) {
         $errors['remiseBreakAantal'] = "Ongeldig aantal voor Remise Break. Moet tussen 0 en 200 liggen.";
     }
+
+    
     if (!is_int($kazerneBreakAantal) || $kazerneBreakAantal < 0 || $kazerneBreakAantal > 200) {
         $errors['kazerneBreakAantal'] = "Ongeldig aantal voor Kazerne Break. Moet tussen 0 en 200 liggen.";
     }
+
     if (!is_int($fortgrachtBreakAantal) || $fortgrachtBreakAantal < 0 || $fortgrachtBreakAantal > 200) {
         $errors['fortgrachtBreakAantal'] = "Ongeldig aantal voor Fortgracht Break. Moet tussen 0 en 200 liggen.";
     }
+
     if (!is_int($waterijsjeAantal) || $waterijsjeAantal < 0 || $waterijsjeAantal > 200) {
         $errors['waterijsjeAantal'] = "Ongeldig aantal voor Waterijsje. Moet tussen 0 en 200 liggen.";
     }
+
+    
+
     if (!is_int($pakjeDrinkenAantal) || $pakjeDrinkenAantal < 0 || $pakjeDrinkenAantal > 200) {
         $errors['pakjeDrinkenAantal'] = "Ongeldig aantal voor Pakje Drinken. Moet tussen 0 en 200 liggen.";
     }
 
+   
+
     if (!is_int($remiseLunchAantal) || $remiseLunchAantal < 0 || $remiseLunchAantal > 200) {
         $errors['remiseLunchAantal'] = "Ongeldig aantal voor Remise Lunch. Moet tussen 0 en 200 liggen.";
     }
+
 
     if (!in_array($eigenPicknick, [0, 1], true)) {
         $errors['eigenPicknick'] = "Ongeldige waarde voor Eigen Picknick. Moet 0 of 1 zijn.";
@@ -427,7 +456,7 @@ try {
         :pakjeDrinkenAantal, 
         :remiseLunchAantal, 
         :eigenPicknick, 
-        'Definitief'
+        'In optie'
     )";
 
     $stmt = $pdo->prepare($sql);

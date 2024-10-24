@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event listener voor de knop "Bekijk aanvragen"
     let aanvragenData = {};  // Variabele om de aanvragen op te slaan
 
-    document.getElementById('submit-date').addEventListener('click', function() {
+    document.querySelector('button[name="weekaanvragen"]').addEventListener('click', function () {
         const datumVeld = document.getElementById('start_date');
         const datumPicker = datumVeld._flatpickr;  // Verkrijg Flatpickr instance
         const geselecteerdeDatum = datumPicker.selectedDates[0];  // Geselecteerde datum
@@ -106,6 +106,33 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error fetching requests:', error);
         });
     });
+
+    document.querySelector('button[name="In optie"]').addEventListener('click', function () {
+        // Verstuur alleen de status 'In optie' naar de backend
+        fetch('get_in_optie_aanvragen.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: 'In optie' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success === false) {
+                alert(data.message);
+                return;
+            }
+    
+            // Sla de ontvangen data op in aanvragenData
+            aanvragenData = data;  // Hier worden de aanvragen opgeslagen
+            console.log(data);
+            displayRequests(data);
+        })
+        .catch(error => {
+            console.error('Error fetching "In optie" requests:', error);
+        });
+    });
+    
     
     // Functie om de aanvragen weer te geven
    // Functie om de aanvragen weer te geven, gegroepeerd per datum
@@ -162,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const statusSelect = document.createElement('select');
         statusSelect.name = `status[${request.id}]`;
-        ['In Optie', 'Definitief', 'Afgewezen'].forEach(status => {
+        ['In optie', 'Definitief', 'Afgewezen'].forEach(status => {
             const option = document.createElement('option');
             option.value = status;
             option.textContent = status;
@@ -280,7 +307,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Voeg hier de check toe voor bezoektijdenInfo
                 if (targetId === "aanvragenInfo") {
                     toggle.querySelector("span").textContent = "Meer informatie over het bekijken van de aanvragen";
-                } 
+                } else if (targetId =="aanvrageninoptieInfo"){
+                    toggle.querySelector("span").textContent = "Meer informatie over het bekijken van de aanvragen in optie";
+                }
             }
         });
     });

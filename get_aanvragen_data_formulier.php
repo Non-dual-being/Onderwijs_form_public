@@ -25,7 +25,7 @@ try {
                COUNT(*) AS aantal_definitieve_boekingen
         FROM aanvragen
         WHERE status = 'Definitief'
-        AND bezoekdatum BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 6 MONTH)
+        AND bezoekdatum BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 12 MONTH)
         GROUP BY bezoekdatum
         ORDER BY bezoekdatum;
     ";

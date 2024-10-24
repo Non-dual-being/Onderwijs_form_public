@@ -15,7 +15,7 @@ function sanitize_input($data) {
 
 // Functie om de geldigheid van de status te controleren
 function isValidStatus($status) {
-    $validStatuses = ['In Optie', 'Definitief', 'Afgewezen'];
+    $validStatuses = ['In optie', 'Definitief', 'Afgewezen'];
     return in_array($status, $validStatuses);
 }
 
