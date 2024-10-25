@@ -576,7 +576,7 @@ try {
         $mailContent = "
         <p>Beste " . htmlspecialchars($voornaam) . ",<br></p>
         <p>Bedankt voor uw aanvraag voor een schoolbezoek aan het GeoFort.<p>
-        <p>In de bijlage treft u het conceptrooster aan.</p>
+        <p>In de bijlage treft u het conceptrooster aan: het defintieve rooster kan hier nog van afwijken.</p>
         <p>Hieronder het overzicht van uw aanvraag:</p>
     
         <h4 style='margin-bottom: 0; padding: 0; text-decoration: underline'>Algemene gegevens</h4>

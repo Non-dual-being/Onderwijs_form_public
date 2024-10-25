@@ -46,7 +46,7 @@ try {
 
     // Haal alle "In optie" aanvragen van het afgelopen jaar op
     $sql = "
-    SELECT id, schoolnaam, aantal_leerlingen, status, bezoekdatum 
+    SELECT id, schoolnaam, aantal_leerlingen, status, bezoekdatum, email
     FROM aanvragen
     WHERE status = :status
       AND bezoekdatum BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 12 MONTH)

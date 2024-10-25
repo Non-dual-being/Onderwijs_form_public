@@ -197,10 +197,43 @@ document.addEventListener('DOMContentLoaded', function () {
         const requestDiv = document.createElement('div');
         requestDiv.classList.add('request-item', 'card');
 
-        const schoolInfo = document.createElement('p');
-        schoolInfo.textContent = `School: ${request.schoolnaam} Aantal leerlingen: ${request.aantal_leerlingen}`;
+        const schoolInfo = document.createElement('div');
+        schoolInfo.classList.add('request-item', 'container')
         requestDiv.appendChild(schoolInfo);
+        
 
+        const schoolNaam = document.createElement('p');
+        schoolNaam.textContent = `School: ${request.schoolnaam}`;
+        schoolNaam.classList.add('request-item', 'para');
+        schoolInfo.appendChild(schoolNaam);
+
+        const aantalLeerlingen = document.createElement('p');
+        aantalLeerlingen.textContent = `Aantal leerlingen: ${request.aantal_leerlingen}`;
+        aantalLeerlingen.classList.add('request-item', 'para');
+        schoolInfo.append(aantalLeerlingen);
+
+        const email = document.createElement('p');
+        email.textContent = `Email: ${request.email}`;
+        email.classList.add('request-item', 'para');
+        schoolInfo.append(email);
+
+        const statusContainer = document.createElement('div');
+        statusContainer.classList.add('request-item', 'status-container');
+        requestDiv.appendChild(statusContainer);
+        
+
+
+                // Voeg deze regels toe na het maken van schoolInfo
+        const statusContainerTitle = document.createElement('div');
+        statusContainerTitle.classList.add('request-item', 'status-containerTitle');
+
+        // Voeg een titel toe voor de status
+        const statusTitle = document.createElement('h4');
+        statusTitle.textContent = 'Status Change';
+        statusContainerTitle.appendChild(statusTitle);
+        statusContainer.append(statusContainerTitle);
+
+        requestDiv.appendChild(statusContainer);
         const statusSelect = document.createElement('select');
         statusSelect.name = `status[${request.id}]`;
         ['In optie', 'Definitief', 'Afgewezen'].forEach(status => {
@@ -212,10 +245,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             statusSelect.appendChild(option);
         });
-        requestDiv.appendChild(statusSelect);
+        statusContainer.appendChild(statusSelect);
 
         dateContainer.appendChild(requestDiv);
     });
+
 }
 
 

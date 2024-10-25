@@ -1108,7 +1108,7 @@ html::-webkit-scrollbar-button {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 600px;
+    min-width: 45%;
 }
 
 /* Start date input styling */
@@ -1123,7 +1123,7 @@ html::-webkit-scrollbar-button {
 #content-container {
     flex: 1;
     padding: 20px;
-    min-width: 100px;
+    min-width: 45%;
     padding-bottom: 20px; 
     align-items: left;
     margin-top: 20px;
@@ -1168,12 +1168,18 @@ button#submit-date, button#submit-statuses {
     cursor: pointer;
 }
 
+#requests-container{
+    min-width: 90%;
+}
+
+
 .overview-section-dashboard {
     background-color: #081540;
     border: 2px solid white;
     padding: 20px;
     border-radius: 5px;
     margin-top: 10px;
+    min-width: 60%;
 }
 
 
@@ -1194,8 +1200,8 @@ button#submit-date, button#submit-statuses {
 
 /* Container voor elke aanvraag */
 .request-item.card {
-    margin-bottom: 15px;
-    padding: 15px;
+    margin-bottom: 5px;
+    padding: 5px;
     background-color:white; /* Witte achtergrond voor de kaarten */
     border: 3px solid #081540; /* Zachte grijze rand voor subtiele scheiding */
     color: #333333; /* Donkere tekstkleur voor leesbaarheid */
@@ -1205,10 +1211,75 @@ button#submit-date, button#submit-statuses {
     align-items: center;
 }
 
+.request-item.container {
+    flex-grow:  1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 70%;
+    min-width: 70%;
+    align-items: flex-start; /* Uitlijnen naar links */
+}
+
+/* Aanpassen van de status sectie */
+/* Aanpassen van de status sectie */
+.request-item.status-container {
+    flex: 0 1 auto; /* Flex eigenschappen aangepast om de breedte flexibel te maken */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Linker uitlijning op de verticale as */
+    justify-content: flex-start;
+    padding: 15px;
+    background-color: #f3f7ff; /* Lichte afwijkende kleur voor achtergrond */
+    border-left: 5px solid #081540; /* Scheidingslijn tussen info en status */
+    border-radius: 5px;
+    overflow: hidden; /* Verberg eventuele overflow */
+    box-sizing: border-box; /* Houd rekening met padding en border in de breedte */
+}
+
+
+
+
+.request-item.card {
+    display: flex;
+    justify-content: space-between; /* Plaatst de informatie en status naast elkaar */
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: white; /* Witte achtergrond behouden */
+    border: 3px solid #081540; /* Donkerblauwe rand voor consistentie */
+    color: #333333;
+    border-radius: 5px;
+    gap: 5px; /* Ruimte tussen informatie en status */
+}
+
+
+.request-item.status-container h4 {
+    margin: 0 0 10px 0; /* Verwijder extra marges aan de bovenkant */
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #081540;
+    text-align: left; /* Tekst naar links uitlijnen */
+    align-self: flex-start; /* Zorgt ervoor dat de titel bovenaan begint */
+}
+
+
+/* Stilering voor de status dropdown */
+.request-item.status-container select {
+    padding: 3px 3px;
+    border-radius: 6px;
+    border: 1px solid #cccccc;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Zorg dat de dropdown de volledige breedte neemt */
+}
 
 /* Stilering voor de schoolinfo */
-.request-item p {
-    margin: 0;
+.request-item.para {
+    margin-bottom: 3px;
     font-size: 1em;
     font-weight: bold;
     color: #081540; /* Donkerblauwe tekstkleur voor consistentie */
@@ -1220,20 +1291,15 @@ button#submit-date, button#submit-statuses {
    
 }
 
-/* Stilering voor de status dropdown */
-.request-item select {
-    padding: 8px 10px; /* Iets meer padding voor een comfortabelere klikervaring */
-    border-radius: 6px; /* Meer afgerond voor een zachtere uitstraling */
-    border: 1px solid #cccccc; /* Zachtere grijze rand voor minder hard contrast */
-    background-color: #f9f9f9; /* Zeer lichtgrijze achtergrond voor een subtiele opvulling */
-    color: #333; /* Donkere tekstkleur voor leesbaarheid */
-    font-size: 1em; /* Houd de tekstgrootte consistent met de rest van de content */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Zachte overgang voor interactie */
+.request-item.para:hover {
+    background-color: #d0d8e8; /* Lichte tintverandering bij hover */
 }
 
+
+
 /* Hover- en focusstijlen voor select-elementen */
-.request-item select:hover,
-.request-item select:focus {
+.request-item.status-container select:hover,
+.request-item.status-container select:focus {
     border-color: #081540; /* Donkerblauwe rand bij hover/focus voor consistentie */
     box-shadow: 0 0 5px rgba(8, 21, 64, 0.3); /* Zachte blauwe gloed voor visuele focus */
     outline: none; /* Verwijder de standaard outline voor een schonere look */

@@ -144,7 +144,7 @@
             </div>
         
             <div id="keuzeModuleSelectie">
-                <label for="keuzeModule">Kies een lesmodule</label>
+                <label for="keuzeModule">Kies een keuzemodule</label>
                 <select id="keuzeModule" name="keuzeModule" required>
                     <!-- Keuzemodules worden hier dynamisch toegevoegd -->
                 </select>
@@ -172,7 +172,7 @@
                 <a href="#" class="meerInformatieToggle" data-target="begeleidersInfo"><span>Meer informatie over aantal begeleiders</span></a>
                 <div id="begeleidersInfo" class="meerInformatieContent">
                     <p>
-                        GeoFort verwacht minimaal <strong>één begeleider per groep leerlingen</strong>. Voor elke <strong>8 leerlingen</strong> is <strong>één begeleider</strong> gratis inbegrepen. Voor aanvullende begeleiders wordt er <strong>€20</strong> per begeleider in rekening gebracht.
+                        GeoFort verwacht minimaal <strong>één begeleider per groep van 16 leerlingen</strong>. Voor elke <strong>8 leerlingen</strong> is <strong>één begeleider</strong> gratis inbegrepen. Voor aanvullende begeleiders wordt er <strong>€20</strong> per begeleider in rekening gebracht.
                     </p>
                 </div>
             </div>

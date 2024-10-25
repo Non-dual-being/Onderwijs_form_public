@@ -67,7 +67,7 @@ try {
 
     // Haal alle aanvragen van de geselecteerde week op
     $sql = "
-    SELECT id, schoolnaam, aantal_leerlingen, status, bezoekdatum 
+    SELECT id, schoolnaam, aantal_leerlingen, status, bezoekdatum, email
     FROM aanvragen
     WHERE bezoekdatum BETWEEN :weekStart AND :weekEnd
 ";
