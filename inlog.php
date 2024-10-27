@@ -120,7 +120,7 @@ try {
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['password_hash'])) {
+    if ($user && password_verify($password, $user['Some_key'])) {
         
         // Sessie-ID regenereren voor beveiliging
         session_regenerate_id(true);
@@ -129,7 +129,7 @@ try {
 
         $_SESSION['username'] = "Some user";
 
-        $_SESSION['loggedin'] = true;
+        $_SESSION['Some_key'] = true;
         echo json_encode(['success' => true]);
 
         // Verwijder mislukte pogingen na succesvolle inlog

@@ -560,7 +560,7 @@ try {
         $nederlandseDatum = $fmt->format($dateTime);
     
         // Afzender en ontvangers
-        $mail->setFrom('Justsomemail', 'GeoFort Onderwijs');
+        $mail->setFrom('Justsomemail', 'Just_Some_random name');
         $mail->addAddress($email, $voornaam . ' ' . $achternaam);  // Ontvanger
         $mail->addBCC('hideen_info');  // Zelf een BCC ontvangen
 
