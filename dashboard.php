@@ -2,8 +2,8 @@
 session_start();
 
 // Controleer of de gebruiker is ingelogd en of de sessie nog geldig is
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['username'] !== "GeoFort Planner") {
-    header("Location: inlog_pagina.php");
+if (!isset($_SESSION['hidden_info']) || $_SESSION['hidden_info'] !== true || $_SESSION['hidden_info'] !== "hidden_info") {
+    header("Location: Some_other_page.php");
     exit();
 }
 
@@ -41,7 +41,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // Werk tijd van laatste activiteit bij
         <div id="content-container">
             <a class="meerInformatieToggle" id="Uitlog_Dashboard"><span>Uitloggen</span></a>
             <section class="welcome-section">
-                <h2>Welkom op het Dashboard, <?php echo $_SESSION['username']; ?>!</h2>
+                <h2>Welkom op het Dashboard, <?php echo $_SESSION['Some_info']; ?>!</h2>
             </section>
             <fieldset>
             <legend class="dashboard-legend">Aanvragen per week</legend>

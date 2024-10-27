@@ -6,11 +6,11 @@ ini_set('log_errors', 1);      // Log fouten naar een logbestand
 error_reporting(E_ALL);        // Log alle fouten
 
 // Database inloggegevens
-$host = '127.0.0.1';
-$dbname = 'school_db';
-$user = 'root'; 
-$pass = ''; 
-$port = '3307';
+$host = 'hidden_info';
+$dbname = 'hidden_info';
+$user = 'hidden_info'; 
+$pass = 'hidden_info'; 
+$port = 'hidden_info';
 
 try {
     // Maak een verbinding met de database
@@ -27,9 +27,6 @@ try {
     WHERE status IN ('In Optie', 'Definitief', 'Afgewezen')
     ORDER BY jaar ASC, weeknummer ASC;
 ";
-
-
-    
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();

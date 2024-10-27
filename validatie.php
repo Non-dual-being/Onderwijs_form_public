@@ -14,19 +14,18 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 // Haal alleen de specifieke variabele op die je nodig hebt
-$smtp_password = $_ENV['SMTP_PASSWORD'] ?? null;
+$Some_variable_2 = $_ENV['Some_key'] ?? null;
 
 
 // Database inloggegevens
-$host = '127.0.0.1';
-$dbname = 'school_db';
-$user = 'root'; 
-$pass = ''; 
-$port = '3307';
+$host = 'hidden_info';
+$dbname = 'hidden_info';
+$user = 'hidden_info'; 
+$pass = 'hidden_info'; 
+$port = 'hidden_info';
 
 header('Content-Type: application/json');  // Zorg ervoor dat de PHP-respons in JSON-formaat is
 
-error_log("Ontvangen gegevens: " . print_r($_POST, true));
 
 // Definieer de geldige waarden voor schooltype en keuzemodule
 $onderwijsModules = [
@@ -489,7 +488,7 @@ try {
         $mail = new PHPMailer(true);
         // Roep get_rooster.php aan om het rooster op te halen
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://localhost/GeoFort/Get_Rooster.php"); // Zorg ervoor dat je de correcte URL gebruikt
+        curl_setopt($ch, CURLOPT_URL, "Sone_other_url"); // Zorg ervoor dat je de correcte URL gebruikt
         curl_setopt($ch, CURLOPT_POST, 1);
         
         // Verzenden van de POST data
@@ -538,12 +537,12 @@ try {
     try {
         // Configuratie voor het gebruik van SMTP
         $mail->isSMTP();
-        $mail->Host = 'smtp.office365.com'; // verander dit straks weer naar .com
+        $mail->Host = 'hidden_info'; // verander dit straks weer naar .com
         $mail->SMTPAuth = true;
-        $mail->Username = 'kevin@geofort.nl';
-        $mail->Password = $smtp_password;  // Zorg ervoor dat wachtwoorden veilig worden opgeslagen en niet hardcoded
+        $mail->Username = 'unknown';
+        $mail->Password = $Some_variable;  // Zorg ervoor dat wachtwoorden veilig worden opgeslagen en niet hardcoded
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Port = 99999;
         $mail->SMTPDebug = 0; // Toon SMTP-fouten en communicatie in de log
 
         $schooltype = $schooltypeMapping[$schooltype];
@@ -561,10 +560,9 @@ try {
         $nederlandseDatum = $fmt->format($dateTime);
     
         // Afzender en ontvangers
-        $mail->setFrom('kevin@geofort.nl', 'GeoFort Onderwijs');
+        $mail->setFrom('Justsomemail', 'GeoFort Onderwijs');
         $mail->addAddress($email, $voornaam . ' ' . $achternaam);  // Ontvanger
-        //$mail->addBCC('onderwijs@geofort.nl');  // Blind Carbon Copy
-        $mail->addBCC('kevin@geofort.nl');  // Zelf een BCC ontvangen
+        $mail->addBCC('hideen_info');  // Zelf een BCC ontvangen
 
 
     

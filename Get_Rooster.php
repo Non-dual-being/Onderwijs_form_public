@@ -1,10 +1,10 @@
 <?php
 // Database inloggegevens
-$host = '127.0.0.1';
-$dbname = 'school_db';
-$user = 'root'; // of je databasegebruikersnaam
-$pass = ''; // je databasewachtwoord
-$port = '3307';
+$host = 'hidden_info';
+$dbname = 'hidden_info';
+$user = 'hidden_info'; 
+$pass = 'hidden_info'; 
+$port = 'hidden_info';
 
 // Definieer de geldige waarden voor schooltype en keuzemodule
 $onderwijsModules = [

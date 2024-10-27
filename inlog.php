@@ -6,11 +6,13 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);      
 error_reporting(E_ALL); 
 
-$host = '127.0.0.1';
-$dbname = 'school_db';
-$user = 'root'; 
-$pass = ''; 
-$port = '3307';
+// Database inloggegevens
+$host = 'hidden_info';
+$dbname = 'hidden_info';
+$user = 'hidden_info'; 
+$pass = 'hidden_info'; 
+$port = 'hidden_info';
+
 
 // Maximaal aantal toegestane mislukte pogingen
 $maxAttempts = 3;
@@ -125,7 +127,7 @@ try {
 
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
-        $_SESSION['username'] = "GeoFort Planner";
+        $_SESSION['username'] = "Some user";
 
         $_SESSION['loggedin'] = true;
         echo json_encode(['success' => true]);
